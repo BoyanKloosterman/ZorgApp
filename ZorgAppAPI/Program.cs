@@ -1,15 +1,13 @@
 using Microsoft.EntityFrameworkCore;
-using ZorgAppAPI.Data;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Identity;
 using Avans.Identity.Dapper;
 using ZorgAppAPI.Services;
+using ZorgAppAPI.Repositories;
+using System.Data;
+using Microsoft.Data.SqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add database context for ZorgAppAPI
-builder.Services.AddDbContext<ZorgAppContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add logging
 builder.Services.AddLogging();
@@ -21,13 +19,18 @@ builder.Services
     .AddDapperStores(options =>
         options.ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection"));
 
-
-
 // Add HttpContextAccessor for accessing the current user
 builder.Services.AddHttpContextAccessor();
 
 // Register the AuthenticationService
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+
+// Register the repositories
+builder.Services.AddScoped<ITrajectRepository, TrajectRepository>();
+builder.Services.AddScoped<IZorgmomentRepository, ZorgmomentRepository>();
+
+// Register the database connection
+builder.Services.AddScoped<IDbConnection>(sp => new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Configure Bearer token options
 builder.Services
@@ -40,7 +43,7 @@ builder.Services
     });
 
 // Add controllers for the API
-builder.Services.AddControllers(); 
+builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
