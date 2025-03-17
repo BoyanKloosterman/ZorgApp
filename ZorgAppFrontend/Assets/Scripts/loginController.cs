@@ -31,7 +31,6 @@ public class loginController : MonoBehaviour
 
     public async void PerformLogin()
     {
-        Debug.Log("test");
         user.email = emailInput.text;
         user.password = passwordInput.text;
 
@@ -41,14 +40,10 @@ public class loginController : MonoBehaviour
         {
             case WebRequestData<string> dataResponse:
                 Debug.Log("login succes");
-                SecureUserSession.Instance.SetCurrentUser(new User
-                {
-                    email = user.email
-                });
+                // naar andere scene
 
-                string responseData = dataResponse.Data;
-                string token = JsonHelper.ExtractToken(responseData); 
-                SecureUserSession.Instance.SetToken(token);
+
+                Debug.Log("Token opgeslagen in sessie: " + SecureUserSession.Instance.GetToken());
                 break;
             case WebRequestError errorResponse:
                 Debug.Log("error");
@@ -75,4 +70,11 @@ public class loginController : MonoBehaviour
     {
         ErrorPopup.SetActive(false);
     }
+
+    [Serializable]
+    public class Token
+    {
+        public string accessToken;
+    }
+
 }
