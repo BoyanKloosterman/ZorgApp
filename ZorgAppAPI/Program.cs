@@ -21,6 +21,8 @@ builder.Services
     .AddDapperStores(options =>
         options.ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection"));
 
+
+
 // Add HttpContextAccessor for accessing the current user
 builder.Services.AddHttpContextAccessor();
 
@@ -71,7 +73,6 @@ app.MapPost("/account/logout", async (SignInManager<IdentityUser> signInManager)
     return Results.Ok();
 });
 
-// Map controllers (authorization required for all endpoints)
-app.MapControllers().RequireAuthorization();
+app.MapControllers();
 
 app.Run();
