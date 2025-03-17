@@ -8,15 +8,17 @@ namespace ZorgAppAPI.Models
     public class Arts
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(100)]
         public string Naam { get; set; }
 
-        [Required]
-        [StringLength(50)]
+        [StringLength(100)]
         public string Specialisatie { get; set; }
+
+        public string UserId { get; set; }
 
         // Navigation properties
         public virtual ICollection<Patient> Patienten { get; set; }
