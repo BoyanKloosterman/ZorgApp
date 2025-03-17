@@ -14,6 +14,8 @@ namespace ZorgAppAPI.Models
         [Required]
         [StringLength(50)]
         public string Naam { get; set; }
+        [StringLength(256)]
+        public string Omschrijving { get; set; }
 
         // Navigation properties
         public virtual ICollection<Patient> Patienten { get; set; }
