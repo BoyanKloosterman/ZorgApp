@@ -37,6 +37,8 @@ builder.Services
         options.RefreshTokenExpiration = TimeSpan.FromDays(7);
     });
 
+// Add controllers for the API
+builder.Services.AddControllers(); 
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
