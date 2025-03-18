@@ -21,7 +21,10 @@ namespace ZorgAppAPI.Models
         public string Achternaam { get; set; }
 
         [Required]
-        public int OuderVoogd_ID { get; set; }
+        public DateTime Geboortedatum { get; set; }
+
+        [Required]
+        public int OuderVoogdID { get; set; }
 
         [Required]
         public int TrajectID { get; set; }
