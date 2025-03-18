@@ -25,9 +25,6 @@ public class RoutesManager : MonoBehaviour
     {
         checkpointID = id;
         routeName = route;
-
-        Debug.Log($"Checkpoint geselecteerd! ID: {checkpointID}, Route: {routeName}");
-
         SceneManager.LoadScene("Checkpoint");
     }
 }
