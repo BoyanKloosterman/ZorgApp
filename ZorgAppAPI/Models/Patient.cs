@@ -20,13 +20,7 @@ namespace ZorgAppAPI.Models
         [StringLength(50)]
         public string Achternaam { get; set; }
 
-        [Required]
-        public DateTime Geboortedatum { get; set; }
-
-        [Required]
         public int OuderVoogdID { get; set; }
-
-        [Required]
         public int TrajectID { get; set; }
 
         public int? ArtsID { get; set; }
