@@ -46,6 +46,7 @@ namespace ZorgAppAPI.Controllers
 
                 if (!succeeded)
                 {
+                    _logger.LogError("User creation failed: {Errors}", string.Join(", ", errors));
                     return BadRequest(new { Errors = errors });
                 }
 
@@ -95,16 +96,37 @@ namespace ZorgAppAPI.Controllers
                             break;
 
                         case "Patient":
-                            return StatusCode(501, "Patient registration not implemented");
+                            using (var command = new SqlCommand())
+                            {
+                                command.Connection = _db;
+                                command.Transaction = transaction;
+                                command.CommandText = "INSERT INTO dbo.Patient (Voornaam, Achternaam, UserId, GeboorteDatum) VALUES (@Voornaam, @Achternaam, @UserId, @GeboorteDatum); SELECT SCOPE_IDENTITY();";
+
+                                command.Parameters.AddWithValue("@Voornaam", model.Voornaam);
+                                command.Parameters.AddWithValue("@Achternaam", model.Achternaam);
+                                command.Parameters.AddWithValue("@UserId", userId);
+
+                                var result = await command.ExecuteScalarAsync();
+                                profileId = Convert.ToInt32(result);
+                            }
+                            break;
+
 
                         default:
                             return BadRequest("Invalid role specified");
                     }
                 }
+                catch (SqlException sqlEx)
+                {
+                    _logger.LogError(sqlEx, "SQL error creating profile for user {UserId}", userId);
+                    await transaction.RollbackAsync();
+                    return StatusCode(500, "A database error occurred during registration");
+                }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error creating profile for user {UserId}", userId);
-                    throw;
+                    await transaction.RollbackAsync();
+                    return StatusCode(500, "An error occurred during registration");
                 }
 
                 await transaction.CommitAsync();
