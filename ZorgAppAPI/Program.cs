@@ -6,6 +6,7 @@ using ZorgAppAPI.Services;
 using ZorgAppAPI.Repositories;
 using System.Data;
 using Microsoft.Data.SqlClient;
+using ZorgAppAPI.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,9 @@ builder.Services.AddScoped<IZorgmomentRepository, ZorgmomentRepository>();
 // Register the database connection
 builder.Services.AddScoped<IDbConnection>(sp => new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
+builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
+
 // Configure Bearer token options
 builder.Services
     .AddOptions<BearerTokenOptions>()
@@ -41,6 +45,24 @@ builder.Services
         options.BearerTokenExpiration = TimeSpan.FromHours(1);
         options.RefreshTokenExpiration = TimeSpan.FromDays(7);
     });
+
+// Program.cs
+builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
+builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
+builder.Services.AddScoped<IDbConnection>(sp =>
+    new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Configureer Identity zonder EF
+builder.Services.AddIdentityCore<IdentityUser>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequiredLength = 6;
+    options.User.RequireUniqueEmail = true;
+})
+.AddRoles<IdentityRole>();
 
 // Add controllers for the API
 builder.Services.AddControllers();
