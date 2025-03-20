@@ -15,6 +15,8 @@ namespace ZorgAppAPI.Models
         [StringLength(100)]
         public string Voornaam { get; set; }
 
+        [Required]
+        [StringLength(100)]
         public string Achternaam { get; set; }
 
         [StringLength(100)]
