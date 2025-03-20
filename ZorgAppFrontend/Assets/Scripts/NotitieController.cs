@@ -22,15 +22,14 @@ public class NotitieController : MonoBehaviour
 
     void Start()
     {
-        string userId = SecureUserSession.Instance.GetUserId();
         if (!SecureUserSession.Instance.IsLoggedIn)
         {
             Debug.LogWarning("User not logged in. Redirecting to login screen.");
             SceneManager.LoadScene("Login");
             return;
         }
+
         PlayerPrefs.GetString("userId", userId);
-        Debug.Log($"userId: {userId}");
 
         if (string.IsNullOrEmpty(userId))
         {
@@ -48,24 +47,7 @@ public class NotitieController : MonoBehaviour
         if (statusMessage != null)
             statusMessage.text = "";
 
-        if (string.IsNullOrEmpty(userId) && PlayerPrefs.HasKey("userId"))
-        {
-            userId = PlayerPrefs.GetString("userId");
-            Debug.Log("Retrieved userId from PlayerPrefs: " + userId);
-
-            if (!string.IsNullOrEmpty(userId))
-            {
-                SecureUserSession.Instance.SetUserId(userId);
-            }
-        }
-        if (string.IsNullOrEmpty(userId))
-        {
-            Debug.LogError("User ID is missend, dit hoort niet te gebeuren, u word teruggestuurd naar login.");
-            SceneManager.LoadScene("Login");
-            return;
-        }
-        Debug.Log("userId: " + userId);
-
+        Debug.Log($"Using userId: {userId}");
     }
 
     public void GoToNoteAddScene()
