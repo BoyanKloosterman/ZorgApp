@@ -9,7 +9,7 @@ public class UserApiClient : MonoBehaviour
 
 	public async Awaitable<IWebRequestReponse> Register(User user)
 	{
-		string route = "/account/register";
+		string route = "/api/Auth/register";
 		string data = JsonUtility.ToJson(user);
 
 		return await webClient.SendPostRequest(route, data);

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class loginController : MonoBehaviour
+public class LoginController : MonoBehaviour
 {
     public User user;
     public UserApiClient userApiClient;
