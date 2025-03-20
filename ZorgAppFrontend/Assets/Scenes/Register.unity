@@ -2516,6 +2516,7 @@ GameObject:
   - component: {fileID: 962030926}
   - component: {fileID: 962030929}
   - component: {fileID: 962030930}
+  - component: {fileID: 962030931}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -2589,6 +2590,32 @@ MonoBehaviour:
   ErrorPopup: {fileID: 398307331}
   popupMessageText: {fileID: 702820450}
   popupCloseButton: {fileID: 978955516}
+  login: {fileID: 962030931}
+--- !u!114 &962030931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 962030924}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c718ec27905a0284f8a03b5c1a5b7931, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  user:
+    voornaam: 
+    achternaam: 
+    role: 
+    email: 
+    password: 
+  userApiClient: {fileID: 962030929}
+  emailInput: {fileID: 816111833}
+  passwordInput: {fileID: 368309651}
+  loginButton: {fileID: 0}
+  ErrorPopup: {fileID: 0}
+  popupMessageText: {fileID: 0}
+  popupCloseButton: {fileID: 0}
 --- !u!1 &978955514
 GameObject:
   m_ObjectHideFlags: 0
