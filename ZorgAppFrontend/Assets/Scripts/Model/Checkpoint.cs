@@ -6,4 +6,5 @@ public class Checkpoint
     public string plaatje;
     public int tijdsDuurInMin;
     public string trajectZorgMomenten;
+    public string tekst;
 }
