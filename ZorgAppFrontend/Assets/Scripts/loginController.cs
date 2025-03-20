@@ -39,7 +39,25 @@ public class LoginController : MonoBehaviour
         switch (webRequestResponse)
         {
             case WebRequestData<string> dataResponse:
-                Debug.Log("login succes");
+                Debug.Log("login success");
+
+                try
+                {
+                    // Parse the response to get the user id
+                    var responseData = JsonUtility.FromJson<Token>(dataResponse.Data);
+                    if (!string.IsNullOrEmpty(responseData.userId))
+                    {
+                        // Store the user ID in PlayerPrefs
+                        PlayerPrefs.SetString("userId", responseData.userId);
+                        PlayerPrefs.Save();
+                        Debug.Log("User ID saved to PlayerPrefs: " + responseData.userId);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError("Error parsing user ID: " + ex.Message);
+                }
+
                 // naar andere scene
                 SceneManager.LoadScene("Route13");
 
@@ -54,6 +72,7 @@ public class LoginController : MonoBehaviour
                 throw new NotImplementedException("No implementation for webRequestResponse of class: " + webRequestResponse.GetType());
         }
     }
+
     private void ShowErrorPopup(string message)
     {
         if (ErrorPopup != null)
@@ -75,6 +94,9 @@ public class LoginController : MonoBehaviour
     public class Token
     {
         public string accessToken;
+        public string userId;
     }
+
+
 
 }

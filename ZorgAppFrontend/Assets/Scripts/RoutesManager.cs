@@ -13,7 +13,7 @@ public class RoutesManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); 
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -27,4 +27,9 @@ public class RoutesManager : MonoBehaviour
         routeName = route;
         SceneManager.LoadScene("Checkpoint");
     }
+    public void GoToNoteScene()
+    {
+        SceneManager.LoadScene("NoteScene");
+    }
+
 }
