@@ -41,24 +41,6 @@ public class LoginController : MonoBehaviour
             case WebRequestData<string> dataResponse:
                 Debug.Log("login success");
 
-                try
-                {
-                    // Parse the response to get the user id
-                    var responseData = JsonUtility.FromJson<Token>(dataResponse.Data);
-                    if (!string.IsNullOrEmpty(responseData.userId))
-                    {
-                        // Store the user ID in PlayerPrefs
-                        PlayerPrefs.SetString("userId", responseData.userId);
-                        PlayerPrefs.Save();
-                        Debug.Log("User ID saved to PlayerPrefs: " + responseData.userId);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogError("Error parsing user ID: " + ex.Message);
-                }
-
-                // naar andere scene
                 SceneManager.LoadScene("Route13");
 
                 Debug.Log("Token opgeslagen in sessie: " + SecureUserSession.Instance.GetToken());
@@ -94,9 +76,5 @@ public class LoginController : MonoBehaviour
     public class Token
     {
         public string accessToken;
-        public string userId;
     }
-
-
-
 }
