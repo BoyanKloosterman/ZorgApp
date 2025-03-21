@@ -50,7 +50,6 @@ public class NotitieController : MonoBehaviour
             return;
         }
 
-
         Notitie newNote = new Notitie
         {
             Titel = titleInput.text,
@@ -58,12 +57,10 @@ public class NotitieController : MonoBehaviour
             DatumAanmaak = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss")
         };
 
-
         try
         {
             string noteJson = JsonUtility.ToJson(newNote);
             string token = SecureUserSession.Instance.GetToken();
-            Debug.Log($"Token: {token}");
 
             if (!string.IsNullOrEmpty(token))
             {
@@ -72,26 +69,21 @@ public class NotitieController : MonoBehaviour
 
                 if (response is WebRequestError errorResponse)
                 {
-                    string errorMessage = errorResponse?.ErrorMessage ?? "Unknown error";
                     ShowStatus("Fout bij opslaan van notitie", true);
-                    Debug.LogError($"Failed to save note: {errorMessage}");
                 }
                 else if (response is WebRequestData<string> dataResponse)
                 {
-                    Debug.Log($"Note saved successfully: {dataResponse.Data}");
                     ShowStatus("Notitie succesvol opgeslagen!", false);
                     StartCoroutine(ReturnToMainAfterDelay(2f));
                 }
                 else
                 {
                     ShowStatus("Onbekende respons", true);
-                    Debug.LogWarning($"Unknown response type: {response?.GetType().Name}");
                 }
             }
             else
             {
                 ShowStatus("Geen token beschikbaar", true);
-                Debug.LogError("Cannot save note: No auth token available");
             }
         }
         catch (Exception ex)
@@ -100,6 +92,7 @@ public class NotitieController : MonoBehaviour
             Debug.LogException(ex);
         }
     }
+
 
     private async void LoadNotes()
     {
@@ -122,13 +115,6 @@ public class NotitieController : MonoBehaviour
                 {
                     ShowStatus("Geen notities gevonden", true);
                     return;
-                }
-
-                if (notes.Count >= 0)
-                {
-                    PlayerPrefs.SetString("userId", notes[0].UserId);
-                    PlayerPrefs.Save();
-                    Debug.Log($"Stored userId: {notes[0].UserId}");
                 }
 
                 foreach (var note in notes)
