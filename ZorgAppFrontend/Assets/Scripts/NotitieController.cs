@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class NotitieController : MonoBehaviour
 {
@@ -27,6 +28,8 @@ public class NotitieController : MonoBehaviour
 
         if (statusMessage != null)
             statusMessage.text = "";
+
+        LoadNotes();
     }
 
     public void GoToNoteAddScene()
@@ -97,6 +100,63 @@ public class NotitieController : MonoBehaviour
             Debug.LogException(ex);
         }
     }
+
+    private async void LoadNotes()
+    {
+        try
+        {
+            string token = SecureUserSession.Instance.GetToken();
+            if (string.IsNullOrEmpty(token))
+            {
+                ShowStatus("Geen token beschikbaar", true);
+                return;
+            }
+
+            webClient.SetToken(token);
+            IWebRequestReponse response = await webClient.SendGetRequest("api/Notitie");
+
+            if (response is WebRequestData<List<Notitie>> data)
+            {
+                List<Notitie> notes = data.Data;
+                if (notes == null || notes.Count == 0)
+                {
+                    ShowStatus("Geen notities gevonden", true);
+                    return;
+                }
+
+                if (notes.Count >= 0)
+                {
+                    PlayerPrefs.SetString("userId", notes[0].UserId);
+                    PlayerPrefs.Save();
+                    Debug.Log($"Stored userId: {notes[0].UserId}");
+                }
+
+                foreach (var note in notes)
+                {
+                    AddNoteToUI(note);
+                }
+                ShowStatus($"{notes.Count} notities geladen", false);
+            }
+            else if (response is WebRequestError errorResponse)
+            {
+                string errorMessage = errorResponse?.ErrorMessage ?? "Unknown error";
+                ShowStatus("Fout bij laden van notities", true);
+                Debug.LogError($"Failed to load notes: {errorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowStatus("Er is een fout opgetreden", true);
+            Debug.LogException(ex);
+        }
+    }
+
+
+    private void AddNoteToUI(Notitie note)
+    {
+        Debug.Log($"Note loaded: {note.Titel}");
+    }
+
 
     private void ShowStatus(string message, bool isError)
     {

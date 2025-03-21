@@ -38,10 +38,6 @@ namespace ZorgAppAPI.Controllers
             {
                 return NotFound();
             }
-
-            // Optional: Add verification that this user has access to this notitie
-            // if (notitie.UserID != userId) return Forbidden();
-
             return Ok(notitie);
         }
 
@@ -75,8 +71,8 @@ namespace ZorgAppAPI.Controllers
 
             _logger.LogInformation("Adding new notitie for user ID: {UserId}", userId);
 
-            // Assign the current user ID to the notitie
-            // notitie.UserID = userId;
+            //Assign the current user ID to the notitie
+            notitie.UserId = userId;
 
             await _notitieRepository.AddNotitieAsync(notitie);
             return CreatedAtAction(nameof(GetNotitieById), new { id = notitie.ID }, notitie);
