@@ -345,23 +345,13 @@ public class NotitieController : MonoBehaviour
             button.onClick.AddListener(() => OpenEditNoteScene(capturedNote));
         }
     }
-
-
     private void OpenEditNoteScene(Notitie note)
     {
-        PlayerPrefs.SetString("CurrentNoteId", note.id.ToString());
+        PlayerPrefs.SetInt("CurrentNoteId", note.id);
         PlayerPrefs.SetString("CurrentNoteTitle", note.Titel);
         PlayerPrefs.SetString("CurrentNoteText", note.Tekst ?? "");
         PlayerPrefs.SetString("CurrentNoteDate", note.DatumAanmaak ?? DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"));
         SceneManager.LoadScene("NoteEditScene");
-    }
-
-    private void OpenNoteDetail(Notitie note)
-    {
-        PlayerPrefs.SetString("CurrentNoteTitle", note.Titel);
-        PlayerPrefs.SetString("CurrentNoteText", note.Tekst ?? "");
-        PlayerPrefs.SetString("CurrentNoteDate", note.DatumAanmaak ?? DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"));
-        ShowStatus($"Notitie: {note.Titel}", false);
     }
 
     private void ShowStatus(string message, bool isError)

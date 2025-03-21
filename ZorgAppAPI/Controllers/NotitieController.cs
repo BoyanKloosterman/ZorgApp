@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using ZorgAppAPI.Models;
 using ZorgAppAPI.Repositories;
 using ZorgAppAPI.Services;
@@ -95,10 +96,11 @@ namespace ZorgAppAPI.Controllers
             _logger.LogInformation("Updating notitie {NotitieId} for user ID: {UserId}", id, userId);
 
             // Optional: Verify the user has permission to update this notitie
-            var existingNotitie = await _notitieRepository.GetNotitieByIdAsync(id);
-            if (existingNotitie == null) return NotFound();
-            if (existingNotitie.UserId != userId) return Forbid();
+            //var existingNotitie = await _notitieRepository.GetNotitieByIdAsync(id);
+            //if (existingNotitie == null) return NotFound();
+            //if (existingNotitie.UserId != userId) return Forbid();
 
+            notitie.UserId = userId;
             await _notitieRepository.UpdateNotitieAsync(notitie);
             return NoContent();
         }
