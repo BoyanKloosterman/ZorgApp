@@ -4,6 +4,7 @@ using ZorgAppAPI.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ZorgAppAPI.Interfaces;
+using ZorgAppAPI.Services;
 
 namespace ZorgAppAPI.Controllers
 {
@@ -12,10 +13,12 @@ namespace ZorgAppAPI.Controllers
     public class UserZorgMomentController : ControllerBase
     {
         private readonly IUserZorgMomentRepository _userZorgMomentRepository;
+        private readonly IAuthenticationService _authenticationService;
 
-        public UserZorgMomentController(IUserZorgMomentRepository userZorgMomentRepository)
+        public UserZorgMomentController(IUserZorgMomentRepository userZorgMomentRepository, IAuthenticationService authenticationService)
         {
             _userZorgMomentRepository = userZorgMomentRepository;
+            _authenticationService = authenticationService;
         }
 
         [HttpPost]
@@ -30,9 +33,11 @@ namespace ZorgAppAPI.Controllers
             return CreatedAtAction(nameof(GetUserZorgMomentsByUserId), new { userId = createdZorgMoment.UserId }, createdZorgMoment);
         }
 
-        [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetUserZorgMomentsByUserId(string userId)
+        [HttpGet]
+        public async Task<IActionResult> GetUserZorgMomentsByUserId()
         {
+            var userId = await _authenticationService.GetCurrentUserIdAsync();
+            Console.WriteLine(userId);
             var zorgMoments = await _userZorgMomentRepository.GetUserZorgMomentsByUserIdAsync(userId);
             return Ok(zorgMoments);
         }

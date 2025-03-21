@@ -10,7 +10,6 @@ public class ZorgMomentSceneManager : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log($"zorgMoment: {TrajectManager.Instance.zorgMomentID}, Route: {TrajectManager.Instance.trajectNumber}");
         PerformLoadzorgMomentData();
     }
 

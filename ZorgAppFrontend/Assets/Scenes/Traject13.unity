@@ -4442,6 +4442,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2098123110}
   - component: {fileID: 2098123111}
+  - component: {fileID: 2098123113}
+  - component: {fileID: 2098123112}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -4476,8 +4478,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a6617d4850f4d547a45bc56f93f7790, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  userApiClient: {fileID: 2098123113}
   zorgMomentID: 0
   trajectNumber: 
+--- !u!114 &2098123112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2098123109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ed722d7c057c4f48af80e38d24e0abc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseUrl: https://localhost:7078
+--- !u!114 &2098123113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2098123109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f88ca0967fc122e4dbe316439df1e615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  webClient: {fileID: 2098123112}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

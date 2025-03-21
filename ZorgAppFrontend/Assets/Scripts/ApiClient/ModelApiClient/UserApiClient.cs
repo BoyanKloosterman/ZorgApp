@@ -7,13 +7,26 @@ public class UserApiClient : MonoBehaviour
 {
 	public WebClient webClient;
 
+    public async Awaitable<IWebRequestReponse> LoadBehaaldeZorgMomenten()
+    {
+        string route = "/api/UserZorgMoment";
+        return await webClient.SendGetRequest(route);
+    }
+
     public async Awaitable<IWebRequestReponse> LoadZorgMomentData(int zorgMomentId)
     {
         string route = "/api/ZorgMoment/" + zorgMomentId;
         return await webClient.SendGetRequest(route);
     }
 
-	public async Awaitable<IWebRequestReponse> Register(User user)
+    //public async Awaitable<IWebRequestReponse> FinishZorgMoment()
+    //{
+    //    string route = "/api/UserZorgmoment";
+    //    //string data = JsonUtility.ToJson(zorgmoment);
+    //    return await webClient.SendPostRequest(route, data);
+    //}
+
+    public async Awaitable<IWebRequestReponse> Register(User user)
 	{
 		string route = "/api/Auth/register";
 		string data = JsonUtility.ToJson(user);

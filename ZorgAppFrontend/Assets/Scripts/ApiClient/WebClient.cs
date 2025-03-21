@@ -71,6 +71,7 @@ public class WebClient : MonoBehaviour
 
     private void AddToken(UnityWebRequest webRequest)
     {
+        Debug.Log("Adding token to request: " + token);
         webRequest.SetRequestHeader("Authorization", "Bearer " + token);
     }
 
