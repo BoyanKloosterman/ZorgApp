@@ -12,22 +12,39 @@ public class NotitieController : MonoBehaviour
     public TMP_InputField titleInput;
     public TMP_InputField textInput;
     public Button saveButton;
-    public Button backButton;
-    public TMP_Text statusMessage;
-
+    public Button backNoteButton;
+    public Button backRouteButton;
+    public Text statusMessage;
     [Header("API Connection")]
     public WebClient webClient;
+
+    [Header("Error Popup")]
+    public GameObject ErrorPopup;
+    public Text popupMessageText;
+    public Button popupCloseButton;
 
     void Start()
     {
         if (saveButton != null)
             saveButton.onClick.AddListener(SaveNote);
 
-        if (backButton != null)
-            backButton.onClick.AddListener(GoBack);
+        if (backNoteButton != null)
+            backNoteButton.onClick.AddListener(ReturnToNoteScene);
+
+        if (backRouteButton != null)
+            backRouteButton.onClick.AddListener(ReturnToRouteScene);
 
         if (statusMessage != null)
             statusMessage.text = "";
+
+        if (ErrorPopup != null)
+        {
+            ErrorPopup.SetActive(false);
+        }
+        if (popupCloseButton != null)
+        {
+            popupCloseButton.onClick.AddListener(OnPopupCloseButtonClick);
+        }
 
         LoadNotes();
     }
@@ -37,16 +54,21 @@ public class NotitieController : MonoBehaviour
         SceneManager.LoadScene("NoteAddScene");
     }
 
-    public void GoBack()
+    public void ReturnToRouteScene()
     {
         SceneManager.LoadScene("Route13");
+    }
+
+    public void ReturnToNoteScene()
+    {
+        SceneManager.LoadScene("NoteScene");
     }
 
     public async void SaveNote()
     {
         if (string.IsNullOrEmpty(titleInput.text))
         {
-            ShowStatus("Titel is verplicht", true);
+            ShowErrorPopup("Titel is verplicht");
             return;
         }
 
@@ -69,7 +91,7 @@ public class NotitieController : MonoBehaviour
 
                 if (response is WebRequestError errorResponse)
                 {
-                    ShowStatus("Fout bij opslaan van notitie", true);
+                    ShowErrorPopup("Fout bij opslaan van notitie");
                 }
                 else if (response is WebRequestData<string> dataResponse)
                 {
@@ -78,21 +100,20 @@ public class NotitieController : MonoBehaviour
                 }
                 else
                 {
-                    ShowStatus("Onbekende respons", true);
+                    ShowErrorPopup("Onbekende respons");
                 }
             }
             else
             {
-                ShowStatus("Geen token beschikbaar", true);
+                ShowErrorPopup("Geen token beschikbaar");
             }
         }
         catch (Exception ex)
         {
-            ShowStatus("Er is een fout opgetreden", true);
+            ShowErrorPopup("Er is een fout opgetreden");
             Debug.LogException(ex);
         }
     }
-
 
     private async void LoadNotes()
     {
@@ -101,7 +122,7 @@ public class NotitieController : MonoBehaviour
             string token = SecureUserSession.Instance.GetToken();
             if (string.IsNullOrEmpty(token))
             {
-                ShowStatus("Geen token beschikbaar", true);
+                ShowErrorPopup("Geen token beschikbaar");
                 return;
             }
 
@@ -126,23 +147,21 @@ public class NotitieController : MonoBehaviour
             else if (response is WebRequestError errorResponse)
             {
                 string errorMessage = errorResponse?.ErrorMessage ?? "Unknown error";
-                ShowStatus("Fout bij laden van notities", true);
+                ShowErrorPopup("Fout bij laden van notities");
                 Debug.LogError($"Failed to load notes: {errorMessage}");
             }
         }
         catch (Exception ex)
         {
-            ShowStatus("Er is een fout opgetreden", true);
+            ShowErrorPopup("Er is een fout opgetreden");
             Debug.LogException(ex);
         }
     }
-
 
     private void AddNoteToUI(Notitie note)
     {
         Debug.Log($"Note loaded: {note.Titel}");
     }
-
 
     private void ShowStatus(string message, bool isError)
     {
@@ -153,9 +172,27 @@ public class NotitieController : MonoBehaviour
         }
     }
 
+    private void ShowErrorPopup(string message)
+    {
+        if (ErrorPopup != null)
+        {
+            if (popupMessageText != null)
+            {
+                popupMessageText.text = message;
+            }
+
+            ErrorPopup.SetActive(true);
+        }
+    }
+
+    private void OnPopupCloseButtonClick()
+    {
+        ErrorPopup.SetActive(false);
+    }
+
     private IEnumerator ReturnToMainAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        GoBack();
+        ReturnToNoteScene();
     }
 }

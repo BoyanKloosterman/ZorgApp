@@ -95,9 +95,9 @@ namespace ZorgAppAPI.Controllers
             _logger.LogInformation("Updating notitie {NotitieId} for user ID: {UserId}", id, userId);
 
             // Optional: Verify the user has permission to update this notitie
-            // var existingNotitie = await _notitieRepository.GetNotitieByIdAsync(id);
-            // if (existingNotitie == null) return NotFound();
-            // if (existingNotitie.UserID != userId) return Forbidden();
+            var existingNotitie = await _notitieRepository.GetNotitieByIdAsync(id);
+            if (existingNotitie == null) return NotFound();
+            if (existingNotitie.UserId != userId) return Forbid();
 
             await _notitieRepository.UpdateNotitieAsync(notitie);
             return NoContent();
@@ -113,11 +113,11 @@ namespace ZorgAppAPI.Controllers
             }
 
             _logger.LogInformation("Deleting notitie {NotitieId} for user ID: {UserId}", id, userId);
-
+            // Dont know for sure whether Forbid works or not, may be temporary
             // Optional: Verify the user has permission to delete this notitie
-            // var existingNotitie = await _notitieRepository.GetNotitieByIdAsync(id);
-            // if (existingNotitie == null) return NotFound();
-            // if (existingNotitie.UserID != userId) return Forbidden();
+            var existingNotitie = await _notitieRepository.GetNotitieByIdAsync(id);
+            if (existingNotitie == null) return NotFound();
+            if (existingNotitie.UserId != userId) return Forbid();
 
             await _notitieRepository.DeleteNotitieAsync(id);
             return NoContent();
