@@ -17,9 +17,9 @@ public class NotitieController : MonoBehaviour
     public Text statusMessage;
 
     [Header("Note Display")]
-    public GameObject noteButtonPrefab;  // Het prefab voor de NoteButton
-    public Transform notePanel;          // Het panel waar de notes in komen
-    public TextMeshProUGUI noNotesText;  // Text die "Geen notities" toont
+    public GameObject noteButtonPrefab;
+    public Transform notePanel;
+    public Text noNotesText;
 
     [Header("API Connection")]
     public WebClient webClient;
@@ -29,12 +29,10 @@ public class NotitieController : MonoBehaviour
     public Text popupMessageText;
     public Button popupCloseButton;
 
-    // Flag to track if critical components are missing
     private bool hasMissingComponents = false;
 
     void Start()
     {
-        // Check for critical components
         CheckRequiredComponents();
 
         if (saveButton != null)
@@ -50,19 +48,13 @@ public class NotitieController : MonoBehaviour
             statusMessage.text = "";
 
         if (ErrorPopup != null)
-        {
             ErrorPopup.SetActive(false);
-        }
-        if (popupCloseButton != null)
-        {
-            popupCloseButton.onClick.AddListener(OnPopupCloseButtonClick);
-        }
 
-        // Only load notes if we have the necessary components
+        if (popupCloseButton != null)
+            popupCloseButton.onClick.AddListener(OnPopupCloseButtonClick);
+
         if (!hasMissingComponents)
-        {
             LoadNotes();
-        }
     }
 
     private void CheckRequiredComponents()
@@ -90,7 +82,6 @@ public class NotitieController : MonoBehaviour
             hasMissingComponents = true;
         }
 
-        // Display error message if components are missing
         if (hasMissingComponents && noNotesText != null)
         {
             noNotesText.gameObject.SetActive(true);
@@ -138,11 +129,11 @@ public class NotitieController : MonoBehaviour
                 webClient.SetToken(token);
                 IWebRequestReponse response = await webClient.SendPostRequest("api/Notitie", noteJson);
 
-                if (response is WebRequestError errorResponse)
+                if (response is WebRequestError)
                 {
                     ShowErrorPopup("Fout bij opslaan van notitie");
                 }
-                else if (response is WebRequestData<string> dataResponse)
+                else if (response is WebRequestData<string>)
                 {
                     ShowStatus("Notitie succesvol opgeslagen!", false);
                     StartCoroutine(ReturnToMainAfterDelay(2f));
@@ -168,17 +159,14 @@ public class NotitieController : MonoBehaviour
     {
         try
         {
-            // Check if critical components are missing before proceeding
             if (hasMissingComponents)
             {
                 Debug.LogError("Kan notities niet laden: essentiële componenten ontbreken");
                 return;
             }
 
-            // Verwijder bestaande notities in UI als ze er zijn
             ClearNotesFromUI();
 
-            // Toon "Laden..." tijdens het ophalen van de notities
             if (noNotesText != null)
             {
                 noNotesText.gameObject.SetActive(true);
@@ -196,29 +184,23 @@ public class NotitieController : MonoBehaviour
             webClient.SetToken(token);
             IWebRequestReponse response = await webClient.SendGetRequest("api/Notitie");
 
-            // Verwerk verschillende soorten responses
             if (response is WebRequestData<List<Notitie>> listData)
             {
-                // Direct ontvangen als List<Notitie>
                 ProcessNotes(listData.Data);
             }
             else if (response is WebRequestData<Notitie[]> arrayData)
             {
-                // Ontvangen als Notitie[]
                 ProcessNotes(new List<Notitie>(arrayData.Data));
             }
             else if (response is WebRequestData<string> stringData)
             {
-                // Ontvangen als string (JSON)
                 string json = stringData.Data;
                 Debug.Log($"Received JSON: {json}");
 
                 try
                 {
-                    // Direct deserialize to array since the JSON starts with [
                     if (json.TrimStart().StartsWith("["))
                     {
-                        // Unity's JsonUtility can't directly deserialize arrays, so we need to wrap it
                         string wrappedJson = "{\"items\":" + json + "}";
                         NotitiesWrapper wrapper = JsonUtility.FromJson<NotitiesWrapper>(wrappedJson);
 
@@ -244,7 +226,6 @@ public class NotitieController : MonoBehaviour
                     UpdateNoNotesText("Fout bij verwerken van notities");
                 }
             }
-
             else if (response is WebRequestError errorResponse)
             {
                 string errorMessage = errorResponse?.ErrorMessage ?? "Unknown error";
@@ -287,7 +268,6 @@ public class NotitieController : MonoBehaviour
 
         Debug.Log($"Processing {notes.Count} notes");
 
-        // We hebben notities, dus verberg de "Geen notities" tekst
         if (noNotesText != null)
         {
             noNotesText.gameObject.SetActive(false);
@@ -295,10 +275,9 @@ public class NotitieController : MonoBehaviour
 
         bool addedAtLeastOne = false;
 
-        // Voeg elke notitie toe aan de UI
         foreach (var note in notes)
         {
-            if (note != null && !string.IsNullOrEmpty(note.titel))  // Changed from note.Titel to note.titel
+            if (note != null && !string.IsNullOrEmpty(note.titel))
             {
                 Debug.Log($"Adding note to UI: {note.titel}");
                 AddNoteToUI(note);
@@ -322,7 +301,6 @@ public class NotitieController : MonoBehaviour
 
     private void ClearNotesFromUI()
     {
-        // Verwijder alle bestaande note buttons uit het panel
         if (notePanel != null)
         {
             foreach (Transform child in notePanel)
@@ -334,21 +312,17 @@ public class NotitieController : MonoBehaviour
 
     private void AddNoteToUI(Notitie note)
     {
-        // Check of de essentiële componenten aanwezig zijn
         if (noteButtonPrefab == null || notePanel == null)
         {
             Debug.LogError("Note button prefab of note panel is niet ingesteld!");
             return;
         }
 
-        // Instantieer een nieuwe note button
         GameObject noteButtonObj = Instantiate(noteButtonPrefab, notePanel);
 
-        // Zoek naar het TitleText component (TextMeshProUGUI of Text)
         TextMeshProUGUI titleTMP = noteButtonObj.GetComponentInChildren<TextMeshProUGUI>();
         Text titleText = noteButtonObj.GetComponentInChildren<Text>();
 
-        // Stel de titel in op de juiste component
         if (titleTMP != null)
         {
             titleTMP.text = note.Titel;
@@ -361,7 +335,6 @@ public class NotitieController : MonoBehaviour
         {
             Debug.LogWarning("Geen TextMeshProUGUI of Text component gevonden op de note button!");
 
-            // Probeer een generic UI component te vinden om de titel te tonen
             Component[] textComponents = noteButtonObj.GetComponentsInChildren<Component>();
             bool foundTextComponent = false;
 
@@ -369,7 +342,6 @@ public class NotitieController : MonoBehaviour
             {
                 if (component.GetType().Name.Contains("Text"))
                 {
-                    // Gebruik reflectie om de text property te zetten
                     try
                     {
                         var property = component.GetType().GetProperty("text");
@@ -393,11 +365,9 @@ public class NotitieController : MonoBehaviour
             }
         }
 
-        // Voeg een click handler toe die de volledige notitie opent
         Button button = noteButtonObj.GetComponent<Button>();
         if (button != null)
         {
-            // Maak een lokale kopie van de notitie voor de delegate
             Notitie capturedNote = note;
             button.onClick.AddListener(() => OpenNoteDetail(capturedNote));
         }
@@ -411,17 +381,12 @@ public class NotitieController : MonoBehaviour
 
     private void OpenNoteDetail(Notitie note)
     {
-        // Sla de huidige notitie op in een statische variabele of PlayerPrefs
-        // om deze te kunnen openen in het detail scherm
         PlayerPrefs.SetString("CurrentNoteTitle", note.Titel);
-        PlayerPrefs.SetString("CurrentNoteText", note.Tekst ?? ""); // Voorkom null reference
+        PlayerPrefs.SetString("CurrentNoteText", note.Tekst ?? "");
         PlayerPrefs.SetString("CurrentNoteDate", note.DatumAanmaak ?? DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"));
 
-        // Laad het detail scherm
-        // SceneManager.LoadScene("NoteDetailScene");
         Debug.Log($"Opening note detail: {note.Titel}");
 
-        // Als je nog geen detail scene hebt, kun je de notitie informatie tonen in een popup
         ShowStatus($"Notitie: {note.Titel}", false);
     }
 
@@ -447,7 +412,6 @@ public class NotitieController : MonoBehaviour
         }
         else
         {
-            // Fallback als de popup niet beschikbaar is
             Debug.LogError($"Fout: {message}");
             ShowStatus(message, true);
         }
@@ -467,7 +431,6 @@ public class NotitieController : MonoBehaviour
         ReturnToNoteScene();
     }
 
-    // Helper class voor JSON deserialisatie
     [Serializable]
     private class NotitiesWrapper
     {

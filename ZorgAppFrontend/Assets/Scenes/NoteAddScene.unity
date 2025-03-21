@@ -1339,6 +1339,9 @@ MonoBehaviour:
   backNoteButton: {fileID: 763898089}
   backRouteButton: {fileID: 0}
   statusMessage: {fileID: 503223355}
+  noteButtonPrefab: {fileID: 0}
+  notePanel: {fileID: 0}
+  noNotesText: {fileID: 0}
   webClient: {fileID: 593100066}
   ErrorPopup: {fileID: 785291569}
   popupMessageText: {fileID: 503223355}
@@ -2562,19 +2565,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1114924110}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 593100064}
-        m_TargetAssemblyTypeName: NotitieController, Assembly-CSharp
-        m_MethodName: SaveNote
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1114924110
 MonoBehaviour:
   m_ObjectHideFlags: 0
