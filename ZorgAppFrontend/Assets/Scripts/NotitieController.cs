@@ -61,24 +61,21 @@ public class NotitieController : MonoBehaviour
     {
         if (noteButtonPrefab == null)
         {
-            Debug.LogError("NoteButtonPrefab is niet ingesteld! Stel dit in in de Inspector.");
             hasMissingComponents = true;
         }
 
         if (notePanel == null)
         {
-            Debug.LogError("NotePanel is niet ingesteld! Stel dit in in de Inspector.");
             hasMissingComponents = true;
         }
 
         if (noNotesText == null)
         {
-            Debug.LogError("NoNotesText is niet ingesteld! Stel dit in in de Inspector.");
+            hasMissingComponents = true;
         }
 
         if (webClient == null)
         {
-            Debug.LogError("WebClient is niet ingesteld! Stel dit in in de Inspector.");
             hasMissingComponents = true;
         }
 
@@ -151,7 +148,6 @@ public class NotitieController : MonoBehaviour
         catch (Exception ex)
         {
             ShowErrorPopup("Er is een fout opgetreden");
-            Debug.LogException(ex);
         }
     }
 
@@ -161,7 +157,6 @@ public class NotitieController : MonoBehaviour
         {
             if (hasMissingComponents)
             {
-                Debug.LogError("Kan notities niet laden: essentiële componenten ontbreken");
                 return;
             }
 
@@ -195,54 +190,45 @@ public class NotitieController : MonoBehaviour
             else if (response is WebRequestData<string> stringData)
             {
                 string json = stringData.Data;
-                Debug.Log($"Received JSON: {json}");
-
                 try
                 {
                     if (json.TrimStart().StartsWith("["))
                     {
-                        string wrappedJson = "{\"items\":" + json + "}";
-                        NotitiesWrapper wrapper = JsonUtility.FromJson<NotitiesWrapper>(wrappedJson);
+                        List<Notitie> notes = JsonHelper.ParseJsonArray<Notitie>(json);
 
-                        if (wrapper != null && wrapper.items != null && wrapper.items.Count > 0)
+                        if (notes != null && notes.Count > 0)
                         {
-                            ProcessNotes(wrapper.items);
+                            ProcessNotes(notes);
                         }
                         else
                         {
-                            Debug.LogWarning("Geen notities gevonden in de JSON data");
                             UpdateNoNotesText("Geen notities gevonden");
                         }
                     }
                     else
                     {
-                        Debug.LogWarning("Unexpected JSON format - expected array");
                         UpdateNoNotesText("Onverwacht JSON formaat");
                     }
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogError($"JSON parsing error: {ex.Message}");
                     UpdateNoNotesText("Fout bij verwerken van notities");
                 }
             }
             else if (response is WebRequestError errorResponse)
             {
                 string errorMessage = errorResponse?.ErrorMessage ?? "Unknown error";
-                Debug.LogError($"Failed to load notes: {errorMessage}");
                 UpdateNoNotesText("Fout bij laden van notities");
                 ShowErrorPopup("Fout bij laden van notities");
             }
             else
             {
-                Debug.LogError("Unknown response type");
                 UpdateNoNotesText("Onbekende fout bij laden");
                 ShowErrorPopup("Onbekende respons bij laden van notities");
             }
         }
         catch (Exception ex)
         {
-            Debug.LogException(ex);
             UpdateNoNotesText("Fout bij laden van notities");
             ShowErrorPopup("Er is een fout opgetreden");
         }
@@ -261,13 +247,9 @@ public class NotitieController : MonoBehaviour
     {
         if (notes == null || notes.Count == 0)
         {
-            Debug.Log("No notes found or notes is null");
             UpdateNoNotesText("Geen notities gevonden");
             return;
         }
-
-        Debug.Log($"Processing {notes.Count} notes");
-
         if (noNotesText != null)
         {
             noNotesText.gameObject.SetActive(false);
@@ -279,13 +261,12 @@ public class NotitieController : MonoBehaviour
         {
             if (note != null && !string.IsNullOrEmpty(note.titel))
             {
-                Debug.Log($"Adding note to UI: {note.titel}");
                 AddNoteToUI(note);
                 addedAtLeastOne = true;
             }
             else
             {
-                Debug.LogWarning($"Ongeldige notitie gevonden: {note?.id}, titel: {note?.titel}, is null: {note == null}");
+                //
             }
         }
 
@@ -314,7 +295,6 @@ public class NotitieController : MonoBehaviour
     {
         if (noteButtonPrefab == null || notePanel == null)
         {
-            Debug.LogError("Note button prefab of note panel is niet ingesteld!");
             return;
         }
 
@@ -333,8 +313,6 @@ public class NotitieController : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Geen TextMeshProUGUI of Text component gevonden op de note button!");
-
             Component[] textComponents = noteButtonObj.GetComponentsInChildren<Component>();
             bool foundTextComponent = false;
 
@@ -354,14 +332,9 @@ public class NotitieController : MonoBehaviour
                     }
                     catch (Exception ex)
                     {
-                        Debug.LogError($"Fout bij het instellen van tekst via reflectie: {ex.Message}");
+                        //
                     }
                 }
-            }
-
-            if (!foundTextComponent)
-            {
-                Debug.LogError("Geen geschikt tekstcomponent gevonden op de note button!");
             }
         }
 
@@ -371,12 +344,6 @@ public class NotitieController : MonoBehaviour
             Notitie capturedNote = note;
             button.onClick.AddListener(() => OpenNoteDetail(capturedNote));
         }
-        else
-        {
-            Debug.LogWarning("Geen Button component gevonden op de note button!");
-        }
-
-        Debug.Log($"Note toegevoegd aan UI: {note.Titel}");
     }
 
     private void OpenNoteDetail(Notitie note)
@@ -384,9 +351,6 @@ public class NotitieController : MonoBehaviour
         PlayerPrefs.SetString("CurrentNoteTitle", note.Titel);
         PlayerPrefs.SetString("CurrentNoteText", note.Tekst ?? "");
         PlayerPrefs.SetString("CurrentNoteDate", note.DatumAanmaak ?? DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"));
-
-        Debug.Log($"Opening note detail: {note.Titel}");
-
         ShowStatus($"Notitie: {note.Titel}", false);
     }
 
@@ -412,7 +376,6 @@ public class NotitieController : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"Fout: {message}");
             ShowStatus(message, true);
         }
     }
@@ -431,9 +394,4 @@ public class NotitieController : MonoBehaviour
         ReturnToNoteScene();
     }
 
-    [Serializable]
-    private class NotitiesWrapper
-    {
-        public List<Notitie> items;
-    }
 }
