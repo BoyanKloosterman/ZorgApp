@@ -12,6 +12,7 @@ public class NoteEditController : MonoBehaviour
     public TMP_InputField textInput;
     public Button saveButton;
     public Button backButton;
+    public Button deleteButton;
     public Text statusMessage;
 
     [Header("API Connection")]
@@ -31,6 +32,9 @@ public class NoteEditController : MonoBehaviour
 
         if (backButton != null)
             backButton.onClick.AddListener(ReturnToNoteScene);
+
+        if (deleteButton != null)
+            deleteButton.onClick.AddListener(DeleteNote);
 
         if (statusMessage != null)
             statusMessage.text = "";
@@ -84,6 +88,42 @@ public class NoteEditController : MonoBehaviour
                 else if (response is WebRequestData<string>)
                 {
                     ShowStatus("Notitie succesvol bijgewerkt!", false);
+                    StartCoroutine(ReturnToMainAfterDelay(2f));
+                }
+                else
+                {
+                    ShowErrorPopup("Onbekende respons");
+                }
+            }
+            else
+            {
+                ShowErrorPopup("Geen token beschikbaar");
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowErrorPopup("Er is een fout opgetreden");
+        }
+    }
+
+    public async void DeleteNote()
+    {
+        try
+        {
+            string token = SecureUserSession.Instance.GetToken();
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                webClient.SetToken(token);
+                IWebRequestReponse response = await webClient.SendDeleteRequest($"api/Notitie/{currentNoteId}");
+
+                if (response is WebRequestError)
+                {
+                    ShowErrorPopup("Fout bij verwijderen van notitie");
+                }
+                else if (response is WebRequestData<string>)
+                {
+                    ShowStatus("Notitie succesvol verwijderd!", false);
                     StartCoroutine(ReturnToMainAfterDelay(2f));
                 }
                 else
