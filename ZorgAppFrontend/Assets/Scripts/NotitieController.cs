@@ -250,6 +250,10 @@ public class NotitieController : MonoBehaviour
             UpdateNoNotesText("Geen notities gevonden");
             return;
         }
+
+        // Sort notes by creation/update date in descending order
+        notes.Sort((note1, note2) => DateTime.Parse(note2.DatumAanmaak).CompareTo(DateTime.Parse(note1.DatumAanmaak)));
+
         if (noNotesText != null)
         {
             noNotesText.gameObject.SetActive(false);
@@ -259,14 +263,10 @@ public class NotitieController : MonoBehaviour
 
         foreach (var note in notes)
         {
-            if (note != null && !string.IsNullOrEmpty(note.titel))
+            if (note != null && !string.IsNullOrEmpty(note.Titel))
             {
                 AddNoteToUI(note);
                 addedAtLeastOne = true;
-            }
-            else
-            {
-                //
             }
         }
 
@@ -279,6 +279,7 @@ public class NotitieController : MonoBehaviour
             UpdateNoNotesText("Geen geldige notities gevonden");
         }
     }
+
 
     private void ClearNotesFromUI()
     {
