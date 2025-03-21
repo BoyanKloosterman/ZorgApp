@@ -3,26 +3,26 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class CheckpointSceneManager : MonoBehaviour
+public class zorgMomentSceneManager : MonoBehaviour
 {
     public TextMeshProUGUI text;
     public UserApiClient userApiClient;
 
     private void Start()
     {
-        Debug.Log($"Checkpoint: {RoutesManager.Instance.checkpointID}, Route: {RoutesManager.Instance.routeName}");
-        PerformLoadCheckpointData();
+        Debug.Log($"zorgMoment: {TrajectManager.Instance.zorgMomentID}, Route: {TrajectManager.Instance.trajectNumber}");
+        PerformLoadzorgMomentData();
     }
 
-    public async void PerformLoadCheckpointData()
+    public async void PerformLoadzorgMomentData()
     {
-        IWebRequestReponse webRequestResponse = await userApiClient.LoadCheckpointData(RoutesManager.Instance.checkpointID);
+        IWebRequestReponse webRequestResponse = await userApiClient.LoadZorgMomentData(TrajectManager.Instance.zorgMomentID);
 
         switch (webRequestResponse)
         {
             case WebRequestData<string> dataResponse:
-                Checkpoint parsedCheckpoint = JsonUtility.FromJson<Checkpoint>(dataResponse.Data);
-                text.text = parsedCheckpoint.tekst; 
+                ZorgMoment parsedzorgMoment = JsonUtility.FromJson<ZorgMoment>(dataResponse.Data);
+                text.text = parsedzorgMoment.tekst; 
 
                 break;
             case WebRequestError errorResponse:
@@ -36,6 +36,6 @@ public class CheckpointSceneManager : MonoBehaviour
 
     public void ReturnToRouteScene()
     {
-        SceneManager.LoadScene(RoutesManager.Instance.routeName);
+        SceneManager.LoadScene("traject" + TrajectManager.Instance.trajectNumber);
     }
 }

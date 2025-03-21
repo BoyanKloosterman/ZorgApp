@@ -1,16 +1,16 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CheckpointButton : MonoBehaviour
+public class zorgMomentButton : MonoBehaviour
 {
-	public int checkpointID;
-	public string routeName;
+	public int zorgMomentID;
+	public string trajectNumber;
 
 	private Button button;
 
 	private void Start()
 	{
 		button = GetComponent<Button>();
-		button.onClick.AddListener(() => RoutesManager.Instance.LoadCheckpointScene(checkpointID, routeName));
+		button.onClick.AddListener(() => TrajectManager.Instance.LoadZorgMomentScene(zorgMomentID, trajectNumber));
 	}
 }

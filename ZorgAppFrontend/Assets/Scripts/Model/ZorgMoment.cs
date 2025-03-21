@@ -1,4 +1,4 @@
-public class Checkpoint
+public class ZorgMoment
 {
     public int id;
     public string naam;

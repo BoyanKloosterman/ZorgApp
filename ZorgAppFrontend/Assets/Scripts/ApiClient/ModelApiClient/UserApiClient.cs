@@ -7,9 +7,9 @@ public class UserApiClient : MonoBehaviour
 {
 	public WebClient webClient;
 
-    public async Awaitable<IWebRequestReponse> LoadCheckpointData(int checkpointId)
+    public async Awaitable<IWebRequestReponse> LoadZorgMomentData(int zorgMomentId)
     {
-        string route = "/api/ZorgMoment/" + checkpointId;
+        string route = "/api/ZorgMoment/" + zorgMomentId;
         return await webClient.SendGetRequest(route);
     }
 
