@@ -342,8 +342,18 @@ public class NotitieController : MonoBehaviour
         if (button != null)
         {
             Notitie capturedNote = note;
-            button.onClick.AddListener(() => OpenNoteDetail(capturedNote));
+            button.onClick.AddListener(() => OpenEditNoteScene(capturedNote));
         }
+    }
+
+
+    private void OpenEditNoteScene(Notitie note)
+    {
+        PlayerPrefs.SetString("CurrentNoteId", note.id.ToString());
+        PlayerPrefs.SetString("CurrentNoteTitle", note.Titel);
+        PlayerPrefs.SetString("CurrentNoteText", note.Tekst ?? "");
+        PlayerPrefs.SetString("CurrentNoteDate", note.DatumAanmaak ?? DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"));
+        SceneManager.LoadScene("NoteEditScene");
     }
 
     private void OpenNoteDetail(Notitie note)

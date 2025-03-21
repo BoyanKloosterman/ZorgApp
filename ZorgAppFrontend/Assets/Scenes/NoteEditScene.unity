@@ -171,6 +171,73 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Padding: {x: -8, y: -5, z: -8, w: -5}
   m_Softness: {x: 0, y: 0}
+--- !u!1 &224811963
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 224811965}
+  - component: {fileID: 224811964}
+  - component: {fileID: 224811966}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &224811964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 224811963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1a57070484f7d6459052c5bc4c86484, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titleInput: {fileID: 751716197}
+  textInput: {fileID: 484850459}
+  saveButton: {fileID: 475326574}
+  backButton: {fileID: 770977812}
+  statusMessage: {fileID: 1392241768}
+  webClient: {fileID: 224811966}
+  ErrorPopup: {fileID: 1348126141}
+  popupMessageText: {fileID: 1392241768}
+  popupCloseButton: {fileID: 2097079976}
+--- !u!4 &224811965
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 224811963}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1068.9331, y: 734.0417, z: -4.804693}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &224811966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 224811963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ed722d7c057c4f48af80e38d24e0abc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseUrl: https://localhost:7078/
 --- !u!1 &263742835
 GameObject:
   m_ObjectHideFlags: 0
@@ -506,7 +573,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 487090627}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: NotitieController, Assembly-CSharp
         m_MethodName: ReturnToNoteScene
         m_Mode: 1
@@ -734,74 +801,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 484850457}
   m_CullTransparentMesh: 1
---- !u!1 &487090625
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 487090626}
-  - component: {fileID: 487090627}
-  - component: {fileID: 487090628}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &487090626
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 487090625}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1063.3815, y: 411.5304, z: -9.764703}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &487090627
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 487090625}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee9a83f20d313834b9d459c092e76636, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  titleInput: {fileID: 751716197}
-  textInput: {fileID: 484850459}
-  saveButton: {fileID: 475326574}
-  backNoteButton: {fileID: 770977812}
-  backRouteButton: {fileID: 0}
-  statusMessage: {fileID: 1392241768}
-  webClient: {fileID: 487090628}
-  ErrorPopup: {fileID: 1348126141}
-  popupMessageText: {fileID: 1392241768}
-  popupCloseButton: {fileID: 2097079976}
---- !u!114 &487090628
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 487090625}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ed722d7c057c4f48af80e38d24e0abc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseUrl: https://localhost:7078/
 --- !u!1 &526900964
 GameObject:
   m_ObjectHideFlags: 0
@@ -1348,7 +1347,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 487090627}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: NotitieController, Assembly-CSharp
         m_MethodName: ReturnToNoteScene
         m_Mode: 1
@@ -3136,5 +3135,5 @@ SceneRoots:
   - {fileID: 263742838}
   - {fileID: 756458251}
   - {fileID: 1348126142}
-  - {fileID: 487090626}
   - {fileID: 369470023}
+  - {fileID: 224811965}
