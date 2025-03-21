@@ -13,6 +13,8 @@ namespace ZorgAppAPI.Models
         [StringLength(50)]
         public string Naam { get; set; }
 
+        public string Tekst { get; set; }
+
         [StringLength(256)]
         public string Url { get; set; }
 

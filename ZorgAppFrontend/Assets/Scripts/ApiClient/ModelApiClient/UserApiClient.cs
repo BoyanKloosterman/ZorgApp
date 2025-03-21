@@ -7,6 +7,12 @@ public class UserApiClient : MonoBehaviour
 {
 	public WebClient webClient;
 
+    public async Awaitable<IWebRequestReponse> LoadZorgMomentData(int zorgMomentId)
+    {
+        string route = "/api/ZorgMoment/" + zorgMomentId;
+        return await webClient.SendGetRequest(route);
+    }
+
 	public async Awaitable<IWebRequestReponse> Register(User user)
 	{
 		string route = "/api/Auth/register";
@@ -38,6 +44,5 @@ public class UserApiClient : MonoBehaviour
 				return webRequestResponse;
 		}
 	}
-
 }
 
