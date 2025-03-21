@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class zorgMomentButton : MonoBehaviour
+public class ZorgMomentButton : MonoBehaviour
 {
 	public int zorgMomentID;
 	public string trajectNumber;

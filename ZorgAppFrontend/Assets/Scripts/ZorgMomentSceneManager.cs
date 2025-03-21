@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class zorgMomentSceneManager : MonoBehaviour
+public class ZorgMomentSceneManager : MonoBehaviour
 {
     public TextMeshProUGUI text;
     public UserApiClient userApiClient;
