@@ -6,6 +6,7 @@ using ZorgAppAPI.Services;
 using ZorgAppAPI.Repositories;
 using System.Data;
 using Microsoft.Data.SqlClient;
+using ZorgAppAPI.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,7 @@ builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 // Register the repositories
 builder.Services.AddScoped<ITrajectRepository, TrajectRepository>();
 builder.Services.AddScoped<IZorgmomentRepository, ZorgmomentRepository>();
+builder.Services.AddScoped<IUserZorgMomentRepository, UserZorgMomentRepository>();
 
 // Register the database connection
 builder.Services.AddScoped<IDbConnection>(sp => new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
