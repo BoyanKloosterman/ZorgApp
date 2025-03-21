@@ -55,7 +55,7 @@ namespace ZorgAppAPI.Controllers
             // Assuming you want to only get notities for the current user
             var notities = await _notitieRepository.GetAllNotitiesAsync();
             // Optionally filter by userId if needed
-            // var notities = await _notitieRepository.GetNotitiesByUserIdAsync(userId);
+            //var notities = await _notitieRepository.GetNotitiesByUserIdAsync(userId);
 
             return Ok(notities);
         }
