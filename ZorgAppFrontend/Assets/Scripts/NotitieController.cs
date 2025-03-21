@@ -215,30 +215,27 @@ public class NotitieController : MonoBehaviour
 
                 try
                 {
-                    // Probeer te deserialiseren naar een wrapper class
-                    NotitiesWrapper wrapper = null;
-
-                    // Check of het JSON een array is
+                    // Direct deserialize to array since the JSON starts with [
                     if (json.TrimStart().StartsWith("["))
                     {
-                        // Wrap de array in een object
-                        json = "{\"items\":" + json + "}";
-                        wrapper = JsonUtility.FromJson<NotitiesWrapper>(json);
-                    }
-                    else
-                    {
-                        // Het is al een object, probeer direct te deserialiseren
-                        wrapper = JsonUtility.FromJson<NotitiesWrapper>(json);
-                    }
+                        // Unity's JsonUtility can't directly deserialize arrays, so we need to wrap it
+                        string wrappedJson = "{\"items\":" + json + "}";
+                        NotitiesWrapper wrapper = JsonUtility.FromJson<NotitiesWrapper>(wrappedJson);
 
-                    if (wrapper != null && wrapper.items != null)
-                    {
-                        ProcessNotes(wrapper.items);
+                        if (wrapper != null && wrapper.items != null && wrapper.items.Count > 0)
+                        {
+                            ProcessNotes(wrapper.items);
+                        }
+                        else
+                        {
+                            Debug.LogWarning("Geen notities gevonden in de JSON data");
+                            UpdateNoNotesText("Geen notities gevonden");
+                        }
                     }
                     else
                     {
-                        Debug.LogWarning("Geen notities gevonden in de JSON data");
-                        UpdateNoNotesText("Geen notities gevonden");
+                        Debug.LogWarning("Unexpected JSON format - expected array");
+                        UpdateNoNotesText("Onverwacht JSON formaat");
                     }
                 }
                 catch (Exception ex)
@@ -247,6 +244,7 @@ public class NotitieController : MonoBehaviour
                     UpdateNoNotesText("Fout bij verwerken van notities");
                 }
             }
+
             else if (response is WebRequestError errorResponse)
             {
                 string errorMessage = errorResponse?.ErrorMessage ?? "Unknown error";
@@ -267,13 +265,6 @@ public class NotitieController : MonoBehaviour
             UpdateNoNotesText("Fout bij laden van notities");
             ShowErrorPopup("Er is een fout opgetreden");
         }
-    }
-
-    // Helper class voor JSON deserialisatie
-    [Serializable]
-    private class NotitiesWrapper
-    {
-        public List<Notitie> items;
     }
 
     private void UpdateNoNotesText(string message)
@@ -307,15 +298,15 @@ public class NotitieController : MonoBehaviour
         // Voeg elke notitie toe aan de UI
         foreach (var note in notes)
         {
-            if (note != null && !string.IsNullOrEmpty(note.Titel))
+            if (note != null && !string.IsNullOrEmpty(note.titel))  // Changed from note.Titel to note.titel
             {
-                Debug.Log($"Adding note to UI: {note.Titel}");
+                Debug.Log($"Adding note to UI: {note.titel}");
                 AddNoteToUI(note);
                 addedAtLeastOne = true;
             }
             else
             {
-                Debug.LogWarning("Ongeldige notitie gevonden (null of lege titel), wordt overgeslagen");
+                Debug.LogWarning($"Ongeldige notitie gevonden: {note?.id}, titel: {note?.titel}, is null: {note == null}");
             }
         }
 
@@ -474,5 +465,12 @@ public class NotitieController : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         ReturnToNoteScene();
+    }
+
+    // Helper class voor JSON deserialisatie
+    [Serializable]
+    private class NotitiesWrapper
+    {
+        public List<Notitie> items;
     }
 }
