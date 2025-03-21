@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using ZorgAppAPI.Models;
 using ZorgAppAPI.Repositories;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using ZorgAppAPI.Interfaces;
 using ZorgAppAPI.Services;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ZorgAppAPI.Controllers
 {
@@ -14,32 +15,57 @@ namespace ZorgAppAPI.Controllers
     {
         private readonly IUserZorgMomentRepository _userZorgMomentRepository;
         private readonly IAuthenticationService _authenticationService;
+        private readonly ILogger<UserZorgMomentController> _logger;
 
-        public UserZorgMomentController(IUserZorgMomentRepository userZorgMomentRepository, IAuthenticationService authenticationService)
+        public UserZorgMomentController(
+            IUserZorgMomentRepository userZorgMomentRepository,
+            IAuthenticationService authenticationService,
+            ILogger<UserZorgMomentController> logger)
         {
             _userZorgMomentRepository = userZorgMomentRepository;
             _authenticationService = authenticationService;
+            _logger = logger;
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddUserZorgMoment([FromBody] UserZorgMoment userZorgMoment)
+        public async Task<IActionResult> AddUserZorgMoment([FromBody] ZorgmomentRequest request)
         {
-            if (!ModelState.IsValid)
+            var userId = await _authenticationService.GetCurrentUserIdAsync();
+            if (userId == null)
             {
-                return BadRequest(ModelState);
+                return BadRequest("User ID is null");
             }
+            else
+            {
+                _logger.LogInformation($"ZorgMomentId: {request.ZorgMomentId}");
 
-            var createdZorgMoment = await _userZorgMomentRepository.AddUserZorgMomentAsync(userZorgMoment);
-            return CreatedAtAction(nameof(GetUserZorgMomentsByUserId), new { userId = createdZorgMoment.UserId }, createdZorgMoment);
+                var createdZorgMoment = await _userZorgMomentRepository.AddUserZorgMomentAsync(userId, request.ZorgMomentId);
+
+                return CreatedAtAction(nameof(GetUserZorgMomentsByUserId),
+                    new { userId = createdZorgMoment.UserId },
+                    createdZorgMoment);
+            }
+        }
+
+        // tijdelijk ff slordig hier
+        public class ZorgmomentRequest
+        {
+            public int ZorgMomentId { get; set; }
         }
 
         [HttpGet]
         public async Task<IActionResult> GetUserZorgMomentsByUserId()
         {
             var userId = await _authenticationService.GetCurrentUserIdAsync();
-            Console.WriteLine(userId);
-            var zorgMoments = await _userZorgMomentRepository.GetUserZorgMomentsByUserIdAsync(userId);
-            return Ok(zorgMoments);
+            if (userId == null)
+            {
+                return BadRequest("User ID is null");
+            }
+            else
+            {
+                var zorgMoments = await _userZorgMomentRepository.GetUserZorgMomentsByUserIdAsync(userId);
+                return Ok(zorgMoments);
+            }
         }
     }
 }

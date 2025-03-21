@@ -16,13 +16,19 @@ namespace ZorgAppAPI.Repositories
             _dbConnection = dbConnection;
         }
 
-        public async Task<UserZorgMoment> AddUserZorgMomentAsync(UserZorgMoment userZorgMoment)
+        public async Task<UserZorgMoment> AddUserZorgMomentAsync(string userId, int zorgMomentId)
         {
-            var query = @"INSERT INTO dbo.User_ZorgMoment (UserId, ZorgMomentId)
-                        OUTPUT INSERTED.*
-                        VALUES (@UserId, @ZorgMomentId)";
+            var query = @"INSERT INTO dbo.User_Zorgmoment (UserId, ZorgmomentId)
+                OUTPUT INSERTED.UserId, INSERTED.ZorgmomentId, INSERTED.CreatedAt
+                VALUES (@UserId, @ZorgmomentId)";
 
-            return await _dbConnection.QuerySingleAsync<UserZorgMoment>(query, userZorgMoment);
+            var parameters = new
+            {
+                UserId = userId,
+                ZorgmomentId = zorgMomentId
+            };
+
+            return await _dbConnection.QuerySingleAsync<UserZorgMoment>(query, parameters);
         }
 
         public async Task<IEnumerable<UserZorgMoment>> GetUserZorgMomentsByUserIdAsync(string userId)
