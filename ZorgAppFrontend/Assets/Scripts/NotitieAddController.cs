@@ -10,6 +10,7 @@ public class NotitieAddController : MonoBehaviour
     [Header("UI Elements")]
     public TMP_InputField titleInput;
     public TMP_InputField textInput;
+    public Button backButton;
     public Button saveButton;
     public Text statusMessage;
 
@@ -26,6 +27,10 @@ public class NotitieAddController : MonoBehaviour
         if (saveButton != null)
             saveButton.onClick.AddListener(SaveNote);
 
+
+        if (backButton != null)
+            backButton.onClick.AddListener(ReturnToNoteScene);
+
         if (statusMessage != null)
             statusMessage.text = "";
 
@@ -34,6 +39,11 @@ public class NotitieAddController : MonoBehaviour
 
         if (popupCloseButton != null)
             popupCloseButton.onClick.AddListener(OnPopupCloseButtonClick);
+    }
+
+    private void ReturnToNoteScene()
+    {
+        SceneManager.LoadScene("NoteScene");
     }
 
     public async void SaveNote()
