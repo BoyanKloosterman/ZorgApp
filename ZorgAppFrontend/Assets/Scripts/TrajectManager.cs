@@ -1,14 +1,19 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+using System.Linq;
 
 public class TrajectManager : MonoBehaviour
 {
     public static TrajectManager Instance;
     public UserApiClient userApiClient;
+    public int HighestBehaaldId { get; private set; }
 
     public int zorgMomentID;
     public string trajectNumber;
+    public List<int> BehaaldeZorgMomentIds;
+    public event Action OnZorgMomentenUpdated;
 
     private void Awake()
     {
@@ -16,7 +21,7 @@ public class TrajectManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            SceneManager.sceneLoaded += OnSceneLoaded; // Nieuwe event listener
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
@@ -24,14 +29,10 @@ public class TrajectManager : MonoBehaviour
         }
     }
 
-    // Nieuwe methode die wordt aangeroepen bij elke scene load
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log($"Scene geladen: {scene.name}");
-
-        if (scene.name == "Traject13") // Exacte scene naam check
+        if (scene.name == "Traject13")
         {
-            Debug.Log("Traject13 scene gedetecteerd");
             LoadBehaaldeZorgMomenten();
         }
     }
@@ -48,13 +49,26 @@ public class TrajectManager : MonoBehaviour
         switch (webRequestResponse)
         {
             case WebRequestData<string> dataResponse:
-                Debug.Log("Response data raw: " + dataResponse.Data);
+                try
+                {
+                    List<BehaaldeZorgMoment> zorgMomenten =
+                        JsonHelper.ParseJsonArray<BehaaldeZorgMoment>(dataResponse.Data);
+
+                    BehaaldeZorgMomentIds = zorgMomenten
+                        .Select(z => z.zorgMomentId)
+                        .ToList();
+                    HighestBehaaldId = BehaaldeZorgMomentIds.DefaultIfEmpty(0).Max();
+
+                    OnZorgMomentenUpdated?.Invoke();
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"Parse error: {ex.Message}");
+                }
                 break;
             case WebRequestError errorResponse:
-                Debug.LogError("Error: " + errorResponse.ErrorMessage);
+                Debug.LogError($"API error: {errorResponse.ErrorMessage}");
                 break;
-            default:
-                throw new NotImplementedException("No implementation for webRequestResponse of class: " + webRequestResponse.GetType());
         }
     }
 
@@ -67,6 +81,12 @@ public class TrajectManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded; // Belangrijk voor cleanup
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
+}
+
+[Serializable]
+public class BehaaldeZorgMoment
+{
+    public int zorgMomentId;
 }
