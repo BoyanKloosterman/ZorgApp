@@ -3,11 +3,13 @@ using System.Data;
 using Microsoft.Data.SqlClient;
 using ZorgAppAPI.Interfaces;
 using ZorgAppAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ZorgAppAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [AllowAnonymous]
     public class AuthController : ControllerBase
     {
         private readonly IIdentityRepository _identityRepository;

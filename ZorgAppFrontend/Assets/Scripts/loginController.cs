@@ -39,9 +39,9 @@ public class LoginController : MonoBehaviour
         switch (webRequestResponse)
         {
             case WebRequestData<string> dataResponse:
-                Debug.Log("login succes");
-                // naar andere scene
+                Debug.Log("login success");
 
+                SceneManager.LoadScene("Route13");
 
                 Debug.Log("Token opgeslagen in sessie: " + SecureUserSession.Instance.GetToken());
                 break;
@@ -54,6 +54,7 @@ public class LoginController : MonoBehaviour
                 throw new NotImplementedException("No implementation for webRequestResponse of class: " + webRequestResponse.GetType());
         }
     }
+
     private void ShowErrorPopup(string message)
     {
         if (ErrorPopup != null)
@@ -76,5 +77,4 @@ public class LoginController : MonoBehaviour
     {
         public string accessToken;
     }
-
 }
