@@ -1448,10 +1448,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee9a83f20d313834b9d459c092e76636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  titleInput: {fileID: 0}
-  textInput: {fileID: 0}
-  saveButton: {fileID: 0}
-  backNoteButton: {fileID: 0}
   backRouteButton: {fileID: 1336777237}
   statusMessage: {fileID: 673941291}
   noteButtonPrefab: {fileID: 7841175535417096924, guid: c88c219014ec1d6419734c6db5f8b2dc, type: 3}

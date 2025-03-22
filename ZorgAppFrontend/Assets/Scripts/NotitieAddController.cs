@@ -68,7 +68,7 @@ public class NotitieAddController : MonoBehaviour
                 else if (response is WebRequestData<string>)
                 {
                     ShowStatus("Notitie succesvol opgeslagen!", false);
-                    StartCoroutine(ReturnToMainAfterDelay(2f));
+                    StartCoroutine(ReturnToMainAfterDelay(0.5f));
                 }
                 else
                 {

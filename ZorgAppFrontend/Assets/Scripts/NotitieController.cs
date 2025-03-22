@@ -86,6 +86,10 @@ public class NotitieController : MonoBehaviour
         SceneManager.LoadScene("NoteScene");
     }
 
+    public void GoToNoteAddScene()
+    {
+        SceneManager.LoadScene("NoteAddScene");
+    }
     private async void LoadNotes()
     {
         try
