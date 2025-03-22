@@ -29,6 +29,9 @@ builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 // Register the repositories
 builder.Services.AddScoped<ITrajectRepository, TrajectRepository>();
 builder.Services.AddScoped<IZorgmomentRepository, ZorgmomentRepository>();
+builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+builder.Services.AddScoped<IArtsRepository, ArtsRepository>();
+builder.Services.AddScoped<IOuderVoogdRepository, OuderVoogdRepository>();
 
 // Register the database connection
 builder.Services.AddScoped<IDbConnection>(sp => new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));

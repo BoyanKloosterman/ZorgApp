@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class WebRequestData<T> : IWebRequestReponse
+public class WebRequestData<T> : IWebRequestResponse
 {
     public readonly T Data;
 

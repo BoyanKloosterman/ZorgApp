@@ -47,7 +47,7 @@ public class RegisterController : MonoBehaviour
             role = roleDropdown.options[roleDropdown.value].text
         };
 
-        IWebRequestReponse webRequestResponse = await userApiClient.Register(newUser);
+        IWebRequestResponse webRequestResponse = await userApiClient.Register(newUser);
 
         if (webRequestResponse is WebRequestData<string> successResponse)
         {

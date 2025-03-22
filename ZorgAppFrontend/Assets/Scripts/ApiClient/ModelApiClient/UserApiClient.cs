@@ -7,7 +7,7 @@ public class UserApiClient : MonoBehaviour
 {
 	public WebClient webClient;
 
-	public async Awaitable<IWebRequestReponse> Register(User user)
+	public async Awaitable<IWebRequestResponse> Register(User user)
 	{
 		string route = "/api/Auth/register";
 		string data = JsonUtility.ToJson(user);
@@ -15,16 +15,16 @@ public class UserApiClient : MonoBehaviour
 		return await webClient.SendPostRequest(route, data);
 	}
 
-	public async Awaitable<IWebRequestReponse> Login(User user)
+	public async Awaitable<IWebRequestResponse> Login(User user)
 	{
 		string route = "/account/login";
 		string data = JsonUtility.ToJson(user);
 
-		IWebRequestReponse response = await webClient.SendPostRequest(route, data);
+		IWebRequestResponse response = await webClient.SendPostRequest(route, data);
 		return ProcessLoginResponse(response);
 	}
 
-	private IWebRequestReponse ProcessLoginResponse(IWebRequestReponse webRequestResponse)
+	private IWebRequestResponse ProcessLoginResponse(IWebRequestResponse webRequestResponse)
 	{
 		switch (webRequestResponse)
 		{

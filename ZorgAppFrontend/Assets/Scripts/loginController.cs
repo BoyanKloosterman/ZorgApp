@@ -34,7 +34,7 @@ public class LoginController : MonoBehaviour
         user.email = emailInput.text;
         user.password = passwordInput.text;
 
-        IWebRequestReponse webRequestResponse = await userApiClient.Login(user);
+        IWebRequestResponse webRequestResponse = await userApiClient.Login(user);
 
         switch (webRequestResponse)
         {
