@@ -145,7 +145,7 @@ public class NotitieController : MonoBehaviour
                         UpdateNoNotesText("Onverwacht JSON formaat");
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     UpdateNoNotesText("Fout bij verwerken van notities");
                 }
@@ -162,7 +162,7 @@ public class NotitieController : MonoBehaviour
                 ShowErrorPopup("Onbekende respons bij laden van notities");
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             UpdateNoNotesText("Fout bij laden van notities");
             ShowErrorPopup("Er is een fout opgetreden");
@@ -249,7 +249,6 @@ public class NotitieController : MonoBehaviour
         else
         {
             Component[] textComponents = noteButtonObj.GetComponentsInChildren<Component>();
-            bool foundTextComponent = false;
 
             foreach (var component in textComponents)
             {
@@ -261,11 +260,10 @@ public class NotitieController : MonoBehaviour
                         if (property != null)
                         {
                             property.SetValue(component, note.Titel);
-                            foundTextComponent = true;
                             break;
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         //
                     }
