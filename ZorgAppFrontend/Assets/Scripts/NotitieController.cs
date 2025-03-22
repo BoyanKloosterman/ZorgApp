@@ -1,18 +1,14 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections.Generic;
 
 public class NotitieController : MonoBehaviour
 {
     [Header("UI Elements")]
-    public TMP_InputField titleInput;
-    public TMP_InputField textInput;
-    public Button saveButton;
-    public Button backNoteButton;
     public Button backRouteButton;
     public Text statusMessage;
 
@@ -34,12 +30,6 @@ public class NotitieController : MonoBehaviour
     void Start()
     {
         CheckRequiredComponents();
-
-        if (saveButton != null)
-            saveButton.onClick.AddListener(SaveNote);
-
-        if (backNoteButton != null)
-            backNoteButton.onClick.AddListener(ReturnToNoteScene);
 
         if (backRouteButton != null)
             backRouteButton.onClick.AddListener(ReturnToRouteScene);
@@ -86,11 +76,6 @@ public class NotitieController : MonoBehaviour
         }
     }
 
-    public void GoToNoteAddScene()
-    {
-        SceneManager.LoadScene("NoteAddScene");
-    }
-
     public void ReturnToRouteScene()
     {
         SceneManager.LoadScene("Route13");
@@ -99,56 +84,6 @@ public class NotitieController : MonoBehaviour
     public void ReturnToNoteScene()
     {
         SceneManager.LoadScene("NoteScene");
-    }
-
-    public async void SaveNote()
-    {
-        if (string.IsNullOrEmpty(titleInput.text))
-        {
-            ShowErrorPopup("Titel is verplicht");
-            return;
-        }
-
-        Notitie newNote = new Notitie
-        {
-            Titel = titleInput.text,
-            Tekst = textInput.text,
-            DatumAanmaak = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss")
-        };
-
-        try
-        {
-            string noteJson = JsonUtility.ToJson(newNote);
-            string token = SecureUserSession.Instance.GetToken();
-
-            if (!string.IsNullOrEmpty(token))
-            {
-                webClient.SetToken(token);
-                IWebRequestReponse response = await webClient.SendPostRequest("api/Notitie", noteJson);
-
-                if (response is WebRequestError)
-                {
-                    ShowErrorPopup("Fout bij opslaan van notitie");
-                }
-                else if (response is WebRequestData<string>)
-                {
-                    ShowStatus("Notitie succesvol opgeslagen!", false);
-                    StartCoroutine(ReturnToMainAfterDelay(2f));
-                }
-                else
-                {
-                    ShowErrorPopup("Onbekende respons");
-                }
-            }
-            else
-            {
-                ShowErrorPopup("Geen token beschikbaar");
-            }
-        }
-        catch (Exception ex)
-        {
-            ShowErrorPopup("Er is een fout opgetreden");
-        }
     }
 
     private async void LoadNotes()
@@ -280,7 +215,6 @@ public class NotitieController : MonoBehaviour
         }
     }
 
-
     private void ClearNotesFromUI()
     {
         if (notePanel != null)
@@ -346,6 +280,7 @@ public class NotitieController : MonoBehaviour
             button.onClick.AddListener(() => OpenEditNoteScene(capturedNote));
         }
     }
+
     private void OpenEditNoteScene(Notitie note)
     {
         PlayerPrefs.SetInt("CurrentNoteId", note.id);
@@ -388,11 +323,4 @@ public class NotitieController : MonoBehaviour
             ErrorPopup.SetActive(false);
         }
     }
-
-    private IEnumerator ReturnToMainAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        ReturnToNoteScene();
-    }
-
 }

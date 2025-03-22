@@ -1,18 +1,16 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections;
 using UnityEngine.UI;
 using TMPro;
 
-public class NoteEditController : MonoBehaviour
+public class NotitieAddController : MonoBehaviour
 {
     [Header("UI Elements")]
     public TMP_InputField titleInput;
     public TMP_InputField textInput;
     public Button saveButton;
-    public Button backButton;
-    public Button deleteButton;
     public Text statusMessage;
 
     [Header("API Connection")]
@@ -23,18 +21,10 @@ public class NoteEditController : MonoBehaviour
     public Text popupMessageText;
     public Button popupCloseButton;
 
-    private int currentNoteId;
-
-    void Start()
+    private void Start()
     {
         if (saveButton != null)
             saveButton.onClick.AddListener(SaveNote);
-
-        if (backButton != null)
-            backButton.onClick.AddListener(ReturnToNoteScene);
-
-        if (deleteButton != null)
-            deleteButton.onClick.AddListener(DeleteNote);
 
         if (statusMessage != null)
             statusMessage.text = "";
@@ -44,15 +34,6 @@ public class NoteEditController : MonoBehaviour
 
         if (popupCloseButton != null)
             popupCloseButton.onClick.AddListener(OnPopupCloseButtonClick);
-
-        LoadNoteData();
-    }
-
-    private void LoadNoteData()
-    {
-        currentNoteId = PlayerPrefs.GetInt("CurrentNoteId");
-        titleInput.text = PlayerPrefs.GetString("CurrentNoteTitle");
-        textInput.text = PlayerPrefs.GetString("CurrentNoteText");
     }
 
     public async void SaveNote()
@@ -63,23 +44,22 @@ public class NoteEditController : MonoBehaviour
             return;
         }
 
-        Notitie updatedNote = new Notitie
+        Notitie newNote = new Notitie
         {
-            id = currentNoteId,
             Titel = titleInput.text,
             Tekst = textInput.text,
-            DatumAanmaak = PlayerPrefs.GetString("CurrentNoteDate")
+            DatumAanmaak = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss")
         };
 
         try
         {
-            string noteJson = JsonUtility.ToJson(updatedNote);
+            string noteJson = JsonUtility.ToJson(newNote);
             string token = SecureUserSession.Instance.GetToken();
 
             if (!string.IsNullOrEmpty(token))
             {
                 webClient.SetToken(token);
-                IWebRequestReponse response = await webClient.SendPutRequest($"api/Notitie/{currentNoteId}", noteJson);
+                IWebRequestReponse response = await webClient.SendPostRequest("api/Notitie", noteJson);
 
                 if (response is WebRequestError)
                 {
@@ -87,43 +67,7 @@ public class NoteEditController : MonoBehaviour
                 }
                 else if (response is WebRequestData<string>)
                 {
-                    ShowStatus("Notitie succesvol bijgewerkt!", false);
-                    StartCoroutine(ReturnToMainAfterDelay(2f));
-                }
-                else
-                {
-                    ShowErrorPopup("Onbekende respons");
-                }
-            }
-            else
-            {
-                ShowErrorPopup("Geen token beschikbaar");
-            }
-        }
-        catch (Exception ex)
-        {
-            ShowErrorPopup("Er is een fout opgetreden");
-        }
-    }
-
-    public async void DeleteNote()
-    {
-        try
-        {
-            string token = SecureUserSession.Instance.GetToken();
-
-            if (!string.IsNullOrEmpty(token))
-            {
-                webClient.SetToken(token);
-                IWebRequestReponse response = await webClient.SendDeleteRequest($"api/Notitie/{currentNoteId}");
-
-                if (response is WebRequestError)
-                {
-                    ShowErrorPopup("Fout bij verwijderen van notitie");
-                }
-                else if (response is WebRequestData<string>)
-                {
-                    ShowStatus("Notitie succesvol verwijderd!", false);
+                    ShowStatus("Notitie succesvol opgeslagen!", false);
                     StartCoroutine(ReturnToMainAfterDelay(2f));
                 }
                 else
@@ -179,11 +123,6 @@ public class NoteEditController : MonoBehaviour
     private IEnumerator ReturnToMainAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        ReturnToNoteScene();
-    }
-
-    private void ReturnToNoteScene()
-    {
         SceneManager.LoadScene("NoteScene");
     }
 }

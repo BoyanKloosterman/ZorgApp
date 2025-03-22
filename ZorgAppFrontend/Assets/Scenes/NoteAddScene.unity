@@ -1312,8 +1312,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 593100065}
-  - component: {fileID: 593100064}
   - component: {fileID: 593100066}
+  - component: {fileID: 593100067}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -1321,31 +1321,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &593100064
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 593100063}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee9a83f20d313834b9d459c092e76636, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  titleInput: {fileID: 1098741048}
-  textInput: {fileID: 2055093030}
-  saveButton: {fileID: 1114924109}
-  backNoteButton: {fileID: 763898089}
-  backRouteButton: {fileID: 0}
-  statusMessage: {fileID: 503223355}
-  noteButtonPrefab: {fileID: 0}
-  notePanel: {fileID: 0}
-  noNotesText: {fileID: 0}
-  webClient: {fileID: 593100066}
-  ErrorPopup: {fileID: 785291569}
-  popupMessageText: {fileID: 503223355}
-  popupCloseButton: {fileID: 1531557549}
 --- !u!4 &593100065
 Transform:
   m_ObjectHideFlags: 0
@@ -1374,6 +1349,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseUrl: https://localhost:7078/
+--- !u!114 &593100067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593100063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76b950bb578a8d9448d15ecaa6a0631b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titleInput: {fileID: 2055093030}
+  textInput: {fileID: 2055093030}
+  saveButton: {fileID: 1114924109}
+  statusMessage: {fileID: 1524921929}
+  webClient: {fileID: 593100066}
+  ErrorPopup: {fileID: 785291569}
+  popupMessageText: {fileID: 503223355}
+  popupCloseButton: {fileID: 1531557549}
 --- !u!1 &692551886
 GameObject:
   m_ObjectHideFlags: 0
@@ -1536,7 +1531,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 593100064}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: NotitieController, Assembly-CSharp
         m_MethodName: ReturnToNoteScene
         m_Mode: 1
