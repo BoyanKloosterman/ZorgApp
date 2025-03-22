@@ -30,6 +30,7 @@ builder.Services.AddScoped<IAuthenticationService, AspNetIdentityAuthenticationS
 builder.Services.AddScoped<ITrajectRepository, TrajectRepository>();
 builder.Services.AddScoped<IZorgmomentRepository, ZorgmomentRepository>();
 builder.Services.AddScoped<INotitieRepository, NotitieRepository>();
+builder.Services.AddScoped<IUserZorgMomentRepository, UserZorgMomentRepository>();
 
 // Register the database connection
 builder.Services.AddScoped<IDbConnection>(sp => new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
