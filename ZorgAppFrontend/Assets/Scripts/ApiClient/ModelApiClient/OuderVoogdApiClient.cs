@@ -1,21 +1,19 @@
-﻿using Assets.Scripts.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿
+
+using Assets.Scripts.Model;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.Scripts.ApiClient.ModelApiClient
 {
-    public class PatientApiClient : MonoBehaviour
+    public class OuderVoogdApiClient : MonoBehaviour
     {
         public WebClient webClient;
 
-        public async Awaitable<IWebRequestResponse> GetPatients()
+        public async Awaitable<IWebRequestResponse> GetOuderVoogden()
         {
-            string route = "/api/Patient";
+            string route = "/api/OuderVoogd";
             IWebRequestResponse webRequestResponse = await webClient.SendGetRequest(route);
             return ParseListResponse(webRequestResponse);
         }
@@ -24,8 +22,8 @@ namespace Assets.Scripts.ApiClient.ModelApiClient
             switch (webRequestResponse)
             {
                 case WebRequestData<string> data:
-                    Patient patient = JsonConvert.DeserializeObject<Patient>(data.Data);
-                    WebRequestData<Patient> parsedWebRequestData = new WebRequestData<Patient>(patient);
+                    OuderVoogd ouderVoogd = JsonConvert.DeserializeObject<OuderVoogd>(data.Data);
+                    WebRequestData<OuderVoogd> parsedWebRequestData = new WebRequestData<OuderVoogd>(ouderVoogd);
                     return parsedWebRequestData;
                 default:
                     return webRequestResponse;
@@ -38,8 +36,8 @@ namespace Assets.Scripts.ApiClient.ModelApiClient
             {
                 case WebRequestData<string> data:
                     //Debug.Log("Response data raw: " + data.Data);
-                    List<Patient> patient = JsonConvert.DeserializeObject<List<Patient>>(data.Data);
-                    WebRequestData<List<Patient>> parsedWebRequestData = new WebRequestData<List<Patient>>(patient);
+                    List<OuderVoogd> ouderVoogd = JsonConvert.DeserializeObject<List<OuderVoogd>>(data.Data);
+                    WebRequestData<List<OuderVoogd>> parsedWebRequestData = new WebRequestData<List<OuderVoogd>>(ouderVoogd);
                     return parsedWebRequestData;
                 default:
                     return webRequestResponse;

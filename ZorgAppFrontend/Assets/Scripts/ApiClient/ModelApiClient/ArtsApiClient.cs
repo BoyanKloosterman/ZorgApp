@@ -1,21 +1,21 @@
 ﻿using Assets.Scripts.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using Newtonsoft.Json;
 
 namespace Assets.Scripts.ApiClient.ModelApiClient
 {
-    public class PatientApiClient : MonoBehaviour
+    public class ArtsApiClient : MonoBehaviour
     {
         public WebClient webClient;
 
-        public async Awaitable<IWebRequestResponse> GetPatients()
+        public async Awaitable<IWebRequestResponse> GetArtsen()
         {
-            string route = "/api/Patient";
+            string route = "/api/Arts";
             IWebRequestResponse webRequestResponse = await webClient.SendGetRequest(route);
             return ParseListResponse(webRequestResponse);
         }
@@ -24,8 +24,8 @@ namespace Assets.Scripts.ApiClient.ModelApiClient
             switch (webRequestResponse)
             {
                 case WebRequestData<string> data:
-                    Patient patient = JsonConvert.DeserializeObject<Patient>(data.Data);
-                    WebRequestData<Patient> parsedWebRequestData = new WebRequestData<Patient>(patient);
+                    Arts arts = JsonConvert.DeserializeObject<Arts>(data.Data);
+                    WebRequestData<Arts> parsedWebRequestData = new WebRequestData<Arts>(arts);
                     return parsedWebRequestData;
                 default:
                     return webRequestResponse;
@@ -38,8 +38,8 @@ namespace Assets.Scripts.ApiClient.ModelApiClient
             {
                 case WebRequestData<string> data:
                     //Debug.Log("Response data raw: " + data.Data);
-                    List<Patient> patient = JsonConvert.DeserializeObject<List<Patient>>(data.Data);
-                    WebRequestData<List<Patient>> parsedWebRequestData = new WebRequestData<List<Patient>>(patient);
+                    List<Arts> arts = JsonConvert.DeserializeObject<List<Arts>>(data.Data);
+                    WebRequestData<List<Arts>> parsedWebRequestData = new WebRequestData<List<Arts>>(arts);
                     return parsedWebRequestData;
                 default:
                     return webRequestResponse;
@@ -47,3 +47,4 @@ namespace Assets.Scripts.ApiClient.ModelApiClient
         }
     }
 }
+
