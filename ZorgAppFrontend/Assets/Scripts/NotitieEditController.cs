@@ -100,7 +100,7 @@ public class NotitieEditController : MonoBehaviour
                 ShowErrorPopup("Geen token beschikbaar");
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             ShowErrorPopup("Er is een fout opgetreden");
         }
@@ -136,7 +136,7 @@ public class NotitieEditController : MonoBehaviour
                 ShowErrorPopup("Geen token beschikbaar");
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             ShowErrorPopup("Er is een fout opgetreden");
         }
