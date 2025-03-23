@@ -27,9 +27,5 @@ public class RoutesManager : MonoBehaviour
         routeName = route;
         SceneManager.LoadScene("Checkpoint");
     }
-    public void GoToNoteScene()
-    {
-        SceneManager.LoadScene("NoteScene");
-    }
 
 }

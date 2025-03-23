@@ -3,11 +3,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.UI;
 
 public class TrajectManager : MonoBehaviour
 {
     public static TrajectManager Instance;
     public UserApiClient userApiClient;
+    public Button noteButton;
+
     public int HighestBehaaldId { get; private set; }
 
     public int zorgMomentID;
@@ -40,6 +43,9 @@ public class TrajectManager : MonoBehaviour
     private void Start()
     {
         LoadBehaaldeZorgMomenten();
+
+        if (noteButton != null)
+            noteButton.onClick.AddListener(GoToNoteScene);
     }
 
     public async void LoadBehaaldeZorgMomenten()
@@ -82,6 +88,11 @@ public class TrajectManager : MonoBehaviour
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    public void GoToNoteScene()
+    {
+        SceneManager.LoadScene("NoteScene");
     }
 }
 
