@@ -78,7 +78,7 @@ public class NotitieController : MonoBehaviour
 
     public void ReturnToRouteScene()
     {
-        SceneManager.LoadScene("Route13");
+        SceneManager.LoadScene("Traject13");
     }
 
     public void ReturnToNoteScene()

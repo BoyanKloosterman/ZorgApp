@@ -30,7 +30,7 @@ namespace ZorgAppAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> AddUserZorgMoment([FromBody] ZorgmomentRequest request)
         {
-            var userId = await _authenticationService.GetCurrentUserIdAsync();
+            var userId = _authenticationService.GetCurrentAuthenticatedUserId();
             if (userId == null)
             {
                 return BadRequest("User ID is null");
@@ -56,7 +56,7 @@ namespace ZorgAppAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUserZorgMomentsByUserId()
         {
-            var userId = await _authenticationService.GetCurrentUserIdAsync();
+            var userId = _authenticationService.GetCurrentAuthenticatedUserId();
             if (userId == null)
             {
                 return BadRequest("User ID is null");
