@@ -29,7 +29,6 @@ namespace ZorgAppAPI.Repositories
         {
             var query = "INSERT INTO dbo.Notitie (Titel, Tekst, UserId, DatumAanmaak) VALUES (@Titel, @Tekst, @UserId, @DatumAanmaak)";
             await _dbConnection.ExecuteAsync(query, notitie);
-
         }
 
         public async Task UpdateNotitieAsync(Notitie notitie)
@@ -42,6 +41,12 @@ namespace ZorgAppAPI.Repositories
         {
             var query = "DELETE FROM dbo.Notitie WHERE ID = @Id";
             await _dbConnection.ExecuteAsync(query, new { Id = id });
+        }
+
+        public async Task<IEnumerable<Notitie>> GetNotitiesByUserIdAsync(string userId)
+        {
+            var query = "SELECT * FROM dbo.Notitie WHERE UserId = @UserId";
+            return await _dbConnection.QueryAsync<Notitie>(query, new { UserId = userId });
         }
     }
 }

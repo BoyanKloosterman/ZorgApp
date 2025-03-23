@@ -9,5 +9,7 @@ namespace ZorgAppAPI.Repositories
         Task AddNotitieAsync(Notitie notitie);
         Task UpdateNotitieAsync(Notitie notitie);
         Task DeleteNotitieAsync(int id);
+        Task<IEnumerable<Notitie>> GetNotitiesByUserIdAsync(string userId);
     }
+
 }
