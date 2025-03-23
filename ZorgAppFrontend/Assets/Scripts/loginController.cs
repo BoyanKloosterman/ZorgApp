@@ -44,6 +44,8 @@ public class LoginController : MonoBehaviour
                 SceneManager.LoadScene("Route13");
 
                 Debug.Log("Token opgeslagen in sessie: " + SecureUserSession.Instance.GetToken());
+                //tijdelijk forcen naar traject13 scene.
+                SceneManager.LoadScene("Traject13");
                 break;
             case WebRequestError errorResponse:
                 Debug.Log("error");
