@@ -24,7 +24,7 @@ builder.Services
 builder.Services.AddHttpContextAccessor();
 
 // Register the AuthenticationService
-builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IAuthenticationService, AspNetIdentityAuthenticationService>();
 
 // Register the repositories
 builder.Services.AddScoped<ITrajectRepository, TrajectRepository>();
@@ -32,6 +32,9 @@ builder.Services.AddScoped<IZorgmomentRepository, ZorgmomentRepository>();
 builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 builder.Services.AddScoped<IArtsRepository, ArtsRepository>();
 builder.Services.AddScoped<IOuderVoogdRepository, OuderVoogdRepository>();
+builder.Services.AddScoped<INotitieRepository, NotitieRepository>();
+builder.Services.AddScoped<IUserZorgMomentRepository, UserZorgMomentRepository>();
+
 
 // Register the database connection
 builder.Services.AddScoped<IDbConnection>(sp => new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -48,12 +51,6 @@ builder.Services
         options.BearerTokenExpiration = TimeSpan.FromHours(1);
         options.RefreshTokenExpiration = TimeSpan.FromDays(7);
     });
-
-// Program.cs
-builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
-builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
-builder.Services.AddScoped<IDbConnection>(sp =>
-    new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Configureer Identity zonder EF
 builder.Services.AddIdentityCore<IdentityUser>(options =>
@@ -72,6 +69,11 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Move these lines before builder.Build()
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<IAuthenticationService, AspNetIdentityAuthenticationService>();
+
 
 var app = builder.Build();
 
@@ -101,6 +103,7 @@ app.MapPost("/account/logout", async (SignInManager<IdentityUser> signInManager)
     return Results.Ok();
 });
 
-app.MapControllers();
+app.MapControllers()
+    .RequireAuthorization();
 
 app.Run();
