@@ -8,11 +8,11 @@ public class NavigationController : MonoBehaviour
     {
         //check what button are visible
         //if the user is a patient, the button patient information is not visible
-        string role = PlayerPrefs.GetString("UserRole");
-        if (role == "Arts")
-        {
-            patientInformationButton.SetActive(false);
-        }
+        //string role = PlayerPrefs.GetString("UserRole");
+        //if (role == "Arts")
+        //{
+        //    patientInformationButton.SetActive(false);
+        //}
     }
 
     public void Home()
