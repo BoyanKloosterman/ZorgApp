@@ -6,5 +6,6 @@ namespace ZorgAppAPI.Interfaces
     {
         Task<IEnumerable<Patient>> GetPatients();
         Task<Patient> GetPatient(int id);
+        Task<Patient> UpdatePatient(Patient patient);
     }
 }

@@ -19,7 +19,7 @@ public class PatientController : MonoBehaviour
 
     [Header("Dropdown Menus")]
     [SerializeField] private TMP_Dropdown artsDropdown;
-    [SerializeField] private TMP_Dropdown ouderVoogdDropdown;
+    [SerializeField] private TMP_Text ouderVoogdText;
     [SerializeField] private TMP_Dropdown behandelplanDropdown;
 
     [Header("Patient Details Panel")]
@@ -99,37 +99,29 @@ public class PatientController : MonoBehaviour
     }
 
     // Update your SetOuderVoogdDropdown method to query the list
-    public void SetOuderVoogdDropdown(int? voogdId)
+    public void SetOuderVoogdText(int? voogdId)
     {
-        if (ouderVoogdDropdown == null || !voogdId.HasValue)
+        if (ouderVoogdText == null)
+            return;
+
+        if (!voogdId.HasValue || voogdId.Value == 0)
         {
-            // Set default selection
-            if (ouderVoogdDropdown != null)
-                ouderVoogdDropdown.value = 0;
+            ouderVoogdText.text = "Geen ouder/voogd gekoppeld";
             return;
         }
 
-        // Find the guardian in the list
+        // Zoek de ouder/voogd op basis van ID
         OuderVoogd selectedVoogd = allGuardians.FirstOrDefault(v => v.id == voogdId.Value);
 
         if (selectedVoogd != null)
         {
-            // Find the corresponding dropdown index
-            string guardianName = $"{selectedVoogd.voornaam} {selectedVoogd.achternaam}";
-            int index = ouderVoogdDropdown.options.FindIndex(option => option.text == guardianName);
-
-            if (index >= 0)
-            {
-                ouderVoogdDropdown.value = index;
-            }
-            else
-            {
-                ouderVoogdDropdown.value = 0; // Set to default if not found
-            }
+            // Toon de naam van de ouder/voogd als tekst
+            ouderVoogdText.text = $"{selectedVoogd.voornaam} {selectedVoogd.achternaam}";
         }
         else
         {
-            ouderVoogdDropdown.value = 0; // Set to default if not found
+            // Als de ouder/voogd niet gevonden is
+            ouderVoogdText.text = "Ouder/voogd niet gevonden";
         }
     }
 
@@ -153,6 +145,26 @@ public class PatientController : MonoBehaviour
             default:
                 throw new System.NotImplementedException("No implementation for webRequestResponse of class: " + webRequestResponse.GetType());
         }
+    }
+
+    public async void UpdatePatient()
+    {
+        if (patient == null)
+        {
+            Debug.LogWarning("No patient selected");
+            return;
+        }
+        // Get the selected doctor from the dropdown
+        int selectedDoctorIndex = artsDropdown.value;
+        int selectedDoctorId = selectedDoctorIndex > 0 ? allDoctors[selectedDoctorIndex - 1].id : 0;
+        // Get the selected treatment plan from the dropdown
+        int selectedPlanIndex = behandelplanDropdown.value;
+        int selectedPlanId = selectedPlanIndex > 0 ? selectedPlanIndex : 0;
+        // Update the patient with the selected doctor and treatment plan
+        patient.artsid = selectedDoctorId;
+        patient.trajectid = selectedPlanId;
+        // Call the API to update the patient
+        IWebRequestResponse webRequestResponse = await patientApiClient.UpdatePatient(patient.id, patient.artsid, patient.trajectid);
     }
 
     public void FilterPatients(string searchText)
@@ -215,7 +227,7 @@ public class PatientController : MonoBehaviour
         ConfigureButton(newEnv.transform, "NameButton", () => SeePatient(patient.id));
     }
 
-    public async void SeePatient(int id)
+    public void SeePatient(int id)
     {
         // Find patient with this id
         Patient selectedPatient = allPatients.FirstOrDefault(p => p.id == id);
@@ -225,18 +237,10 @@ public class PatientController : MonoBehaviour
             this.patient = selectedPatient;
 
             // Set the dropdown values for this patient
-            if (selectedPatient.artsid.HasValue)
-            {
-                SetArtsDropdown(selectedPatient.artsid.Value);
-            }
-            else
-            {
-                // Set to default option (first in list)
-                if (artsDropdown != null)
-                    artsDropdown.value = 0;
-            }
+            SetArtsDropdown(selectedPatient.artsid);
 
-            SetOuderVoogdDropdown(selectedPatient.oudervoogd_id ?? 0);
+            // Gebruik de nieuwe methode voor ouder/voogd
+            SetOuderVoogdText(selectedPatient.oudervoogdid);
 
             // Set behandelplan dropdown to default 
             if (behandelplanDropdown != null)
@@ -247,8 +251,6 @@ public class PatientController : MonoBehaviour
             {
                 patientNameText.text = $"{selectedPatient.voornaam} {selectedPatient.achternaam}";
             }
-
-            Debug.Log($"Selected patient: {selectedPatient.voornaam} {selectedPatient.achternaam}");
 
             // Show the patient details panel
             if (patientDetailsPanel != null)
@@ -325,49 +327,30 @@ public class PatientController : MonoBehaviour
 
     private async Task LoadGuardians()
     {
-        if (ouderVoogdDropdown != null && ouderVoogdApiClient != null)
+        if (ouderVoogdApiClient == null)
+            return;
+
+        try
         {
-            // Clear existing options
-            ouderVoogdDropdown.ClearOptions();
+            // Get guardians from API
+            IWebRequestResponse response = await ouderVoogdApiClient.GetOuderVoogden();
 
-            try
+            // Process response
+            switch (response)
             {
-                // Get guardians from API
-                IWebRequestResponse response = await ouderVoogdApiClient.GetOuderVoogden();
+                case WebRequestData<List<OuderVoogd>> dataResponse:
+                    allGuardians = dataResponse.Data;
+                    Debug.Log($"Loaded {allGuardians.Count} guardians");
+                    break;
 
-                // Process response
-                switch (response)
-                {
-                    case WebRequestData<List<OuderVoogd>> dataResponse:
-                        allGuardians = dataResponse.Data;
-
-                        // Create dropdown options
-                        List<string> options = new List<string>();
-                        options.Add("Selecteer ouder/voogd"); // Default option
-
-                        foreach (var guardian in allGuardians)
-                        {
-                            string fullName = $"{guardian.voornaam} {guardian.achternaam}";
-                            options.Add(fullName);
-                        }
-
-                        // Add options to dropdown
-                        ouderVoogdDropdown.AddOptions(options);
-                        Debug.Log($"Loaded {allGuardians.Count} guardians");
-                        break;
-
-                    case WebRequestError errorResponse:
-                        Debug.LogError($"Error fetching guardians: {errorResponse.ErrorMessage}");
-                        // Add default option
-                        ouderVoogdDropdown.AddOptions(new List<string> { "Geen ouders/voogden beschikbaar" });
-                        break;
-                }
+                default:
+                    Debug.LogError($"Error fetching guardians: Unable to process response of type {response.GetType().Name}");
+                    break;
             }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Exception when loading guardians: {ex.Message}");
-                ouderVoogdDropdown.AddOptions(new List<string> { "Fout bij laden van ouders/voogden" });
-            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Exception when loading guardians: {ex.Message}");
         }
     }
 

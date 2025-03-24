@@ -32,5 +32,22 @@ namespace ZorgAppAPI.Controllers
             }
             return Ok(patient);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatePatient(int id, [FromBody]Patient patient)
+        {
+            var existingPatient = await _patientRepository.GetPatient(id);
+            if (existingPatient == null)
+            {
+                return NotFound($"Patient with ID {id} not found");
+            }
+
+            // Update only the ArtsID and TrajectID
+            existingPatient.ArtsID = patient.ArtsID;
+            existingPatient.TrajectID = patient.TrajectID;
+
+            var updatedPatient = await _patientRepository.UpdatePatient(existingPatient);
+            return Ok(updatedPatient);
+        }
     }
 }

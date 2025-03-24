@@ -11,7 +11,7 @@ namespace Assets.Scripts.Model
         public int id;
         public string voornaam;
         public string achternaam;
-        public int? oudervoogd_id;
+        public int? oudervoogdid;
         public int? trajectid;
         public int? artsid;
         public string userid;
