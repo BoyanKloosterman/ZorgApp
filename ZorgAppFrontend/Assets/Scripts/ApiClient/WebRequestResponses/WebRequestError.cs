@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class WebRequestError: IWebRequestReponse
+public class WebRequestError: IWebRequestResponse
 {
     public string ErrorMessage;
 

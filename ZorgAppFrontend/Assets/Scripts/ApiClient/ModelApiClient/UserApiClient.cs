@@ -52,11 +52,11 @@ public class UserApiClient : MonoBehaviour
 		string route = "/account/login";
 		string data = JsonUtility.ToJson(user);
 
-		IWebRequestReponse response = await webClient.SendPostRequest(route, data);
+		IWebRequestResponse response = await webClient.SendPostRequest(route, data);
 		return ProcessLoginResponse(response);
 	}
 
-	private IWebRequestReponse ProcessLoginResponse(IWebRequestReponse webRequestResponse)
+	private IWebRequestResponse ProcessLoginResponse(IWebRequestResponse webRequestResponse)
 	{
 		switch (webRequestResponse)
 		{
