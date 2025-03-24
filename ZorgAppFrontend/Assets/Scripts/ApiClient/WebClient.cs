@@ -14,26 +14,26 @@ public class WebClient : MonoBehaviour
         this.token = token;
     }
 
-    public async Awaitable<IWebRequestReponse> SendGetRequest(string route)
+    public async Awaitable<IWebRequestResponse> SendGetRequest(string route)
     {
         UnityWebRequest webRequest = CreateWebRequest("GET", route, "");
         return await SendWebRequest(webRequest);
     }
 
-    public async Awaitable<IWebRequestReponse> SendPostRequest(string route, string data)
+    public async Awaitable<IWebRequestResponse> SendPostRequest(string route, string data)
     {
         Debug.Log("Verzonden JSON: " + data);
         UnityWebRequest webRequest = CreateWebRequest("POST", route, data);
         return await SendWebRequest(webRequest);
     }
 
-    public async Awaitable<IWebRequestReponse> SendPutRequest(string route, string data)
+    public async Awaitable<IWebRequestResponse> SendPutRequest(string route, string data)
     {
         UnityWebRequest webRequest = CreateWebRequest("PUT", route, data);
         return await SendWebRequest(webRequest);
     }
 
-    public async Awaitable<IWebRequestReponse> SendDeleteRequest(string route)
+    public async Awaitable<IWebRequestResponse> SendDeleteRequest(string route)
     {
         UnityWebRequest webRequest = CreateWebRequest("DELETE", route, "");
         return await SendWebRequest(webRequest);
@@ -55,7 +55,7 @@ public class WebClient : MonoBehaviour
         return webRequest;
     }
 
-    private async Awaitable<IWebRequestReponse> SendWebRequest(UnityWebRequest webRequest)
+    private async Awaitable<IWebRequestResponse> SendWebRequest(UnityWebRequest webRequest)
     {
         await webRequest.SendWebRequest();
 
