@@ -116,7 +116,7 @@ public class NotitieController : MonoBehaviour
             }
 
             webClient.SetToken(token);
-            IWebRequestReponse response = await webClient.SendGetRequest("api/Notitie");
+            IWebRequestResponse response = await webClient.SendGetRequest("api/Notitie");
 
             if (response is WebRequestData<List<Notitie>> listData)
             {

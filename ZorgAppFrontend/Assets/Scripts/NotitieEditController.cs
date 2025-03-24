@@ -79,7 +79,7 @@ public class NotitieEditController : MonoBehaviour
             if (!string.IsNullOrEmpty(token))
             {
                 webClient.SetToken(token);
-                IWebRequestReponse response = await webClient.SendPutRequest($"api/Notitie/{currentNoteId}", noteJson);
+                IWebRequestResponse response = await webClient.SendPutRequest($"api/Notitie/{currentNoteId}", noteJson);
 
                 if (response is WebRequestError)
                 {
@@ -115,7 +115,7 @@ public class NotitieEditController : MonoBehaviour
             if (!string.IsNullOrEmpty(token))
             {
                 webClient.SetToken(token);
-                IWebRequestReponse response = await webClient.SendDeleteRequest($"api/Notitie/{currentNoteId}");
+                IWebRequestResponse response = await webClient.SendDeleteRequest($"api/Notitie/{currentNoteId}");
 
                 if (response is WebRequestError)
                 {

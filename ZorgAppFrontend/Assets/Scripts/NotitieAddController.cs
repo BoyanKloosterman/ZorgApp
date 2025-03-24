@@ -69,7 +69,7 @@ public class NotitieAddController : MonoBehaviour
             if (!string.IsNullOrEmpty(token))
             {
                 webClient.SetToken(token);
-                IWebRequestReponse response = await webClient.SendPostRequest("api/Notitie", noteJson);
+                IWebRequestResponse response = await webClient.SendPostRequest("api/Notitie", noteJson);
 
                 if (response is WebRequestError)
                 {

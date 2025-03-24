@@ -50,7 +50,7 @@ public class TrajectManager : MonoBehaviour
 
     public async void LoadBehaaldeZorgMomenten()
     {
-        IWebRequestReponse webRequestResponse = await userApiClient.LoadBehaaldeZorgMomenten();
+        IWebRequestResponse webRequestResponse = await userApiClient.LoadBehaaldeZorgMomenten();
 
         switch (webRequestResponse)
         {
