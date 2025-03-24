@@ -25,9 +25,9 @@ namespace ZorgAppAPI.Repositories
             return await _dbConnection.QuerySingleOrDefaultAsync<Patient>(query, new { Id = id });
         }
 
-        public async Task<Patient> UpdatePatient(Patient patient)
+        public async Task<PatientDto> UpdatePatient(PatientDto patient)
         {
-            string query = "UPDATE dbo.Patient SET TrajectID = @trajectID, ArtsID = @artsID WHERE ID = @ID";
+            string query = "UPDATE dbo.Patient SET TrajectID = @TrajectID, ArtsID = @ArtsID WHERE ID = @ID";
             await _dbConnection.ExecuteAsync(query, patient);
             return patient;
         }

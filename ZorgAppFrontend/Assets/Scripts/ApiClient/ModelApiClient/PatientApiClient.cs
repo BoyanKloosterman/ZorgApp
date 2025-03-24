@@ -20,10 +20,10 @@ namespace Assets.Scripts.ApiClient.ModelApiClient
             return ParseListResponse(webRequestResponse);
         }
 
-        public async Awaitable<IWebRequestResponse> UpdatePatient(int id, int? artsId, int? trajectId)
+        public async Awaitable<IWebRequestResponse> UpdatePatient(PatientDto patient)
         {
-            string route = $"api/Patient/{id}?artsId={artsId}&trajectId=1";
-            string data = ""; // Add appropriate data to send with the PUT request
+            string route = $"/api/Patient/{patient.id}";
+            string data = JsonConvert.SerializeObject(patient);
             IWebRequestResponse webRequestResponse = await webClient.SendPutRequest(route, data);
             return ParseResponse(webRequestResponse);
         }

@@ -164,7 +164,7 @@ public class PatientController : MonoBehaviour
         patient.artsid = selectedDoctorId;
         patient.trajectid = selectedPlanId;
         // Call the API to update the patient
-        IWebRequestResponse webRequestResponse = await patientApiClient.UpdatePatient(patient.id, patient.artsid, patient.trajectid);
+        IWebRequestResponse webRequestResponse = await patientApiClient.UpdatePatient(new PatientDto { id = patient.id, artsid = selectedDoctorId, trajectid = selectedPlanId });
     }
 
     public void FilterPatients(string searchText)
