@@ -48,6 +48,8 @@ public class RegisterController : MonoBehaviour
         };
 
         IWebRequestResponse webRequestResponse = await userApiClient.Register(newUser);
+        PlayerPrefs.SetString("UserRole", newUser.role);
+        PlayerPrefs.Save();
 
         if (webRequestResponse is WebRequestData<string> successResponse)
         {

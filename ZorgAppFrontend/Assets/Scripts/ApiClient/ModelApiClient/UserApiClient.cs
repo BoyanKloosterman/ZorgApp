@@ -7,19 +7,19 @@ public class UserApiClient : MonoBehaviour
 {
 	public WebClient webClient;
 
-    public async Awaitable<IWebRequestReponse> LoadBehaaldeZorgMomenten()
+    public async Awaitable<IWebRequestResponse> LoadBehaaldeZorgMomenten()
     {
         string route = "/api/UserZorgMoment";
         return await webClient.SendGetRequest(route);
     }
 
-    public async Awaitable<IWebRequestReponse> LoadZorgMomentData(int zorgMomentId)
+    public async Awaitable<IWebRequestResponse> LoadZorgMomentData(int zorgMomentId)
     {
         string route = "/api/ZorgMoment/" + zorgMomentId;
         return await webClient.SendGetRequest(route);
     }
 
-    public async Awaitable<IWebRequestReponse> FinishZorgMoment(int zorgMomentId)
+    public async Awaitable<IWebRequestResponse> FinishZorgMoment(int zorgMomentId)
     {
         string route = "/api/UserZorgMoment";
 
@@ -39,7 +39,7 @@ public class UserApiClient : MonoBehaviour
         public int ZorgMomentId; 
     }
 
-    public async Awaitable<IWebRequestReponse> Register(User user)
+    public async Awaitable<IWebRequestResponse> Register(User user)
 	{
 		string route = "/api/Auth/register";
 		string data = JsonUtility.ToJson(user);
@@ -47,7 +47,7 @@ public class UserApiClient : MonoBehaviour
 		return await webClient.SendPostRequest(route, data);
 	}
 
-    public async Awaitable<IWebRequestReponse> Login(User user)
+    public async Awaitable<IWebRequestResponse> Login(User user)
 	{
 		string route = "/account/login";
 		string data = JsonUtility.ToJson(user);
