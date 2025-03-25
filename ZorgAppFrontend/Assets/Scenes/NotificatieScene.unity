@@ -515,7 +515,7 @@ MonoBehaviour:
   m_StartCorner: 0
   m_StartAxis: 0
   m_CellSize: {x: 1600, y: 150}
-  m_Spacing: {x: 20, y: 20}
+  m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!114 &426362395
@@ -1722,6 +1722,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1620249656}
   - component: {fileID: 1620249657}
+  - component: {fileID: 1620249659}
+  - component: {fileID: 1620249658}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -1758,6 +1760,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notificationText: {fileID: 1205859871}
   notificationPanel: {fileID: 1205859869}
+--- !u!114 &1620249658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1620249655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ed722d7c057c4f48af80e38d24e0abc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseUrl: https://localhost:7078/
+--- !u!114 &1620249659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1620249655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cea6613b2fa97bc40bd16e5db104e150, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statusMessage: {fileID: 476988112}
+  notificationButtonPrefab: {fileID: 705064032070023536, guid: f9a9b981d8210734b8664a5ee91ba33a, type: 3}
+  notificationPanel: {fileID: 426362393}
+  noNotificationsText: {fileID: 1435392939}
+  webClient: {fileID: 1620249658}
+  ErrorPopup: {fileID: 607729482}
+  popupMessageText: {fileID: 1461723751}
+  popupCloseButton: {fileID: 973978934}
 --- !u!1 &1652340900
 GameObject:
   m_ObjectHideFlags: 0
