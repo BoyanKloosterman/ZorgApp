@@ -1,18 +1,18 @@
 using System;
 using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
-
+[System.Serializable]
 public class Notificatie
 {
-    public int ID { get; set; }
+    public int ID;
 
-    public string Bericht { get; set; } = string.Empty;
+    public string Bericht;
 
-    public bool IsGelezen { get; set; } = false;
+    public bool IsGelezen;
 
-    public DateTime DatumAanmaak { get; set; }
+    public string DatumAanmaak;
 
-    public DateTime DatumVerloop { get; set; }
+    public string DatumVerloop;
 
-    public string UserId { get; set; }
+    public string UserId;
 }

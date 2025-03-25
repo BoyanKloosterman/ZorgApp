@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using UI.Dates;
 
+
 public class NotificatieAddController : MonoBehaviour
 {
     [Header("UI Elements")]
@@ -43,7 +44,7 @@ public class NotificatieAddController : MonoBehaviour
 
     private void ReturnToMainScene()
     {
-        SceneManager.LoadScene("MainScene");
+        SceneManager.LoadScene("NotificatieScene");
     }
 
     public async void SaveNotificatie()
@@ -60,18 +61,18 @@ public class NotificatieAddController : MonoBehaviour
             return;
         }
 
-        Notificatie newNotificatie = new Notificatie
+        Notificatie notificatie = new Notificatie
         {
             Bericht = berichtInput.text,
             IsGelezen = false,
-            DatumAanmaak = DateTime.Now,
-            DatumVerloop = datumVerloopPicker.SelectedDate.Date,
+            DatumAanmaak = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
+            DatumVerloop = datumVerloopPicker.SelectedDate.Date.ToString("yyyy-MM-dd")
         };
 
         try
         {
-            string notificatieJson = JsonUtility.ToJson(newNotificatie);
-            Debug.Log("Verzonden JSON: " + notificatieJson); // Add this line to log the JSON being sent
+            string notificatieJson = JsonUtility.ToJson(notificatie);
+            Debug.Log("Verzonden JSON: " + notificatieJson);
             string token = SecureUserSession.Instance.GetToken();
 
             if (!string.IsNullOrEmpty(token))
@@ -79,9 +80,9 @@ public class NotificatieAddController : MonoBehaviour
                 webClient.SetToken(token);
                 IWebRequestResponse response = await webClient.SendPostRequest("api/Notificatie", notificatieJson);
 
-                if (response is WebRequestError)
+                if (response is WebRequestError errorResponse)
                 {
-                    ShowErrorPopup("Fout bij opslaan van notificatie");
+                    ShowErrorPopup("Fout bij opslaan van notificatie: " + (errorResponse as WebRequestError).ErrorMessage);
                 }
                 else if (response is WebRequestData<string>)
                 {
@@ -101,10 +102,9 @@ public class NotificatieAddController : MonoBehaviour
         catch (Exception ex)
         {
             Debug.LogError("Exception: " + ex.Message);
-            ShowErrorPopup("Er is een fout opgetreden");
+            ShowErrorPopup("Er is een fout opgetreden: " + ex.Message);
         }
     }
-
 
     private void ShowStatus(string message, bool isError)
     {
