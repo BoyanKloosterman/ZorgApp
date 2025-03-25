@@ -28,13 +28,13 @@ namespace ZorgAppAPI.Repositories
 
         public async Task AddNotificatieAsync(Notificatie notificatie)
         {
-            var query = "INSERT INTO dbo.Notificatie (Bericht, IsGelezen, DatumAanmaak, UserId) VALUES (@Bericht, @IsGelezen, @DatumAanmaak, @UserId)";
+            var query = "INSERT INTO dbo.Notificatie (Bericht, IsGelezen, DatumAanmaak, DatumVerloop, UserId) VALUES (@Bericht, @IsGelezen, @DatumAanmaak, @DatumVerloop, @UserId)";
             await _dbConnection.ExecuteAsync(query, notificatie);
         }
 
         public async Task UpdateNotificatieAsync(Notificatie notificatie)
         {
-            var query = "UPDATE dbo.Notificatie SET Bericht = @Bericht, IsGelezen = @IsGelezen, DatumAanmaak = @DatumAanmaak, UserId = @UserId WHERE ID = @Id";
+            var query = "UPDATE dbo.Notificatie SET Bericht = @Bericht, IsGelezen = @IsGelezen, DatumAanmaak = @DatumAanmaak, DatumVerloop = @DatumVerloop, UserId = @UserId WHERE ID = @Id";
             await _dbConnection.ExecuteAsync(query, notificatie);
         }
 
@@ -48,6 +48,12 @@ namespace ZorgAppAPI.Repositories
         {
             var query = "SELECT * FROM dbo.Notificatie WHERE UserId = @UserId";
             return await _dbConnection.QueryAsync<Notificatie>(query, new { UserId = userId });
+        }
+
+        public async Task<IEnumerable<Notificatie>> GetExpiredNotificatiesAsync()
+        {
+            var query = "SELECT * FROM dbo.Notificatie WHERE DatumVerloop <= GETDATE() AND IsGelezen = 0";
+            return await _dbConnection.QueryAsync<Notificatie>(query);
         }
     }
 }

@@ -35,7 +35,8 @@ builder.Services.AddScoped<IOuderVoogdRepository, OuderVoogdRepository>();
 builder.Services.AddScoped<INotitieRepository, NotitieRepository>();
 builder.Services.AddScoped<IUserZorgMomentRepository, UserZorgMomentRepository>();
 builder.Services.AddScoped<INotificatieRepository, NotificatieRepository>();
-
+builder.Services.AddScoped<INotificatieSender, NotificatieSender>();
+builder.Services.AddHostedService<NotificatieBackgroundService>();
 
 // Register the database connection
 builder.Services.AddScoped<IDbConnection>(sp => new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -70,6 +71,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 
 // Move these lines before builder.Build()
 builder.Services.AddHttpContextAccessor();

@@ -18,6 +18,9 @@ namespace ZorgAppAPI.Models
         [Required]
         public DateTime DatumAanmaak { get; set; }
 
+        [Required]
+        public DateTime DatumVerloop { get; set; }
+
         [ForeignKey("User")]
         public string UserId { get; set; }
     }

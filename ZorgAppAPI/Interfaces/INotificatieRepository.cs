@@ -10,5 +10,6 @@ namespace ZorgAppAPI.Interfaces
         Task UpdateNotificatieAsync(Notificatie notificatie);
         Task DeleteNotificatieAsync(int id);
         Task<IEnumerable<Notificatie>> GetNotificatiesByUserIdAsync(string userId);
+        Task<IEnumerable<Notificatie>> GetExpiredNotificatiesAsync();
     }
 }

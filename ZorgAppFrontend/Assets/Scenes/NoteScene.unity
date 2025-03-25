@@ -1753,8 +1753,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 786c8be0544bb394d88c3e9c26c66aed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  notificationText: {fileID: 756108913}
-  notificationPanel: {fileID: 0}
+  notificationText: {fileID: 600652318}
+  notificationPanel: {fileID: 2129834157}
 --- !u!224 &1315858740 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5135567900748784388, guid: c88c219014ec1d6419734c6db5f8b2dc, type: 3}
