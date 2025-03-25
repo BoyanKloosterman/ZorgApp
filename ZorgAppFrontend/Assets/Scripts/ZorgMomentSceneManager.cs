@@ -15,13 +15,13 @@ public class ZorgMomentSceneManager : MonoBehaviour
 
     public async void PerformLoadzorgMomentData()
     {
-        IWebRequestReponse webRequestResponse = await userApiClient.LoadZorgMomentData(TrajectManager.Instance.zorgMomentID);
+        IWebRequestResponse webRequestResponse = await userApiClient.LoadZorgMomentData(TrajectManager.Instance.zorgMomentID);
 
         switch (webRequestResponse)
         {
             case WebRequestData<string> dataResponse:
                 ZorgMoment parsedzorgMoment = JsonUtility.FromJson<ZorgMoment>(dataResponse.Data);
-                text.text = parsedzorgMoment.tekst; 
+                text.text = parsedzorgMoment.tekst;
 
                 break;
             case WebRequestError errorResponse:
@@ -35,7 +35,7 @@ public class ZorgMomentSceneManager : MonoBehaviour
 
     public async void PerformFinishZorgMoment()
     {
-        IWebRequestReponse webRequestResponse = await userApiClient.FinishZorgMoment(TrajectManager.Instance.zorgMomentID);
+        IWebRequestResponse webRequestResponse = await userApiClient.FinishZorgMoment(TrajectManager.Instance.zorgMomentID);
 
         switch (webRequestResponse)
         {
