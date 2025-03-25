@@ -6,12 +6,13 @@ using UnityEngine.UI;
 using TMPro;
 using UI.Dates;
 
-
 public class NotificatieAddController : MonoBehaviour
 {
     [Header("UI Elements")]
     public TMP_InputField berichtInput;
     public DatePicker datumVerloopPicker;
+    public TMP_Dropdown dropdownHour;
+    public TMP_Dropdown dropdownMinute;
     public Button backButton;
     public Button saveButton;
     public Text statusMessage;
@@ -61,12 +62,25 @@ public class NotificatieAddController : MonoBehaviour
             return;
         }
 
+        if (dropdownHour == null || dropdownMinute == null)
+        {
+            ShowErrorPopup("Uur en minuut zijn verplicht");
+            return;
+        }
+
+        int selectedHour = dropdownHour.value;
+        int selectedMinute = dropdownMinute.value;
+
+        DateTime datumVerloop = datumVerloopPicker.SelectedDate.Date
+            .AddHours(selectedHour)
+            .AddMinutes(selectedMinute);
+
         Notificatie notificatie = new Notificatie
         {
             Bericht = berichtInput.text,
             IsGelezen = false,
             DatumAanmaak = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
-            DatumVerloop = datumVerloopPicker.SelectedDate.Date.ToString("yyyy-MM-dd")
+            DatumVerloop = datumVerloop.ToString("yyyy-MM-ddTHH:mm:ss")
         };
 
         try
