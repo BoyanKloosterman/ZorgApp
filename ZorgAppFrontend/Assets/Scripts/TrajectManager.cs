@@ -55,6 +55,7 @@ public class TrajectManager : MonoBehaviour
             case WebRequestData<string> dataResponse:
                 try
                 {
+                    Debug.Log(dataResponse.Data);
                     zorgMomentIds = JsonHelper.ParseJsonArray<int>(dataResponse.Data);
                     OnZorgMomentenUpdated?.Invoke();
                 }
