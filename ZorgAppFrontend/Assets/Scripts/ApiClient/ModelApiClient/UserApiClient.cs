@@ -56,7 +56,13 @@ public class UserApiClient : MonoBehaviour
 		return ProcessLoginResponse(response);
 	}
 
-	private IWebRequestResponse ProcessLoginResponse(IWebRequestResponse webRequestResponse)
+    public async Awaitable<IWebRequestResponse> GetCurretnUserRole()
+    {
+        string route = "/api/Auth/role";
+        return await webClient.SendGetRequest(route);
+    }
+
+    private IWebRequestResponse ProcessLoginResponse(IWebRequestResponse webRequestResponse)
 	{
 		switch (webRequestResponse)
 		{
