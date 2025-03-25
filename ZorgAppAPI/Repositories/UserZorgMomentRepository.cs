@@ -31,10 +31,10 @@ namespace ZorgAppAPI.Repositories
             return await _dbConnection.QuerySingleAsync<UserZorgMoment>(query, parameters);
         }
 
-        public async Task<IEnumerable<UserZorgMoment>> GetUserZorgMomentsByUserIdAsync(string userId)
+        public async Task<IEnumerable<int>> GetUserZorgMomentsByUserIdAsync(string userId)
         {
-            var query = "SELECT * FROM dbo.User_ZorgMoment WHERE UserId = @UserId";
-            return await _dbConnection.QueryAsync<UserZorgMoment>(query, new { UserId = userId });
+            var query = "SELECT ZorgmomentId FROM dbo.User_Zorgmoment WHERE UserId = @UserId";
+            return await _dbConnection.QueryAsync<int>(query, new { UserId = userId });
         }
 
     }

@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine.UI;
 
 public class TrajectManager : MonoBehaviour
@@ -12,6 +11,7 @@ public class TrajectManager : MonoBehaviour
     public Button noteButton;
 
     public List<int> zorgMomentIds = new List<int>();
+    public List<int> behaaldeZorgMomentIds = new List<int>();
     public int zorgMomentID;
     public string trajectNumber;
     public event Action OnZorgMomentenUpdated;
@@ -35,12 +35,14 @@ public class TrajectManager : MonoBehaviour
         if (scene.name == "Traject13")
         {
             LoadZorgMomenten();
+            LoadBehaaldeZorgMomenten();
         }
     }
 
     private void Start()
     {
         LoadZorgMomenten();
+        LoadBehaaldeZorgMomenten();
 
         if (noteButton != null)
             noteButton.onClick.AddListener(GoToNoteScene);
@@ -53,21 +55,41 @@ public class TrajectManager : MonoBehaviour
         switch (webRequestResponse)
         {
             case WebRequestData<string> dataResponse:
-                try
-                {
-                    Debug.Log(dataResponse.Data);
-                    zorgMomentIds = JsonHelper.ParseJsonArray<int>(dataResponse.Data);
-                    OnZorgMomentenUpdated?.Invoke();
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogError($"Parse error: {ex.Message}");
-                }
+                zorgMomentIds = JsonHelper.ParseJsonArray<int>(dataResponse.Data);
+                OnZorgMomentenUpdated?.Invoke();
                 break;
             case WebRequestError errorResponse:
                 Debug.LogError($"API error: {errorResponse.ErrorMessage}");
                 break;
         }
+    }
+
+    public async void LoadBehaaldeZorgMomenten()
+    {
+        IWebRequestResponse webRequestResponse = await userApiClient.LoadBehaaldeZorgMomenten();
+
+        switch (webRequestResponse)
+        {
+            case WebRequestData<string> dataResponse:
+                behaaldeZorgMomentIds = JsonHelper.ParseJsonArray<int>(dataResponse.Data);
+                OnZorgMomentenUpdated?.Invoke();
+                break;
+            case WebRequestError errorResponse:
+                Debug.LogError($"API error: {errorResponse.ErrorMessage}");
+                break;
+        }
+    }
+
+    public int GetNextEnabledIndex()
+    {
+        for (int i = 0; i < zorgMomentIds.Count; i++)
+        {
+            if (!behaaldeZorgMomentIds.Contains(zorgMomentIds[i]))
+            {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public void LoadZorgMomentScene(int id, string number)

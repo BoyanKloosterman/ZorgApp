@@ -3,36 +3,37 @@ using UnityEngine.UI;
 
 public class ZorgMomentButton : MonoBehaviour
 {
-    public int index; 
+    public int index;
     public string trajectNumber;
 
     private Button button;
+    private Image buttonImage;
     private int zorgMomentID;
 
     private void Start()
     {
         button = GetComponent<Button>();
+        buttonImage = GetComponent<Image>();
         button.onClick.AddListener(OnButtonClick);
-        TrajectManager.Instance.OnZorgMomentenUpdated += UpdateButtonId;
-
-        if (TrajectManager.Instance.zorgMomentIds.Count > 0)
-        {
-            UpdateButtonId();
-        }
+        TrajectManager.Instance.OnZorgMomentenUpdated += UpdateButtonState;
+        UpdateButtonState();
     }
 
-    private void UpdateButtonId()
+    private void UpdateButtonState()
     {
-        if (index < TrajectManager.Instance.zorgMomentIds.Count)
+        if (index >= TrajectManager.Instance.zorgMomentIds.Count)
         {
-            zorgMomentID = TrajectManager.Instance.zorgMomentIds[index];
-            button.interactable = true;
-        }
-        else
-        {
-            Debug.LogError($"Ongeldige index: {index}");
             button.interactable = false;
+            return;
         }
+
+        zorgMomentID = TrajectManager.Instance.zorgMomentIds[index];
+
+        bool isCompleted = TrajectManager.Instance.behaaldeZorgMomentIds.Contains(zorgMomentID);
+        buttonImage.color = isCompleted ? Color.green : Color.white;
+
+        int nextIndex = TrajectManager.Instance.GetNextEnabledIndex();
+        button.interactable = (index == nextIndex);
     }
 
     private void OnButtonClick()
@@ -44,7 +45,7 @@ public class ZorgMomentButton : MonoBehaviour
     {
         if (TrajectManager.Instance != null)
         {
-            TrajectManager.Instance.OnZorgMomentenUpdated -= UpdateButtonId;
+            TrajectManager.Instance.OnZorgMomentenUpdated -= UpdateButtonState;
         }
     }
 }
