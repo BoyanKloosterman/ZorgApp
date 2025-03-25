@@ -11,11 +11,9 @@ public class TrajectManager : MonoBehaviour
     public UserApiClient userApiClient;
     public Button noteButton;
 
-    public int HighestBehaaldId { get; private set; }
-
+    public List<int> zorgMomentIds = new List<int>();
     public int zorgMomentID;
     public string trajectNumber;
-    public List<int> BehaaldeZorgMomentIds;
     public event Action OnZorgMomentenUpdated;
 
     private void Awake()
@@ -36,35 +34,28 @@ public class TrajectManager : MonoBehaviour
     {
         if (scene.name == "Traject13")
         {
-            LoadBehaaldeZorgMomenten();
+            LoadZorgMomenten();
         }
     }
 
     private void Start()
     {
-        LoadBehaaldeZorgMomenten();
+        LoadZorgMomenten();
 
         if (noteButton != null)
             noteButton.onClick.AddListener(GoToNoteScene);
     }
 
-    public async void LoadBehaaldeZorgMomenten()
+    public async void LoadZorgMomenten()
     {
-        IWebRequestResponse webRequestResponse = await userApiClient.LoadBehaaldeZorgMomenten();
+        IWebRequestResponse webRequestResponse = await userApiClient.LoadZorgMomenten();
 
         switch (webRequestResponse)
         {
             case WebRequestData<string> dataResponse:
                 try
                 {
-                    List<BehaaldeZorgMoment> zorgMomenten =
-                        JsonHelper.ParseJsonArray<BehaaldeZorgMoment>(dataResponse.Data);
-
-                    BehaaldeZorgMomentIds = zorgMomenten
-                        .Select(z => z.zorgMomentId)
-                        .ToList();
-                    HighestBehaaldId = BehaaldeZorgMomentIds.DefaultIfEmpty(0).Max();
-
+                    zorgMomentIds = JsonHelper.ParseJsonArray<int>(dataResponse.Data);
                     OnZorgMomentenUpdated?.Invoke();
                 }
                 catch (Exception ex)
@@ -94,10 +85,4 @@ public class TrajectManager : MonoBehaviour
     {
         SceneManager.LoadScene("NoteScene");
     }
-}
-
-[Serializable]
-public class BehaaldeZorgMoment
-{
-    public int zorgMomentId;
 }

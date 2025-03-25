@@ -617,7 +617,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efe564103bc36fa4191a07832011e285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zorgMomentID: 6
+  index: 5
   trajectNumber: 13
 --- !u!114 &362921816
 MonoBehaviour:
@@ -1115,7 +1115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efe564103bc36fa4191a07832011e285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zorgMomentID: 1
+  index: 0
   trajectNumber: 13
 --- !u!1 &700049614
 GameObject:
@@ -1169,7 +1169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efe564103bc36fa4191a07832011e285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zorgMomentID: 3
+  index: 2
   trajectNumber: 13
 --- !u!114 &700049617
 MonoBehaviour:
@@ -1317,7 +1317,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efe564103bc36fa4191a07832011e285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zorgMomentID: 12
+  index: 11
   trajectNumber: 13
 --- !u!114 &706425654
 MonoBehaviour:
@@ -1465,7 +1465,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efe564103bc36fa4191a07832011e285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zorgMomentID: 11
+  index: 10
   trajectNumber: 13
 --- !u!114 &724980258
 MonoBehaviour:
@@ -1613,7 +1613,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efe564103bc36fa4191a07832011e285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zorgMomentID: 8
+  index: 7
   trajectNumber: 13
 --- !u!114 &751323923
 MonoBehaviour:
@@ -1761,7 +1761,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efe564103bc36fa4191a07832011e285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zorgMomentID: 13
+  index: 12
   trajectNumber: 13
 --- !u!114 &952104699
 MonoBehaviour:
@@ -2589,7 +2589,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efe564103bc36fa4191a07832011e285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zorgMomentID: 5
+  index: 4
   trajectNumber: 13
 --- !u!114 &1093621009
 MonoBehaviour:
@@ -2737,7 +2737,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efe564103bc36fa4191a07832011e285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zorgMomentID: 2
+  index: 1
   trajectNumber: 13
 --- !u!114 &1134844536
 MonoBehaviour:
@@ -3113,7 +3113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efe564103bc36fa4191a07832011e285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zorgMomentID: 7
+  index: 6
   trajectNumber: 13
 --- !u!114 &1304222120
 MonoBehaviour:
@@ -3515,7 +3515,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efe564103bc36fa4191a07832011e285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zorgMomentID: 9
+  index: 8
   trajectNumber: 13
 --- !u!114 &1444151848
 MonoBehaviour:
@@ -3799,7 +3799,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efe564103bc36fa4191a07832011e285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zorgMomentID: 10
+  index: 9
   trajectNumber: 13
 --- !u!114 &1753184440
 MonoBehaviour:
@@ -4321,7 +4321,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efe564103bc36fa4191a07832011e285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zorgMomentID: 4
+  index: 3
   trajectNumber: 13
 --- !u!114 &1921212703
 MonoBehaviour:
@@ -4626,10 +4626,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   userApiClient: {fileID: 2098123113}
-  noteButton: {fileID: 372344426}
+  noteButton: {fileID: 0}
+  zorgMomentIds: 
   zorgMomentID: 0
   trajectNumber: 
-  BehaaldeZorgMomentIds: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
