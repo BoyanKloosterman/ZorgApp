@@ -4,6 +4,7 @@ using Microsoft.Data.SqlClient;
 using ZorgAppAPI.Interfaces;
 using ZorgAppAPI.Models;
 using Microsoft.AspNetCore.Authorization;
+using ZorgAppAPI.Services;
 
 namespace ZorgAppAPI.Controllers
 {
@@ -16,13 +17,16 @@ namespace ZorgAppAPI.Controllers
         private readonly IUserProfileRepository _userProfileRepository;
         private readonly ILogger<AuthController> _logger;
         private readonly SqlConnection _db;
+        private readonly IAuthenticationService _authenticationService;
 
         public AuthController(
+            IAuthenticationService authenticationService,
             IIdentityRepository identityRepository,
             IUserProfileRepository userProfileRepository,
             ILogger<AuthController> logger,
             IDbConnection db)
         {
+            _authenticationService = authenticationService;
             _identityRepository = identityRepository;
             _userProfileRepository = userProfileRepository;
             _logger = logger;
@@ -147,6 +151,19 @@ namespace ZorgAppAPI.Controllers
                 if (_db.State == ConnectionState.Open)
                     await _db.CloseAsync();
             }
+        }
+
+        [HttpGet("role")]
+        public async Task<IActionResult> GetUserRole()
+        {
+            var userId = _authenticationService.GetCurrentAuthenticatedUserId;
+            if (userId == null)
+            {
+                return Unauthorized("User not authorized");
+            }
+
+            var role = _authenticationService.GetCurrentAuthenticatedUserRole();
+            return Ok(new { Role = role });
         }
     }
 }

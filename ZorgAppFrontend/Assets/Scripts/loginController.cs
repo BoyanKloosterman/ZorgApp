@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
 public class LoginController : MonoBehaviour
@@ -44,6 +45,7 @@ public class LoginController : MonoBehaviour
                 SceneManager.LoadScene("Route13");
 
                 Debug.Log("Token opgeslagen in sessie: " + SecureUserSession.Instance.GetToken());
+                GetCurrentUserRole();
                 //tijdelijk forcen naar traject13 scene.
                 SceneManager.LoadScene("Traject13");
                 break;
@@ -52,6 +54,29 @@ public class LoginController : MonoBehaviour
                 ShowErrorPopup("Geen account gevonden met deze gegevens!");
                 break;
 
+            default:
+                throw new NotImplementedException("No implementation for webRequestResponse of class: " + webRequestResponse.GetType());
+        }
+    }
+
+    private async void GetCurrentUserRole()
+    {
+        IWebRequestResponse webRequestResponse = await userApiClient.GetCurretnUserRole();
+
+        switch (webRequestResponse)
+        {
+            case WebRequestData<string> dataResponse:
+                Debug.Log("Role: " + dataResponse.Data);
+                var roleObject = JsonUtility.FromJson<User>(dataResponse.Data);
+                string roleName = roleObject.role;
+
+                // Store just the role name
+                PlayerPrefs.SetString("UserRole", roleName);
+                Debug.Log("Extracted role: " + roleName);
+                break;
+            case WebRequestError errorResponse:
+                Debug.Log("error");
+                break;
             default:
                 throw new NotImplementedException("No implementation for webRequestResponse of class: " + webRequestResponse.GetType());
         }

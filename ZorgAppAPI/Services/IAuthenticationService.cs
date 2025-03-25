@@ -7,5 +7,6 @@
         /// </summary>
         /// <returns></returns>
         string? GetCurrentAuthenticatedUserId();
+        string GetCurrentAuthenticatedUserRole();
     }
 }

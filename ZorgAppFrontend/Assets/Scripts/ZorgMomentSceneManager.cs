@@ -15,7 +15,7 @@ public class ZorgMomentSceneManager : MonoBehaviour
 
     public async void PerformLoadzorgMomentData()
     {
-        IWebRequestReponse webRequestResponse = await userApiClient.LoadZorgMomentData(TrajectManager.Instance.zorgMomentID);
+        IWebRequestResponse webRequestResponse = await userApiClient.LoadZorgMomentData(TrajectManager.Instance.zorgMomentID);
 
         switch (webRequestResponse)
         {
@@ -35,7 +35,7 @@ public class ZorgMomentSceneManager : MonoBehaviour
 
     public async void PerformFinishZorgMoment()
     {
-        IWebRequestReponse webRequestResponse = await userApiClient.FinishZorgMoment(TrajectManager.Instance.zorgMomentID);
+        IWebRequestResponse webRequestResponse = await userApiClient.FinishZorgMoment(TrajectManager.Instance.zorgMomentID);
 
         switch (webRequestResponse)
         {
