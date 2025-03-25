@@ -1226,6 +1226,7 @@ GameObject:
   - component: {fileID: 1469351474}
   - component: {fileID: 1469351475}
   - component: {fileID: 1469351476}
+  - component: {fileID: 1469351477}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -1288,6 +1289,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   webClient: {fileID: 1469351475}
+--- !u!114 &1469351477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1469351472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 786c8be0544bb394d88c3e9c26c66aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  notificationText: {fileID: 562772756}
+  notificationPanel: {fileID: 1750532347}
 --- !u!1 &1637896693
 GameObject:
   m_ObjectHideFlags: 0

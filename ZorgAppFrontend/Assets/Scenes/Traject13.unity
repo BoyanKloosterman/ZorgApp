@@ -4911,6 +4911,7 @@ GameObject:
   - component: {fileID: 2098123114}
   - component: {fileID: 2098123113}
   - component: {fileID: 2098123112}
+  - component: {fileID: 2098123115}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -4976,6 +4977,20 @@ MonoBehaviour:
   zorgMomentID: 0
   trajectNumber: 
   BehaaldeZorgMomentIds: 
+--- !u!114 &2098123115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2098123109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 786c8be0544bb394d88c3e9c26c66aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  notificationText: {fileID: 781904399}
+  notificationPanel: {fileID: 1040400552}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

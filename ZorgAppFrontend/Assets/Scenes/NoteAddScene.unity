@@ -1346,6 +1346,7 @@ GameObject:
   - component: {fileID: 593100065}
   - component: {fileID: 593100066}
   - component: {fileID: 593100067}
+  - component: {fileID: 593100068}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -1402,6 +1403,20 @@ MonoBehaviour:
   ErrorPopup: {fileID: 785291569}
   popupMessageText: {fileID: 503223355}
   popupCloseButton: {fileID: 1531557549}
+--- !u!114 &593100068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593100063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 786c8be0544bb394d88c3e9c26c66aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  notificationText: {fileID: 1203804154}
+  notificationPanel: {fileID: 1155770685}
 --- !u!1 &692551886
 GameObject:
   m_ObjectHideFlags: 0
