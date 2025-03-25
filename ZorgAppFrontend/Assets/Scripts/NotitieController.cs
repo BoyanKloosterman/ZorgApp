@@ -45,6 +45,7 @@ public class NotitieController : MonoBehaviour
 
         if (!hasMissingComponents)
             LoadNotes();
+
     }
 
     private void CheckRequiredComponents()
