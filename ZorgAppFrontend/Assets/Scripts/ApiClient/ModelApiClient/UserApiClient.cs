@@ -13,6 +13,12 @@ public class UserApiClient : MonoBehaviour
         return await webClient.SendGetRequest(route);
     }
 
+    public async Awaitable<IWebRequestResponse> LoadZorgMomenten()
+    {
+        string route = "/api/ZorgMoment";
+        return await webClient.SendGetRequest(route);
+    }
+
     public async Awaitable<IWebRequestResponse> LoadZorgMomentData(int zorgMomentId)
     {
         string route = "/api/ZorgMoment/" + zorgMomentId;
@@ -27,7 +33,7 @@ public class UserApiClient : MonoBehaviour
         var dataObject = new ZorgmomentRequest { ZorgMomentId = zorgMomentId };
         string data = JsonUtility.ToJson(dataObject);
 
-        Debug.Log("Verzonden JSON: " + data); // Controleer nu de output
+        //Debug.Log("Verzonden JSON: " + data); // Controleer nu de output
 
         return await webClient.SendPostRequest(route, data);
     }

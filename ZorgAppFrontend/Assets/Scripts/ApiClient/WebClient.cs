@@ -42,7 +42,7 @@ public class WebClient : MonoBehaviour
     private UnityWebRequest CreateWebRequest(string type, string route, string data)
     {
         string url = baseUrl + route;
-        Debug.Log("Creating " + type + " request to " + url + " with data: " + data);
+        //Debug.Log("Creating " + type + " request to " + url + " with data: " + data);
 
 
         data = RemoveIdFromJson(data);
@@ -72,7 +72,6 @@ public class WebClient : MonoBehaviour
     private void AddToken(UnityWebRequest webRequest)
     {
         SetToken(SecureUserSession.Instance.GetToken());
-        Debug.Log("Adding token to request: " + token);
         webRequest.SetRequestHeader("Authorization", "Bearer " + token);
     }
 
