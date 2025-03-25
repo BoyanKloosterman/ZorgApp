@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
 public class NotificatieShowController : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class NotificatieShowController : MonoBehaviour
     public GameObject notificationButtonPrefab;
     public Transform notificationPanel;
     public Text noNotificationsText;
+    public Button backButton;
 
     [Header("API Connection")]
     public WebClient webClient;
@@ -37,6 +39,9 @@ public class NotificatieShowController : MonoBehaviour
 
         if (popupCloseButton != null)
             popupCloseButton.onClick.AddListener(OnPopupCloseButtonClick);
+
+        if (backButton != null)
+            backButton.onClick.AddListener(ReturnToRoute13);
 
         if (!hasMissingComponents)
             LoadNotificaties();
@@ -69,6 +74,11 @@ public class NotificatieShowController : MonoBehaviour
             noNotificationsText.gameObject.SetActive(true);
             noNotificationsText.text = "Configuratiefout: Controleer de console en Inspector";
         }
+    }
+
+    private void ReturnToRoute13()
+    {
+        SceneManager.LoadScene("Route13");
     }
 
     private async void LoadNotificaties()
@@ -120,6 +130,10 @@ public class NotificatieShowController : MonoBehaviour
                         if (notifications != null && notifications.Count > 0)
                         {
                             ProcessNotificaties(notifications);
+                        }
+                        else
+                        {
+                            UpdateNoNotificationsText("Geen notificaties gevonden");
                         }
                     }
                     else
@@ -214,12 +228,12 @@ public class NotificatieShowController : MonoBehaviour
             if (!isValidDate)
             {
                 string[] formats = new[] {
-                    "yyyy-MM-ddTHH:mm:ss.fff",
-                    "yyyy-MM-ddTHH:mm:ss",
-                    "yyyy-MM-dd HH:mm:ss.fff",
-                    "yyyy-MM-dd HH:mm:ss",
-                    "yyyy-MM-dd"
-                };
+                "yyyy-MM-ddTHH:mm:ss.fff",
+                "yyyy-MM-ddTHH:mm:ss",
+                "yyyy-MM-dd HH:mm:ss.fff",
+                "yyyy-MM-dd HH:mm:ss",
+                "yyyy-MM-dd"
+            };
 
                 isValidDate = DateTime.TryParseExact(
                     notif.DatumAanmaak,
@@ -238,6 +252,12 @@ public class NotificatieShowController : MonoBehaviour
                 }
             }
 
+            if (string.IsNullOrEmpty(notif.DatumVerloop) || notif.DatumVerloop == "0001-01-01T00:00:00")
+            {
+                DateTime creationDate = DateTime.Parse(notif.DatumAanmaak);
+                notif.DatumVerloop = creationDate.AddDays(7).ToString("yyyy-MM-dd HH:mm:ss");
+            }
+
             validNotifications.Add(notif);
         }
 
@@ -251,9 +271,9 @@ public class NotificatieShowController : MonoBehaviour
         {
             try
             {
-                DateTime date1 = DateTime.Parse(notif1.DatumAanmaak);
-                DateTime date2 = DateTime.Parse(notif2.DatumAanmaak);
-                return date2.CompareTo(date1);
+                DateTime expiry1 = DateTime.Parse(notif1.DatumVerloop);
+                DateTime expiry2 = DateTime.Parse(notif2.DatumVerloop);
+                return expiry1.CompareTo(expiry2);
             }
             catch (Exception)
             {
@@ -309,22 +329,159 @@ public class NotificatieShowController : MonoBehaviour
 
         SetTextComponentByName(notificationButtonObj, "BerichtText", notification.Bericht);
 
-        string formattedCreationDate = !string.IsNullOrEmpty(notification.DatumAanmaak)
-            ? FormatDateForDisplay(notification.DatumAanmaak)
-            : "";
-        SetTextComponentByName(notificationButtonObj, "DatumAanmaak", formattedCreationDate);
+        Transform tijdOverTransform = notificationButtonObj.transform.Find("TijdOver");
+        if (tijdOverTransform == null)
+        {
+            tijdOverTransform = notificationButtonObj.transform.Find("DatumVerloop");
+        }
 
-        string formattedExpiryDate = (!string.IsNullOrEmpty(notification.DatumVerloop) &&
-                                      notification.DatumVerloop != "0001-01-01T00:00:00")
-            ? FormatDateForDisplay(notification.DatumVerloop)
-            : "";
-        SetTextComponentByName(notificationButtonObj, "DatumVerloop", formattedExpiryDate);
+        TextMeshProUGUI tmpCountdownText = tijdOverTransform?.GetComponent<TextMeshProUGUI>();
+        Text uiCountdownText = tijdOverTransform?.GetComponent<Text>();
+
+        Transform creationDateTransform = notificationButtonObj.transform.Find("DatumAanmaak");
+        if (creationDateTransform != null)
+        {
+            creationDateTransform.gameObject.SetActive(false);
+        }
+
+        bool parsedExpiry = DateTime.TryParse(notification.DatumVerloop, out DateTime expiryDate);
+
+        if (parsedExpiry)
+        {
+            TimeSpan timeRemaining = expiryDate - DateTime.Now;
+
+            if (timeRemaining.TotalSeconds <= 0)
+            {
+                if (tmpCountdownText != null)
+                {
+                    tmpCountdownText.text = "Verlopen";
+                    tmpCountdownText.color = Color.red;
+                }
+                else if (uiCountdownText != null)
+                {
+                    uiCountdownText.text = "Verlopen";
+                    uiCountdownText.color = Color.red;
+                }
+            }
+            else
+            {
+                if (tmpCountdownText != null)
+                {
+                    StartCoroutine(UpdateTMProCountdown(tmpCountdownText, expiryDate));
+                }
+                else if (uiCountdownText != null)
+                {
+                    StartCoroutine(UpdateUITextCountdown(uiCountdownText, expiryDate));
+                }
+            }
+        }
+        else
+        {
+            if (tmpCountdownText != null)
+            {
+                tmpCountdownText.text = "Geen vervaldatum";
+            }
+            else if (uiCountdownText != null)
+            {
+                uiCountdownText.text = "Geen vervaldatum";
+            }
+        }
 
         Button button = notificationButtonObj.GetComponent<Button>();
         if (button != null)
         {
             Notificatie capturedNotification = notification;
             button.onClick.AddListener(() => OpenNotificationDetailScene(capturedNotification));
+        }
+    }
+
+    private IEnumerator UpdateTMProCountdown(TextMeshProUGUI countdownText, DateTime expiryDate)
+    {
+        int updateCount = 0;
+
+        while (true)
+        {
+            TimeSpan timeRemaining = expiryDate - DateTime.Now;
+
+            if (timeRemaining.TotalSeconds <= 0)
+            {
+                countdownText.text = "Verlopen";
+                countdownText.color = Color.red;
+                yield break;
+            }
+
+            string countdownDisplay = FormatTimeRemaining(timeRemaining);
+            countdownText.text = countdownDisplay;
+
+            countdownText.color = GetTimeRemainingColor(timeRemaining);
+
+            if (updateCount % 60 == 0)
+            {
+            }
+            updateCount++;
+
+            yield return new WaitForSeconds(1);
+        }
+    }
+
+    private IEnumerator UpdateUITextCountdown(Text countdownText, DateTime expiryDate)
+    {
+        int updateCount = 0;
+
+        while (true)
+        {
+            TimeSpan timeRemaining = expiryDate - DateTime.Now;
+
+            if (timeRemaining.TotalSeconds <= 0)
+            {
+                countdownText.text = "Verlopen";
+                countdownText.color = Color.red;
+                yield break;
+            }
+
+            string countdownDisplay = FormatTimeRemaining(timeRemaining);
+            countdownText.text = countdownDisplay;
+
+            countdownText.color = GetTimeRemainingColor(timeRemaining);
+
+            if (updateCount % 60 == 0)
+            {
+            }
+            updateCount++;
+
+            yield return new WaitForSeconds(1);
+        }
+    }
+
+    private string FormatTimeRemaining(TimeSpan timeRemaining)
+    {
+        if (timeRemaining.TotalDays >= 1)
+        {
+            return $"{(int)timeRemaining.TotalDays}d {timeRemaining.Hours}u";
+        }
+        else if (timeRemaining.TotalHours >= 1)
+        {
+            return $"{timeRemaining.Hours}u {timeRemaining.Minutes}m";
+        }
+        else
+        {
+            return $"{timeRemaining.Minutes}m {timeRemaining.Seconds}s";
+        }
+    }
+
+    private Color GetTimeRemainingColor(TimeSpan timeRemaining)
+    {
+        if (timeRemaining.TotalHours < 1)
+        {
+            return Color.red;
+        }
+        else if (timeRemaining.TotalDays < 1)
+        {
+            return new Color(1.0f, 0.5f, 0.0f);
+        }
+        else
+        {
+            return Color.green;
         }
     }
 
@@ -359,22 +516,6 @@ public class NotificatieShowController : MonoBehaviour
                 uiText.text = text;
                 return;
             }
-        }
-    }
-
-    private string FormatDateForDisplay(string dateString)
-    {
-        try
-        {
-            if (DateTime.TryParse(dateString, out DateTime date))
-            {
-                return date.ToString("dd-MM-yyyy HH:mm");
-            }
-            return dateString;
-        }
-        catch
-        {
-            return dateString;
         }
     }
 
