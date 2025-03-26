@@ -525,11 +525,28 @@ public class NotificatieShowController : MonoBehaviour
 
     private void OpenEditNotificatieScene(Notificatie notificatie)
     {
+        // Save all important notification data to PlayerPrefs
         PlayerPrefs.SetInt("CurrentNotificatieId", notificatie.id);
         PlayerPrefs.SetString("CurrentNotificatieBericht", notificatie.Bericht);
-        Debug.Log($"Saved Notificatie ID: {notificatie.id}, Bericht: {notificatie.Bericht}, DatumAanmaak: {notificatie.DatumAanmaak}");
+
+        // Save DatumVerloop to PlayerPrefs so it's available in the edit screen
+        PlayerPrefs.SetString("CurrentNotificatieDatumVerloop", notificatie.DatumVerloop);
+
+        // Save DatumAanmaak to PlayerPrefs
+        PlayerPrefs.SetString("CurrentNotificatieDatumAanmaak", notificatie.DatumAanmaak);
+
+        // Save UserId if it exists
+        if (!string.IsNullOrEmpty(notificatie.UserId))
+        {
+            PlayerPrefs.SetString("CurrentNotificatieUserId", notificatie.UserId);
+        }
+
+        Debug.Log($"Saved Notificatie ID: {notificatie.id}, Bericht: {notificatie.Bericht}, " +
+                  $"DatumAanmaak: {notificatie.DatumAanmaak}, DatumVerloop: {notificatie.DatumVerloop}");
+
         SceneManager.LoadScene("NotificatieEditScene");
     }
+
 
 
     private void ShowStatus(string message, bool isError)

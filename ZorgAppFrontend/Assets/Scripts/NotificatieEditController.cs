@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 using UI.Dates;
+using System.Collections.Generic;
 
 public class NotificatieEditController : MonoBehaviour
 {
@@ -76,13 +77,16 @@ public class NotificatieEditController : MonoBehaviour
 
         try
         {
-            // Get notification ID and text only
+            // Get notification data
             currentNotificatieId = PlayerPrefs.GetInt("CurrentNotificatieId");
             string bericht = PlayerPrefs.GetString("CurrentNotificatieBericht");
             string datumAanmaak = PlayerPrefs.GetString("CurrentNotificatieDatumAanmaak");
+            string datumVerloopStr = PlayerPrefs.GetString("CurrentNotificatieDatumVerloop");
+            string userId = PlayerPrefs.GetString("CurrentNotificatieUserId", "");
 
-            Debug.Log($"Loaded Notificatie ID: {currentNotificatieId}, Bericht: {bericht}, DatumAanmaak: {datumAanmaak}");
+            Debug.Log($"Loaded Notificatie ID: {currentNotificatieId}, Bericht: {bericht}, DatumAanmaak: {datumAanmaak}, DatumVerloop: {datumVerloopStr}, UserId: {userId}");
 
+            // Set the bericht text
             if (berichtInput != null)
             {
                 berichtInput.text = bericht;
@@ -93,7 +97,56 @@ public class NotificatieEditController : MonoBehaviour
                 Debug.LogError("berichtInput reference is null!");
             }
 
-            // Don't attempt to load or set the date
+            // Parse the datum verloop and set the date picker and dropdowns
+            DateTime datumVerloop;
+            if (TryParseDateTime(datumVerloopStr, out datumVerloop))
+            {
+                originalDateTime = datumVerloop;
+                Debug.Log($"Successfully parsed datumVerloop: {datumVerloop}");
+
+                // Set the date picker
+                if (datumVerloopPicker != null)
+                {
+                    datumVerloopPicker.DateSelectionMode = DateSelectionMode.SingleDate;
+                    datumVerloopPicker.SelectedDate = new SerializableDate(datumVerloop.Date);
+                    Debug.Log($"Set datepicker to: {datumVerloopPicker.SelectedDate}");
+                }
+                else
+                {
+                    Debug.LogError("datumVerloopPicker reference is null!");
+                }
+
+                // Set the hour dropdown
+                if (dropdownHour != null)
+                {
+                    // Ensure the hour value is within the valid range for the dropdown
+                    int hour = Mathf.Clamp(datumVerloop.Hour, 0, dropdownHour.options.Count - 1);
+                    dropdownHour.value = hour;
+                    Debug.Log($"Set hour dropdown to: {hour}");
+                }
+                else
+                {
+                    Debug.LogError("dropdownHour reference is null!");
+                }
+
+                // Set the minute dropdown
+                if (dropdownMinute != null)
+                {
+                    // Ensure the minute value is within the valid range for the dropdown
+                    int minute = Mathf.Clamp(datumVerloop.Minute, 0, dropdownMinute.options.Count - 1);
+                    dropdownMinute.value = minute;
+                    Debug.Log($"Set minute dropdown to: {minute}");
+                }
+                else
+                {
+                    Debug.LogError("dropdownMinute reference is null!");
+                }
+            }
+            else
+            {
+                Debug.LogError($"Failed to parse datumVerloop! Value: '{datumVerloopStr}'");
+                SetDefaultDateTimeValues();
+            }
 
             // Set isInitialized to true after loading data
             isInitialized = true;
@@ -102,8 +155,112 @@ public class NotificatieEditController : MonoBehaviour
         catch (Exception ex)
         {
             Debug.LogError($"Error in LoadBasicData: {ex.Message}");
+            SetDefaultDateTimeValues();
         }
     }
+
+    private bool TryParseDateTime(string dateTimeStr, out DateTime result)
+    {
+        result = DateTime.Now;
+
+        if (string.IsNullOrEmpty(dateTimeStr))
+            return false;
+
+        // Define all the formats we want to try
+        string[] formats = {
+        "yyyy-MM-dd HH:mm:ss.fff",    // Matches: 2025-03-26 22:58:00.000
+        "yyyy-MM-ddTHH:mm:ss.fff",
+        "yyyy-MM-dd HH:mm:ss",
+        "yyyy-MM-ddTHH:mm:ss",
+        "yyyy-MM-dd H:mm:ss",
+        "MM/dd/yyyy HH:mm:ss"
+    };
+
+        try
+        {
+            // First, try exactly with the known database format
+            if (dateTimeStr.Length == 23 && dateTimeStr.Contains("-") && dateTimeStr.Contains(":") && dateTimeStr.Contains("."))
+            {
+                // This is likely the database format: 2025-03-26 22:58:00.000
+                if (DateTime.TryParseExact(
+                    dateTimeStr,
+                    "yyyy-MM-dd HH:mm:ss.fff",
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None,
+                    out result))
+                {
+                    Debug.Log($"Successfully parsed date using exact database format: {result}");
+                    return true;
+                }
+            }
+
+            // Try parsing with specific formats
+            if (DateTime.TryParseExact(dateTimeStr, formats,
+                System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.None, out result))
+            {
+                Debug.Log($"Successfully parsed date using format array: {result}");
+                return true;
+            }
+
+            // Try general parsing with InvariantCulture
+            if (DateTime.TryParse(dateTimeStr,
+                System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.None, out result))
+            {
+                Debug.Log($"Successfully parsed date using InvariantCulture: {result}");
+                return true;
+            }
+
+            // Last resort - try with current culture
+            if (DateTime.TryParse(dateTimeStr, out result))
+            {
+                Debug.Log($"Successfully parsed date using current culture: {result}");
+                return true;
+            }
+
+            return false;
+        }
+        catch (Exception ex)
+        {
+            // If any exception occurs during parsing, log it and return false
+            Debug.LogError($"Error during date parsing: {ex.Message}");
+            return false;
+        }
+    }
+
+
+    private void SetDefaultDateTimeValues()
+    {
+        // Set default date/time (today at current time)
+        originalDateTime = DateTime.Now;
+
+        // Set date picker to today
+        if (datumVerloopPicker != null)
+        {
+            datumVerloopPicker.DateSelectionMode = DateSelectionMode.SingleDate;
+            datumVerloopPicker.SelectedDate = new SerializableDate(DateTime.Today);
+            Debug.Log($"Set default datumVerloop: {datumVerloopPicker.SelectedDate}");
+        }
+
+        // Set hour dropdown to current hour
+        if (dropdownHour != null)
+        {
+            int hour = Mathf.Clamp(DateTime.Now.Hour, 0, dropdownHour.options.Count - 1);
+            dropdownHour.value = hour;
+            Debug.Log($"Set default hour: {dropdownHour.value}");
+        }
+
+        // Set minute dropdown to current minute
+        if (dropdownMinute != null)
+        {
+            int minute = Mathf.Clamp(DateTime.Now.Minute, 0, dropdownMinute.options.Count - 1);
+            dropdownMinute.value = minute;
+            Debug.Log($"Set default minute: {dropdownMinute.value}");
+        }
+    }
+
+
 
     public async void SaveNotificatie()
     {
@@ -121,19 +278,37 @@ public class NotificatieEditController : MonoBehaviour
             return;
         }
 
-        // Use the original date info for now
+        // Get selected date from date picker and time from dropdowns
         DateTime datumVerloop;
         try
         {
-            // Try to use the dropdowns for time if available
-            int hour = (dropdownHour != null) ? dropdownHour.value : originalDateTime.Hour;
-            int minute = (dropdownMinute != null) ? dropdownMinute.value : originalDateTime.Minute;
+            // Get date from datepicker
+            DateTime selectedDate;
+            if (datumVerloopPicker != null && datumVerloopPicker.SelectedDate.HasValue)
+            {
+                selectedDate = datumVerloopPicker.SelectedDate.Date;
+                Debug.Log($"Using date from picker: {selectedDate}");
+            }
+            else if (originalDateTime != default)
+            {
+                selectedDate = originalDateTime.Date;
+                Debug.Log($"Using original date: {selectedDate}");
+            }
+            else
+            {
+                selectedDate = DateTime.Today;
+                Debug.Log($"Using today's date: {selectedDate}");
+            }
 
-            // Use the original date
+            // Get time from dropdowns
+            int hour = (dropdownHour != null) ? dropdownHour.value : 0;
+            int minute = (dropdownMinute != null) ? dropdownMinute.value : 0;
+
+            // Combine date and time
             datumVerloop = new DateTime(
-                originalDateTime.Year,
-                originalDateTime.Month,
-                originalDateTime.Day,
+                selectedDate.Year,
+                selectedDate.Month,
+                selectedDate.Day,
                 hour,
                 minute,
                 0
@@ -149,16 +324,46 @@ public class NotificatieEditController : MonoBehaviour
 
         try
         {
-            Notificatie updatedNotificatie = new Notificatie
+            // Get the original DatumAanmaak or use current time if not available
+            string datumAanmaak = PlayerPrefs.GetString("CurrentNotificatieDatumAanmaak");
+            if (string.IsNullOrEmpty(datumAanmaak))
+            {
+                datumAanmaak = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+            }
+
+            // Make sure both dates use the same format (using T instead of space)
+            string formattedDatumVerloop = datumVerloop.ToString("yyyy-MM-ddTHH:mm:ss");
+
+            // Get userId from PlayerPrefs or leave it null if not available
+            string userId = PlayerPrefs.GetString("CurrentNotificatieUserId", null);
+
+            // Create a dictionary for the JSON data to have more control over the structure
+            var notificatieData = new Dictionary<string, object>
+        {
+            { "id", currentNotificatieId },
+            { "bericht", berichtInput.text },
+            { "isGelezen", false },
+            { "datumAanmaak", datumAanmaak },
+            { "datumVerloop", formattedDatumVerloop }
+        };
+
+            // Only add userId if it's not null or empty
+            if (!string.IsNullOrEmpty(userId))
+            {
+                notificatieData.Add("userId", userId);
+            }
+
+            // Convert to JSON
+            string notificatieJson = JsonUtility.ToJson(new Notificatie
             {
                 id = currentNotificatieId,
                 Bericht = berichtInput.text,
                 IsGelezen = false,
-                DatumAanmaak = PlayerPrefs.GetString("CurrentNotificatieDatumAanmaak"),
-                DatumVerloop = datumVerloop.ToString("yyyy-MM-ddTHH:mm:ss")
-            };
+                DatumAanmaak = datumAanmaak,
+                DatumVerloop = formattedDatumVerloop,
+                // Don't set UserId at all - let the server handle it
+            });
 
-            string notificatieJson = JsonUtility.ToJson(updatedNotificatie);
             Debug.Log("Verzonden JSON: " + notificatieJson);
             string token = SecureUserSession.Instance.GetToken();
 
@@ -169,7 +374,8 @@ public class NotificatieEditController : MonoBehaviour
 
                 if (response is WebRequestError errorResponse)
                 {
-                    ShowErrorPopup("Fout bij opslaan van notificatie: " + (errorResponse as WebRequestError).ErrorMessage);
+                    Debug.LogError($"Error response: {errorResponse.ErrorMessage}");
+                    ShowErrorPopup("Fout bij opslaan van notificatie: " + errorResponse.ErrorMessage);
                 }
                 else if (response is WebRequestData<string>)
                 {
@@ -178,6 +384,7 @@ public class NotificatieEditController : MonoBehaviour
                 }
                 else
                 {
+                    Debug.LogError("Unknown response type");
                     ShowErrorPopup("Onbekende respons");
                 }
             }
@@ -192,6 +399,9 @@ public class NotificatieEditController : MonoBehaviour
             ShowErrorPopup("Er is een fout opgetreden bij het opslaan");
         }
     }
+
+
+
 
     public async void DeleteNotificatie()
     {
