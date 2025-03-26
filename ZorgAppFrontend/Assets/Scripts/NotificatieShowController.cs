@@ -42,7 +42,7 @@ public class NotificatieShowController : MonoBehaviour
             popupCloseButton.onClick.AddListener(OnPopupCloseButtonClick);
 
         if (backButton != null)
-            backButton.onClick.AddListener(ReturnToRoute13);
+            backButton.onClick.AddListener(ReturnToTraject13);
 
         if (AddNotificationSceneButton != null)
             AddNotificationSceneButton.onClick.AddListener(() => SceneManager.LoadScene("NotificatieAddScene"));
@@ -80,9 +80,9 @@ public class NotificatieShowController : MonoBehaviour
         }
     }
 
-    private void ReturnToRoute13()
+    private void ReturnToTraject13()
     {
-        SceneManager.LoadScene("Route13");
+        SceneManager.LoadScene("Traject13");
     }
 
     private async void LoadNotificaties()
@@ -395,7 +395,7 @@ public class NotificatieShowController : MonoBehaviour
         if (button != null)
         {
             Notificatie capturedNotification = notification;
-            //button.onClick.AddListener(() => OpenNotificationDetailScene(capturedNotification));
+            button.onClick.AddListener(() => OpenEditNotificatieScene(capturedNotification));
         }
     }
 
@@ -523,13 +523,14 @@ public class NotificatieShowController : MonoBehaviour
         }
     }
 
-    private void OpenNotificationEditScene(Notificatie notification)
+    private void OpenEditNotificatieScene(Notificatie notificatie)
     {
-        PlayerPrefs.SetInt("CurrentNotificationId", notification.ID);
-        PlayerPrefs.SetString("CurrentNotificationMessage", notification.Bericht);
-        PlayerPrefs.SetString("CurrentNotificationDate", notification.DatumAanmaak ?? DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"));
-        SceneManager.LoadScene("NotificationEditScene");
+        PlayerPrefs.SetInt("CurrentNotificatieId", notificatie.id);
+        PlayerPrefs.SetString("CurrentNotificatieBericht", notificatie.Bericht);
+        Debug.Log($"Saved Notificatie ID: {notificatie.id}, Bericht: {notificatie.Bericht}, DatumAanmaak: {notificatie.DatumAanmaak}");
+        SceneManager.LoadScene("NotificatieEditScene");
     }
+
 
     private void ShowStatus(string message, bool isError)
     {

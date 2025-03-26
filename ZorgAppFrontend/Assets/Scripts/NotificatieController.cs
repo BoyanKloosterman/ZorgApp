@@ -222,30 +222,121 @@ public class NotificatieController : MonoBehaviour
 
     private async void ListenForMessages()
     {
+        // Bail early if WebSocket is invalid
         if (webSocket == null || webSocket.State != WebSocketState.Open)
+        {
+            Debug.LogWarning("ListenForMessages called with invalid WebSocket state");
             return;
+        }
+
+        // Ensure cancellationTokenSource is valid
+        if (cancellationTokenSource == null)
+        {
+            Debug.LogWarning("ListenForMessages called with null cancellationTokenSource, creating new one");
+            cancellationTokenSource = new CancellationTokenSource();
+        }
 
         var buffer = new byte[4096];
         try
         {
             Debug.Log("Starting to listen for WebSocket messages");
-            while (webSocket.State == WebSocketState.Open && !cancellationTokenSource.Token.IsCancellationRequested)
+            while (webSocket != null && webSocket.State == WebSocketState.Open &&
+                   cancellationTokenSource != null && !cancellationTokenSource.Token.IsCancellationRequested)
             {
-                var result = await webSocket.ReceiveAsync(
-                    new ArraySegment<byte>(buffer),
-                    cancellationTokenSource.Token);
+                // Create timeout tokens with null checks
+                CancellationTokenSource receiveTimeoutCts = null;
+                CancellationTokenSource linkedCts = null;
 
-                if (result.MessageType == WebSocketMessageType.Text)
+                try
                 {
-                    string message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    Debug.Log($"WebSocket message received: {message}");
+                    // Create new token sources for this loop iteration
+                    receiveTimeoutCts = new CancellationTokenSource();
 
-                    ProcessWebSocketMessage(message);
+                    // Only create linkedCts if main cancellationTokenSource still exists
+                    if (cancellationTokenSource != null)
+                    {
+                        linkedCts = CancellationTokenSource.CreateLinkedTokenSource(
+                            cancellationTokenSource.Token, receiveTimeoutCts.Token);
+                    }
+                    else
+                    {
+                        // If main token is gone, just use the timeout one
+                        linkedCts = CancellationTokenSource.CreateLinkedTokenSource(receiveTimeoutCts.Token);
+                    }
+
+                    // Set timeout
+                    receiveTimeoutCts.CancelAfter(30000); // 30 second timeout
+
+                    // Verify websocket is still valid before receiving
+                    if (webSocket == null || webSocket.State != WebSocketState.Open)
+                    {
+                        Debug.LogWarning("WebSocket became invalid during listen loop");
+                        break;
+                    }
+
+                    var result = await webSocket.ReceiveAsync(
+                        new ArraySegment<byte>(buffer),
+                        linkedCts.Token);
+
+                    if (result.MessageType == WebSocketMessageType.Text)
+                    {
+                        string message = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                        Debug.Log($"WebSocket message received: {message}");
+
+                        ProcessWebSocketMessage(message);
+                    }
+                    else if (result.MessageType == WebSocketMessageType.Close)
+                    {
+                        Debug.Log("WebSocket closed by server");
+                        break;
+                    }
                 }
-                else if (result.MessageType == WebSocketMessageType.Close)
+                catch (OperationCanceledException)
                 {
-                    Debug.Log("WebSocket closed by server");
-                    break;
+                    // Check if it was a timeout or deliberate cancellation
+                    if (receiveTimeoutCts != null && receiveTimeoutCts.IsCancellationRequested &&
+                        (cancellationTokenSource == null || !cancellationTokenSource.IsCancellationRequested))
+                    {
+                        Debug.LogWarning("WebSocket receive operation timed out, checking connection");
+
+                        // Check connection status
+                        try
+                        {
+                            if (webSocket != null && webSocket.State == WebSocketState.Open)
+                            {
+                                Debug.Log("WebSocket connection is still valid after timeout");
+                                continue;
+                            }
+                            else
+                            {
+                                Debug.LogWarning("WebSocket is in invalid state after timeout");
+                                break;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.LogWarning($"Error checking WebSocket state: {ex.Message}");
+                            break;
+                        }
+                    }
+                    else if (cancellationTokenSource != null && cancellationTokenSource.IsCancellationRequested)
+                    {
+                        Debug.Log("WebSocket listening deliberately canceled");
+                        return; // Exit without reconnection attempt
+                    }
+                }
+                finally
+                {
+                    // Clean up token sources
+                    try
+                    {
+                        linkedCts?.Dispose();
+                        receiveTimeoutCts?.Dispose();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError($"Error disposing token sources: {ex.Message}");
+                    }
                 }
             }
         }
@@ -255,23 +346,51 @@ public class NotificatieController : MonoBehaviour
         }
         catch (TaskCanceledException)
         {
-            Debug.Log("WebSocket listening canceled");
+            Debug.Log("WebSocket listening task canceled");
         }
         catch (Exception ex)
         {
             Debug.LogError($"Error listening to WebSocket: {ex.Message}");
+            Debug.LogException(ex);
         }
         finally
         {
-            Debug.Log("WebSocket listener exiting, socket state: " + (webSocket != null ? webSocket.State.ToString() : "null"));
-            // Reconnect if disconnected unexpectedly
-            if (!cancellationTokenSource.Token.IsCancellationRequested)
+            string socketState = "null";
+            try
             {
-                await Task.Delay(1000);
-                ConnectToWebSocket();
+                socketState = webSocket != null ? webSocket.State.ToString() : "null";
+            }
+            catch
+            {
+                socketState = "error-getting-state";
+            }
+
+            Debug.Log($"WebSocket listener exiting, socket state: {socketState}");
+
+            // Only attempt reconnection if we're not deliberately shutting down
+            if (cancellationTokenSource != null && !cancellationTokenSource.IsCancellationRequested)
+            {
+                try
+                {
+                    // Clean up the current socket before reconnecting
+                    DisposeWebSocket();
+
+                    // Delay before reconnection attempt
+                    await Task.Delay(1000);
+
+                    // Try to reconnect
+                    ConnectToWebSocket();
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"Error during reconnection sequence: {ex.Message}");
+                }
             }
         }
     }
+
+
+
 
     private void ProcessWebSocketMessage(string jsonMessage)
     {
