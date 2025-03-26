@@ -122,5 +122,48 @@ namespace ZorgAppAPI.Controllers
             await _notificatieRepository.DeleteNotificatieAsync(id);
             return NoContent();
         }
+
+
+        [HttpPost("testwebsocket")]
+        public async Task<ActionResult> SendTestWebSocket(string message = null)
+        {
+            var userId = _authenticationService.GetCurrentAuthenticatedUserId();
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User not authenticated.");
+            }
+
+            if (string.IsNullOrEmpty(message))
+            {
+                message = $"Test notification at {DateTime.Now:HH:mm:ss}";
+            }
+
+            _logger.LogInformation("Sending test WebSocket notification to user {UserId}", userId);
+
+            var notificatie = new Notificatie
+            {
+                Bericht = message,
+                DatumAanmaak = DateTime.Now,
+                DatumVerloop = DateTime.Now.AddSeconds(5), // Will trigger almost immediately
+                UserId = userId,
+                IsGelezen = false
+            };
+
+            // Save to the database
+            await _notificatieRepository.AddNotificatieAsync(notificatie);
+
+            // Get the notification service and send directly
+            var notificatieSender = HttpContext.RequestServices.GetRequiredService<INotificatieSender>();
+            await notificatieSender.SendNotificationAsync(notificatie);
+
+            return Ok(new
+            {
+                message = "Test notification sent",
+                notificationId = notificatie.ID,
+                userId = userId,
+                expiresAt = notificatie.DatumVerloop
+            });
+        }
+
     }
 }

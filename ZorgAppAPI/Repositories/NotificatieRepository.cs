@@ -55,5 +55,6 @@ namespace ZorgAppAPI.Repositories
             var query = "SELECT * FROM dbo.Notificatie WHERE DatumVerloop <= GETDATE() AND IsGelezen = 0";
             return await _dbConnection.QueryAsync<Notificatie>(query);
         }
+
     }
 }

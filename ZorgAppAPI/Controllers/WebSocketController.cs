@@ -137,14 +137,10 @@ namespace ZorgAppAPI.Controllers
                     return false;
                 }
             }
-            else
-            {
-                // Log if client isn't connected or in wrong state
-                string state = socket != null ? socket.State.ToString() : "null";
-                Console.WriteLine($"Cannot send to user {userId}: Client state is {state}");
-                return false;
-            }
+
+            return false; // User not connected
         }
+
 
 
         // Helper method to broadcast to all connected users

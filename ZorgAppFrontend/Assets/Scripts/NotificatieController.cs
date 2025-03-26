@@ -18,7 +18,7 @@ public class NotificatieController : MonoBehaviour
 
     [Header("WebSocket Settings")]
     public WebClient webClient;
-    public string fallbackUrl = "https://localhost:7078";
+    public string fallbackUrl = "https://localhost:7078/";
     public float reconnectDelay = 5f;
     public int maxReconnectAttempts = 5;
 
@@ -40,6 +40,7 @@ public class NotificatieController : MonoBehaviour
     {
         // Keep this GameObject between scene loads
         DontDestroyOnLoad(gameObject);
+        notificationQueue = new Queue<NotificationItem>();
     }
 
     private void Start()
@@ -57,12 +58,14 @@ public class NotificatieController : MonoBehaviour
     private void Update()
     {
         // Process notification queue if not currently showing a notification
-        if (notificationQueue.Count > 0 && !notificationPanel.activeSelf)
+        // and if notificationPanel is not null
+        if (notificationQueue.Count > 0 && notificationPanel != null && !notificationPanel.activeSelf)
         {
             var item = notificationQueue.Dequeue();
             DisplayNotification(item.Message, item.Duration);
         }
     }
+
 
     private void InitializeUI()
     {
@@ -79,7 +82,7 @@ public class NotificatieController : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Notification panel not assigned!");
+            Debug.LogError("Notification panel not assigned! Please assign it in the Inspector.");
         }
     }
 
@@ -299,7 +302,15 @@ public class NotificatieController : MonoBehaviour
     public void ShowNotification(string message, float duration = 3f)
     {
         Debug.Log($"Queueing notification: {message}");
-        notificationQueue.Enqueue(new NotificationItem { Message = message, Duration = duration });
+
+        if (notificationQueue != null)
+        {
+            notificationQueue.Enqueue(new NotificationItem { Message = message, Duration = duration });
+        }
+        else
+        {
+            Debug.LogError("Notification queue is null!");
+        }
     }
 
     private void DisplayNotification(string message, float duration)
@@ -319,6 +330,13 @@ public class NotificatieController : MonoBehaviour
 
     private IEnumerator ShowAndHideNotification(float duration)
     {
+        // Check if components exist
+        if (canvasGroup == null || notificationPanel == null)
+        {
+            Debug.LogError("Required components missing for notification animation");
+            yield break;
+        }
+
         // Fade-in
         canvasGroup.alpha = 0;
         while (canvasGroup.alpha < 1)
@@ -331,13 +349,17 @@ public class NotificatieController : MonoBehaviour
         yield return new WaitForSeconds(duration);
 
         // Fade-out
-        while (canvasGroup.alpha > 0)
+        while (canvasGroup != null && canvasGroup.alpha > 0)
         {
             canvasGroup.alpha -= Time.deltaTime * fadeSpeed;
             yield return null;
         }
 
-        notificationPanel.SetActive(false);
+        // Check again before deactivating
+        if (notificationPanel != null)
+        {
+            notificationPanel.SetActive(false);
+        }
     }
 
     private void OnDestroy()
@@ -360,6 +382,8 @@ public class NotificatieController : MonoBehaviour
         reconnectAttempts = 0;
         ConnectToWebSocket();
     }
+
+
 
     // Method to send a test notification (for debugging)
     public void SendTestNotification(string message = "This is a test notification")
