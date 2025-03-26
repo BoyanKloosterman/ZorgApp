@@ -22,10 +22,6 @@ public class NotificatieController : MonoBehaviour
     public float reconnectDelay = 5f;
     public int maxReconnectAttempts = 5;
 
-    [Header("Debug")]
-    public bool debugMode = true;
-    public bool forceShowNotification = false;
-
     private CanvasGroup canvasGroup;
     private ClientWebSocket webSocket;
     private CancellationTokenSource cancellationTokenSource;
@@ -61,12 +57,6 @@ public class NotificatieController : MonoBehaviour
         cancellationTokenSource = new CancellationTokenSource();
         ConnectToWebSocket();
 
-        // Test notification for debugging
-        if (debugMode)
-        {
-            Debug.Log("Debug mode active, sending test notification");
-            Invoke("ShowTestNotification", 2f);
-        }
     }
 
     private void Update()
@@ -87,12 +77,6 @@ public class NotificatieController : MonoBehaviour
             }
         }
 
-        // Force show notification for debugging
-        if (forceShowNotification)
-        {
-            forceShowNotification = false;
-            ShowTestNotification();
-        }
     }
 
     private void InitializeUI()
@@ -319,11 +303,6 @@ public class NotificatieController : MonoBehaviour
                     ShowNotification(notificationText, 5f);
                 }
             }
-            else if (messageType == "welcome")
-            {
-                Debug.Log("Welcome message received from WebSocket server");
-                ShowNotification("Connected to notification service", 2f);
-            }
             else
             {
                 Debug.Log($"Unhandled message type: {messageType}");
@@ -448,10 +427,4 @@ public class NotificatieController : MonoBehaviour
         ConnectToWebSocket();
     }
 
-    // Method to send a test notification (for debugging)
-    public void ShowTestNotification(string message = "This is a test notification")
-    {
-        Debug.Log("Showing test notification");
-        ShowNotification(message);
-    }
 }

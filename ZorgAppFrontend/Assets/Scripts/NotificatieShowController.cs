@@ -519,12 +519,12 @@ public class NotificatieShowController : MonoBehaviour
         }
     }
 
-    private void OpenNotificationDetailScene(Notificatie notification)
+    private void OpenNotificationEditScene(Notificatie notification)
     {
         PlayerPrefs.SetInt("CurrentNotificationId", notification.ID);
         PlayerPrefs.SetString("CurrentNotificationMessage", notification.Bericht);
         PlayerPrefs.SetString("CurrentNotificationDate", notification.DatumAanmaak ?? DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"));
-        SceneManager.LoadScene("NotificationDetailScene");
+        SceneManager.LoadScene("NotificationEditScene");
     }
 
     private void ShowStatus(string message, bool isError)
