@@ -2,6 +2,7 @@
 using ZorgAppAPI.Interfaces;
 using ZorgAppAPI.Models;
 using Microsoft.Extensions.Logging;
+using ZorgAppAPI.Controllers;
 
 namespace ZorgAppAPI.Services
 {
@@ -14,11 +15,52 @@ namespace ZorgAppAPI.Services
             _logger = logger;
         }
 
-        public Task SendNotificationAsync(Notificatie notificatie)
+        public async Task SendNotificationAsync(Notificatie notificatie)
         {
-            // Implement the logic to send the notification (e.g., email, SMS, etc.)
-            _logger.LogInformation("Notification sent for Notificatie ID: {NotificatieId}", notificatie.ID);
-            return Task.CompletedTask;
+            _logger.LogInformation("Sending notification ID: {NotificatieId}, Message: {Message}, UserId: {UserId}",
+                notificatie.ID, notificatie.Bericht, notificatie.UserId);
+
+            try
+            {
+                // Create notification data object
+                var notificationData = new
+                {
+                    type = "notification",
+                    id = notificatie.ID,
+                    message = notificatie.Bericht,
+                    created = notificatie.DatumAanmaak.ToString("yyyy-MM-dd HH:mm:ss"),
+                    expired = notificatie.DatumVerloop.ToString("yyyy-MM-dd HH:mm:ss")
+                };
+
+                bool delivered = false;
+
+                if (!string.IsNullOrEmpty(notificatie.UserId))
+                {
+                    // Try to send to the specific user
+                    delivered = await WebSocketController.SendToUserAsync(notificatie.UserId, notificationData);
+
+                    if (delivered)
+                    {
+                        _logger.LogInformation("Successfully delivered notification to user {UserId}", notificatie.UserId);
+                    }
+                    else
+                    {
+                        _logger.LogWarning("User {UserId} not connected, trying broadcast instead", notificatie.UserId);
+                        // If specific user not connected, try broadcasting as fallback
+                        await WebSocketController.BroadcastAsync(notificationData);
+                    }
+                }
+                else
+                {
+                    // Broadcast to all if no specific user
+                    _logger.LogInformation("Broadcasting notification to all connected users");
+                    await WebSocketController.BroadcastAsync(notificationData);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex, "Error sending WebSocket notification");
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using ZorgAppAPI.Interfaces;
+using ZorgAppAPI.Controllers;
 
 namespace ZorgAppAPI.Services
 {
@@ -40,6 +41,9 @@ namespace ZorgAppAPI.Services
                             await notificatieSender.SendNotificationAsync(notificatie);
                             notificatie.IsGelezen = true;
                             await notificatieRepository.UpdateNotificatieAsync(notificatie);
+
+                            // Send notification via WebSocket
+                            //await WebSocketController.SendMessageAsync(notificatie.Bericht);
                         }
                     }
                 }

@@ -1791,6 +1791,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notificationText: {fileID: 1205859871}
   notificationPanel: {fileID: 2014038478}
+  webClient: {fileID: 0}
+  reconnectDelay: 5
+  maxReconnectAttempts: 5
 --- !u!114 &1620249658
 MonoBehaviour:
   m_ObjectHideFlags: 0
