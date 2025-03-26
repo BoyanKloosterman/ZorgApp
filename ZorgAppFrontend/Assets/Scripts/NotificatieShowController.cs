@@ -16,6 +16,7 @@ public class NotificatieShowController : MonoBehaviour
     public Transform notificationPanel;
     public Text noNotificationsText;
     public Button backButton;
+    public Button AddNotificationSceneButton;
 
     [Header("API Connection")]
     public WebClient webClient;
@@ -42,6 +43,9 @@ public class NotificatieShowController : MonoBehaviour
 
         if (backButton != null)
             backButton.onClick.AddListener(ReturnToRoute13);
+
+        if (AddNotificationSceneButton != null)
+            AddNotificationSceneButton.onClick.AddListener(() => SceneManager.LoadScene("NotificatieAddScene"));
 
         if (!hasMissingComponents)
             LoadNotificaties();
@@ -391,7 +395,7 @@ public class NotificatieShowController : MonoBehaviour
         if (button != null)
         {
             Notificatie capturedNotification = notification;
-            button.onClick.AddListener(() => OpenNotificationDetailScene(capturedNotification));
+            //button.onClick.AddListener(() => OpenNotificationDetailScene(capturedNotification));
         }
     }
 

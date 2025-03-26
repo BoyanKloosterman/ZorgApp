@@ -40,7 +40,6 @@ public class NotificatieController : MonoBehaviour
     private void Awake()
     {
         // Keep this GameObject between scene loads
-        DontDestroyOnLoad(gameObject);
 
         // Ensure the queue is initialized
         notificationQueue = new Queue<NotificationItem>();
@@ -163,9 +162,6 @@ public class NotificatieController : MonoBehaviour
 
             // Reset reconnect attempts after successful connection
             reconnectAttempts = 0;
-
-            // Enqueue a success notification
-            ShowNotification("Connected to notification service", 2f);
 
             // Start listening for messages
             ListenForMessages();
