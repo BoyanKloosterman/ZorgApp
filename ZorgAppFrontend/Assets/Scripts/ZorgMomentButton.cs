@@ -32,8 +32,7 @@ public class ZorgMomentButton : MonoBehaviour
         bool isCompleted = TrajectManager.Instance.behaaldeZorgMomentIds.Contains(zorgMomentID);
         buttonImage.color = isCompleted ? Color.green : Color.white;
 
-        int nextIndex = TrajectManager.Instance.GetNextEnabledIndex();
-        button.interactable = (index == nextIndex);
+        button.interactable = true;
     }
 
     private void OnButtonClick()
