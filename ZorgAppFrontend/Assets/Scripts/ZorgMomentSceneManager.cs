@@ -9,6 +9,7 @@ public class ZorgMomentSceneManager : MonoBehaviour
 {
     public TextMeshProUGUI text;
     public UserApiClient userApiClient;
+    public string url;
 
     private void Start()
     {
@@ -24,6 +25,7 @@ public class ZorgMomentSceneManager : MonoBehaviour
             case WebRequestData<string> dataResponse:
                 ZorgMoment parsedzorgMoment = JsonUtility.FromJson<ZorgMoment>(dataResponse.Data);
                 text.text = parsedzorgMoment.tekst;
+                url = parsedzorgMoment.url;
                 break;
             case WebRequestError errorResponse:
                 Debug.LogError("Error: " + errorResponse.ErrorMessage);
@@ -60,7 +62,6 @@ public class ZorgMomentSceneManager : MonoBehaviour
         switch (webRequestResponse)
         {
             case WebRequestData<string> dataResponse:
-                Debug.Log("Zorgmoment finished");
                 return true;
             case WebRequestError errorResponse:
                 Debug.LogError("Error: " + errorResponse.ErrorMessage);
@@ -74,5 +75,38 @@ public class ZorgMomentSceneManager : MonoBehaviour
     {
         await PerformFinishZorgMoment();
         SceneManager.LoadScene("traject" + TrajectManager.Instance.trajectNumber);
+    }
+
+    public void OpenUrlInBrowser()
+    {
+        if (!string.IsNullOrEmpty(url))
+        {
+            try
+            {
+                Application.OpenURL(url);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("Error opening URL: " + e.Message);
+            }
+        }
+        else
+        {
+            Debug.LogError("URL is empty");
+        }
+    }
+
+    private string ParseUrlFromHyperlink(string hyperlinkText)
+    {
+        // This method extracts the URL from the formatted hyperlink text
+        int startIndex = hyperlinkText.IndexOf("href=\"") + 6;
+        int endIndex = hyperlinkText.IndexOf("\"", startIndex);
+
+        if (startIndex > 5 && endIndex > startIndex)
+        {
+            return hyperlinkText.Substring(startIndex, endIndex - startIndex);
+        }
+
+        return string.Empty;
     }
 }
