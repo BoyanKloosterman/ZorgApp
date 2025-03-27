@@ -277,7 +277,22 @@ public class NotificatieShowController : MonoBehaviour
             {
                 DateTime expiry1 = DateTime.Parse(notif1.DatumVerloop);
                 DateTime expiry2 = DateTime.Parse(notif2.DatumVerloop);
-                return expiry1.CompareTo(expiry2);
+
+                bool isExpired1 = expiry1 < DateTime.Now;
+                bool isExpired2 = expiry2 < DateTime.Now;
+
+                if (isExpired1 && !isExpired2)
+                {
+                    return 1;
+                }
+                else if (!isExpired1 && isExpired2)
+                {
+                    return -1;
+                }
+                else
+                {
+                    return expiry1.CompareTo(expiry2);
+                }
             }
             catch (Exception)
             {
@@ -310,6 +325,7 @@ public class NotificatieShowController : MonoBehaviour
             UpdateNoNotificationsText("Geen geldige notificaties gevonden");
         }
     }
+
 
     private void ClearNotificationsFromUI()
     {
@@ -348,6 +364,13 @@ public class NotificatieShowController : MonoBehaviour
             creationDateTransform.gameObject.SetActive(false);
         }
 
+        // Find the remove button in the prefab
+        Transform removeButtonTransform = notificationButtonObj.transform.Find("RemoveButton");
+        if (removeButtonTransform != null)
+        {
+            removeButtonTransform.gameObject.SetActive(false); // Hide by default
+        }
+
         bool parsedExpiry = DateTime.TryParse(notification.DatumVerloop, out DateTime expiryDate);
 
         if (parsedExpiry)
@@ -356,6 +379,7 @@ public class NotificatieShowController : MonoBehaviour
 
             if (timeRemaining.TotalSeconds <= 0)
             {
+                // Notification is expired
                 if (tmpCountdownText != null)
                 {
                     tmpCountdownText.text = "Verlopen";
@@ -365,6 +389,18 @@ public class NotificatieShowController : MonoBehaviour
                 {
                     uiCountdownText.text = "Verlopen";
                     uiCountdownText.color = Color.red;
+                }
+
+                // Show remove button only for expired notifications
+                if (removeButtonTransform != null)
+                {
+                    removeButtonTransform.gameObject.SetActive(true);
+                    Button removeButton = removeButtonTransform.GetComponent<Button>();
+                    if (removeButton != null)
+                    {
+                        removeButton.onClick.RemoveAllListeners();
+                        removeButton.onClick.AddListener(() => DeleteNotification(notification, notificationButtonObj));
+                    }
                 }
             }
             else
@@ -398,6 +434,48 @@ public class NotificatieShowController : MonoBehaviour
             button.onClick.AddListener(() => OpenEditNotificatieScene(capturedNotification));
         }
     }
+
+    private async void DeleteNotification(Notificatie notification, GameObject notificationObject)
+    {
+        try
+        {
+            if (webClient == null)
+            {
+                ShowErrorPopup("Kan notificatie niet verwijderen: WebClient niet geconfigureerd");
+                return;
+            }
+
+            string token = SecureUserSession.Instance.GetToken();
+            if (string.IsNullOrEmpty(token))
+            {
+                ShowErrorPopup("Geen token beschikbaar");
+                return;
+            }
+
+            webClient.SetToken(token);
+
+            IWebRequestResponse response = await webClient.SendDeleteRequest($"api/Notificatie/{notification.ID}");
+
+            if (response is WebRequestError errorResponse)
+            {
+                string errorMessage = errorResponse?.ErrorMessage ?? "Unknown error";
+                ShowErrorPopup($"Fout bij verwijderen van notificatie: {errorMessage}");
+            }
+            else
+            {
+                if (notificationObject != null)
+                {
+                    Destroy(notificationObject);
+                    ShowStatus("Notificatie succesvol verwijderd", false);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowErrorPopup($"Fout bij verwijderen van notificatie: {ex.Message}");
+        }
+    }
+
 
     private IEnumerator UpdateTMProCountdown(TextMeshProUGUI countdownText, DateTime expiryDate)
     {
