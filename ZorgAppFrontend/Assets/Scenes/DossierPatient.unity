@@ -3793,6 +3793,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notificationText: {fileID: 2048608111}
   notificationPanel: {fileID: 169560339}
+  webClient: {fileID: 1593588581}
+  fallbackUrl: https://localhost:7078
+  reconnectDelay: 5
+  maxReconnectAttempts: 5
 --- !u!1 &1627693313
 GameObject:
   m_ObjectHideFlags: 0
