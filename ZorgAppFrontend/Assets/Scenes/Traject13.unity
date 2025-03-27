@@ -4946,7 +4946,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ed722d7c057c4f48af80e38d24e0abc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseUrl: https://localhost:7078/
+  baseUrl: https://localhost:7078
 --- !u!114 &2098123113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4992,7 +4992,7 @@ MonoBehaviour:
   notificationText: {fileID: 781904399}
   notificationPanel: {fileID: 1040400552}
   webClient: {fileID: 0}
-  fallbackUrl: https://localhost:7078/
+  fallbackUrl: https://localhost:7078
   reconnectDelay: 5
   maxReconnectAttempts: 5
 --- !u!1660057539 &9223372036854775807
