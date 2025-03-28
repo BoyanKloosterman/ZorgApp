@@ -92,7 +92,7 @@ app.UseWebSockets(new WebSocketOptions
     KeepAliveInterval = TimeSpan.FromMinutes(2)
 });
 
-// In Program.cs, voeg deze middleware toe vóór app.UseWebSockets()
+// In Program.cs, voeg deze middleware toe voor app.UseWebSockets()
 app.Use(async (context, next) =>
 {
     var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
