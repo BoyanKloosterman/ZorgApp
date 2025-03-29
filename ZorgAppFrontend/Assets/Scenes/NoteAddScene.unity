@@ -1345,9 +1345,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 593100065}
+  - component: {fileID: 593100068}
   - component: {fileID: 593100066}
   - component: {fileID: 593100067}
-  - component: {fileID: 593100068}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -1418,6 +1418,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notificationText: {fileID: 1203804154}
   notificationPanel: {fileID: 1155770685}
+  webClient: {fileID: 593100066}
+  fallbackUrl: https://localhost:7078
+  reconnectDelay: 5
+  maxReconnectAttempts: 5
 --- !u!1 &692551886
 GameObject:
   m_ObjectHideFlags: 0
