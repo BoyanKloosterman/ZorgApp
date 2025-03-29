@@ -26,15 +26,17 @@ namespace ZorgAppAPI.Models
 
         public int? ArtsID { get; set; }
 
+        public string Geboortedatum { get; set; }
+
         public string UserId { get; set; }
         // Navigation properties
-        [ForeignKey("OuderVoogd_ID")]
-        public virtual OuderVoogd OuderVoogd { get; set; }
+        //[ForeignKey("OuderVoogd_ID")]
+        //public virtual OuderVoogd OuderVoogd { get; set; }
 
-        [ForeignKey("TrajectID")]
-        public virtual Traject Traject { get; set; }
+        //[ForeignKey("TrajectID")]
+        //public virtual Traject Traject { get; set; }
 
-        [ForeignKey("ArtsID")]
-        public virtual Arts Arts { get; set; }
+        //[ForeignKey("ArtsID")]
+        //public virtual Arts Arts { get; set; }
     }
 }

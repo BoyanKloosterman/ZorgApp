@@ -62,7 +62,7 @@ public class RegisterController : MonoBehaviour
             }
             else
             {
-                login.PerformLogin();
+                login.PerformLogin(true);
             }
             return;
         }

@@ -4161,8 +4161,6 @@ MonoBehaviour:
     m_Options:
     - m_Text: Arts
       m_Image: {fileID: 0}
-    - m_Text: Patient
-      m_Image: {fileID: 0}
     - m_Text: OuderVoogd
       m_Image: {fileID: 0}
   m_OnValueChanged:

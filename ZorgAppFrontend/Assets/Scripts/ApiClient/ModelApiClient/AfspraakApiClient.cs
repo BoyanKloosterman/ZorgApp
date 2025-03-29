@@ -1,37 +1,35 @@
-﻿using Assets.Scripts.Model;
+using Assets.Scripts.Model;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using Newtonsoft.Json;
 
 namespace Assets.Scripts.ApiClient.ModelApiClient
 {
-    public class PatientApiClient : MonoBehaviour
+    public class AfspraakApiClient : MonoBehaviour
     {
         public WebClient webClient;
 
-        public async Awaitable<IWebRequestResponse> GetPatients()
+        public async Task<IWebRequestResponse> GetAfspraken()
         {
-            string route = "/api/Patient";
+            string route = "/api/Afspraak";
             IWebRequestResponse webRequestResponse = await webClient.SendGetRequest(route);
             return ParseListResponse(webRequestResponse);
         }
 
-        public async Awaitable<IWebRequestResponse> CreatePatient(Patient patient)
+        public async Task<IWebRequestResponse> CreateAfspraak(Afspraak afspraak)
         {
-            string route = "/api/Patient";
-            string data = JsonConvert.SerializeObject(patient);
+            string route = "/api/Afspraak";
+            string data = JsonConvert.SerializeObject(afspraak);
             IWebRequestResponse webRequestResponse = await webClient.SendPostRequest(route, data);
             return ParseResponse(webRequestResponse);
         }
 
-        public async Awaitable<IWebRequestResponse> UpdatePatient(PatientDto patient)
+        public async Task<IWebRequestResponse> UpdateAfspraak(Afspraak afspraak)
         {
-            string route = $"/api/Patient/{patient.id}";
-            string data = JsonConvert.SerializeObject(patient);
+            string route = $"/api/Afspraak/{afspraak.id}";
+            string data = JsonConvert.SerializeObject(afspraak);
             IWebRequestResponse webRequestResponse = await webClient.SendPutRequest(route, data);
             return ParseResponse(webRequestResponse);
         }
@@ -41,8 +39,8 @@ namespace Assets.Scripts.ApiClient.ModelApiClient
             switch (webRequestResponse)
             {
                 case WebRequestData<string> data:
-                    Patient patient = JsonConvert.DeserializeObject<Patient>(data.Data);
-                    WebRequestData<Patient> parsedWebRequestData = new WebRequestData<Patient>(patient);
+                    Afspraak afspraak = JsonConvert.DeserializeObject<Afspraak>(data.Data);
+                    WebRequestData<Afspraak> parsedWebRequestData = new WebRequestData<Afspraak>(afspraak);
                     return parsedWebRequestData;
                 default:
                     return webRequestResponse;
@@ -54,9 +52,8 @@ namespace Assets.Scripts.ApiClient.ModelApiClient
             switch (webRequestResponse)
             {
                 case WebRequestData<string> data:
-                    //Debug.Log("Response data raw: " + data.Data);
-                    List<Patient> patient = JsonConvert.DeserializeObject<List<Patient>>(data.Data);
-                    WebRequestData<List<Patient>> parsedWebRequestData = new WebRequestData<List<Patient>>(patient);
+                    List<Afspraak> afspraken = JsonConvert.DeserializeObject<List<Afspraak>>(data.Data);
+                    WebRequestData<List<Afspraak>> parsedWebRequestData = new WebRequestData<List<Afspraak>>(afspraken);
                     return parsedWebRequestData;
                 default:
                     return webRequestResponse;

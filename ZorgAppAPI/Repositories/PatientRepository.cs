@@ -25,6 +25,23 @@ namespace ZorgAppAPI.Repositories
             return await _dbConnection.QuerySingleOrDefaultAsync<Patient>(query, new { Id = id });
         }
 
+        public async Task<Patient> CreatePatient(Patient patient)
+        {
+            string query = @"
+                INSERT INTO dbo.Patient 
+                (Voornaam, Achternaam, Geboortedatum, OuderVoogdID, TrajectID, ArtsID, UserID) 
+                VALUES 
+                (@Voornaam, @Achternaam, @Geboortedatum, @OuderVoogdID, @TrajectID, @ArtsID, @UserID);
+                SELECT CAST(SCOPE_IDENTITY() AS INT);";
+
+            // Voer insert uit en haal het nieuwe ID op
+            int newId = await _dbConnection.ExecuteScalarAsync<int>(query, patient);
+
+            // Haal de volledige patient record op
+            patient.ID = newId;
+            return patient;
+        }
+
         public async Task<PatientDto> UpdatePatient(PatientDto patient)
         {
             string query = "UPDATE dbo.Patient SET TrajectID = @TrajectID, ArtsID = @ArtsID WHERE ID = @ID";

@@ -34,6 +34,7 @@ builder.Services.AddScoped<IArtsRepository, ArtsRepository>();
 builder.Services.AddScoped<IOuderVoogdRepository, OuderVoogdRepository>();
 builder.Services.AddScoped<INotitieRepository, NotitieRepository>();
 builder.Services.AddScoped<IUserZorgMomentRepository, UserZorgMomentRepository>();
+builder.Services.AddScoped<IAfspraakRepository, AfspraakRepository>();
 
 
 // Register the database connection

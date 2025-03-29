@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.AspNetCore.Mvc;
 using ZorgAppAPI.Interfaces;
 using ZorgAppAPI.Models;
@@ -20,6 +21,43 @@ namespace ZorgAppAPI.Controllers
         {
             var patients = await _patientRepository.GetPatients();
             return Ok(patients);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreatePatient([FromBody] Patient patient)
+        {
+            // Valideer verplichte velden
+            if (string.IsNullOrWhiteSpace(patient.Voornaam) ||
+                string.IsNullOrWhiteSpace(patient.Achternaam))
+            {
+                return BadRequest("Voornaam en achternaam zijn verplicht");
+            }
+
+            // Controleer geboortedatum
+            if (patient.Geboortedatum == default)
+            {
+                return BadRequest("Geboortedatum is verplicht");
+            }
+
+            //try
+            //{
+            //    // Maak nieuwe patient aan
+            //    var createdPatient = await _patientRepository.CreatePatient(patient);
+
+            //    // Retourneer de aangemaakte patient met een 201 Created status
+            //    return CreatedAtAction(
+            //        nameof(GetPatient),
+            //        new { id = createdPatient.ID },
+            //        createdPatient
+            //    );
+            //}
+            //catch (Exception ex)
+            //{
+            //    // Log de exceptie (voeg logging toe indien beschikbaar)
+            //    return StatusCode(500, "Er is een fout opgetreden bij het aanmaken van de patient");
+            //}
+            await _patientRepository.CreatePatient(patient);
+            return CreatedAtAction(nameof(GetPatient), new { id = patient.ID }, patient);
         }
 
         [HttpGet("{id}")]

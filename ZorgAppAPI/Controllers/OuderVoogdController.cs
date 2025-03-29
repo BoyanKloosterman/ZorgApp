@@ -30,5 +30,16 @@ namespace ZorgAppAPI.Controllers
             }
             return Ok(ouderVoogd);
         }
+
+        [HttpGet("current")]
+        public async Task<IActionResult> GetCurrentOuderVoogd()
+        {
+            var ouderVoogd = await _ouderVoogdRepository.GetCurrentOuderVoogd();
+            if (ouderVoogd == null)
+            {
+                return NotFound();
+            }
+            return Ok(ouderVoogd);
+        }
     }
 }

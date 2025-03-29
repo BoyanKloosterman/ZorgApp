@@ -2288,6 +2288,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2587751804541919609, guid: b5dc5ed70aa7f344db5465e030dfaeee, type: 3}
+      propertyPath: AddKindInformatieButton
+      value: 
+      objectReference: {fileID: 1092524953}
     - target: {fileID: 7622203637956249716, guid: b5dc5ed70aa7f344db5465e030dfaeee, type: 3}
       propertyPath: m_Name
       value: SideBar
@@ -2300,6 +2304,11 @@ PrefabInstance:
 --- !u!224 &1092524952 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1397732215185885590, guid: b5dc5ed70aa7f344db5465e030dfaeee, type: 3}
+  m_PrefabInstance: {fileID: 1092524951}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1092524953 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6154452584649174343, guid: b5dc5ed70aa7f344db5465e030dfaeee, type: 3}
   m_PrefabInstance: {fileID: 1092524951}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1098741046
