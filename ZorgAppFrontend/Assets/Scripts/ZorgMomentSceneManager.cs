@@ -21,7 +21,7 @@ public class ZorgMomentSceneManager : MonoBehaviour
         {
             case WebRequestData<string> dataResponse:
                 ZorgMoment parsedzorgMoment = JsonUtility.FromJson<ZorgMoment>(dataResponse.Data);
-                text.text = parsedzorgMoment.tekst; 
+                text.text = parsedzorgMoment.tekst;
 
                 break;
             case WebRequestError errorResponse:
