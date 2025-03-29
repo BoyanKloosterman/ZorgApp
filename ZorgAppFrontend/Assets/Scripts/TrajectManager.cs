@@ -43,9 +43,6 @@ public class TrajectManager : MonoBehaviour
     private void Start()
     {
         LoadBehaaldeZorgMomenten();
-
-        if (noteButton != null)
-            noteButton.onClick.AddListener(GoToNoteScene);
     }
 
     public async void LoadBehaaldeZorgMomenten()
@@ -88,11 +85,6 @@ public class TrajectManager : MonoBehaviour
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    public void GoToNoteScene()
-    {
-        SceneManager.LoadScene("NoteScene");
     }
 }
 
