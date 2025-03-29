@@ -60,6 +60,8 @@ public class AddPatientController : MonoBehaviour
     {
         // Initialiseer UI elementen
         InitialiseerUIElementen();
+        if (ErrorPopup != null) ErrorPopup.SetActive(false);
+        if (popupCloseButton != null) popupCloseButton.onClick.AddListener(() => ErrorPopup.SetActive(false));
         if (geboorteDatumInput != null)
         {
             geboorteDatumInput.onEndEdit.AddListener(delegate { OnGeboorteDatumGewijzigd(); });
