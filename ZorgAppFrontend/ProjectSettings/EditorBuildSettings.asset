@@ -23,6 +23,23 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/NoteScene.unity
     guid: c01a6af6f36d3f4458f20761e96ff30c
+  - enabled: 1
+    path: Assets/Scenes/NotificatieAddScene.unity
+    guid: c8e7bdb38e9870741af78ff0937d97de
+  - enabled: 1
+    path: Assets/Scenes/NotificatieScene.unity
+    guid: 9925c1f4c008d5549aa09846f6f142b8
+  - enabled: 1
+    path: Assets/Scenes/NotificatieEditScene.unity
+    guid: 89772cf192ce99744bf26ecaf6457aee
+    path: Assets/Scenes/Login.unity
+    guid: 0cb6ceb19d35a2c47a067e00578c5f41
+  - enabled: 1
+    path: Assets/Scenes/Register.unity
+    guid: 5e892a45c3ccaaf4f972e068978bca2d
+  - enabled: 1
+    path: Assets/Scenes/DossierPatient.unity
+    guid: 51646579531a0524a84196d41b9c4819
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 3590b91b4603b465dbb4216d601bff33, type: 3}
   m_UseUCBPForAssetBundles: 0

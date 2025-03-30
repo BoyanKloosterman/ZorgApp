@@ -21,5 +21,10 @@ namespace ZorgAppAPI.Services
             // Returns the aspnet_User.Id of the authenticated user
             return _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
+
+        public string GetCurrentAuthenticatedUserRole()
+        {
+            return _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Role);
+        }
     }
 }
