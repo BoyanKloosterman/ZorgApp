@@ -104,7 +104,6 @@ public class LoginController : MonoBehaviour
         switch (webRequestResponse)
         {
             case WebRequestData<string> dataResponse:
-                Debug.Log("Zorgmomenten geladen");
                 var zorgMomentIds = JsonHelper.ParseJsonArray<int>(dataResponse.Data);
                 SceneManager.LoadScene("Traject" + zorgMomentIds.Count);
                 break;

@@ -54,7 +54,7 @@ public class ZorgMomentSceneManager : MonoBehaviour
             int prevId = zorgMomentIds[i];
             if (!TrajectManager.Instance.behaaldeZorgMomentIds.Contains(prevId))
             {
-                Debug.Log("Cannot complete this zorgmoment: Previous zorgmoment " + prevId + " not completed.");
+                //Debug.Log("Cannot complete this zorgmoment: Previous zorgmoment " + prevId + " not completed.");
                 return false;
             }
         }
