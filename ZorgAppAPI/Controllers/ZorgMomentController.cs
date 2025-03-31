@@ -27,6 +27,11 @@ namespace ZorgAppAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetZorgmomentById(int id)
         {
+            var userId = _authenticationService.GetCurrentAuthenticatedUserId();
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("Niet ingelogd");
+            }
             var zorgmoment = await _zorgmomentRepository.GetZorgmomentByIdAsync(id);
             return zorgmoment != null ? Ok(zorgmoment) : NotFound();
         }
@@ -44,7 +49,6 @@ namespace ZorgAppAPI.Controllers
             _logger.LogInformation($"ZorgMomentIds: {zorgMomentIds}");
             return Ok(zorgMomentIds); 
         }
-
 
         //[HttpPost]
         //public async Task<IActionResult> AddZorgmoment([FromBody] ZorgMoment zorgmoment)
