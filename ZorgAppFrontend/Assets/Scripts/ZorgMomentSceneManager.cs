@@ -9,7 +9,8 @@ public class ZorgMomentSceneManager : MonoBehaviour
 {
     public TextMeshProUGUI text;
     public UserApiClient userApiClient;
-    public string url;
+    public string videoUrl;
+    public string infoUrl;
 
     private void Start()
     {
@@ -25,7 +26,8 @@ public class ZorgMomentSceneManager : MonoBehaviour
             case WebRequestData<string> dataResponse:
                 ZorgMoment parsedzorgMoment = JsonUtility.FromJson<ZorgMoment>(dataResponse.Data);
                 text.text = parsedzorgMoment.tekst;
-                url = parsedzorgMoment.url;
+                videoUrl = parsedzorgMoment.videoUrl;
+                infoUrl = parsedzorgMoment.infoUrl;
                 break;
             case WebRequestError errorResponse:
                 Debug.LogError("Error: " + errorResponse.ErrorMessage);
@@ -52,7 +54,7 @@ public class ZorgMomentSceneManager : MonoBehaviour
             int prevId = zorgMomentIds[i];
             if (!TrajectManager.Instance.behaaldeZorgMomentIds.Contains(prevId))
             {
-                Debug.Log("Cannot complete this zorgmoment: Previous zorgmoment " + prevId + " not completed.");
+                //Debug.Log("Cannot complete this zorgmoment: Previous zorgmoment " + prevId + " not completed.");
                 return false;
             }
         }
@@ -77,18 +79,11 @@ public class ZorgMomentSceneManager : MonoBehaviour
         SceneManager.LoadScene("traject" + TrajectManager.Instance.trajectNumber);
     }
 
-    public void OpenUrlInBrowser()
+    public void OpenVideoUrlInBrowser()
     {
-        if (!string.IsNullOrEmpty(url))
+        if (!string.IsNullOrEmpty(videoUrl))
         {
-            try
-            {
-                Application.OpenURL(url);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError("Error opening URL: " + e.Message);
-            }
+                Application.OpenURL(videoUrl);
         }
         else
         {
@@ -96,17 +91,15 @@ public class ZorgMomentSceneManager : MonoBehaviour
         }
     }
 
-    private string ParseUrlFromHyperlink(string hyperlinkText)
+    public void OpenInfoUrlInBrowser()
     {
-        // This method extracts the URL from the formatted hyperlink text
-        int startIndex = hyperlinkText.IndexOf("href=\"") + 6;
-        int endIndex = hyperlinkText.IndexOf("\"", startIndex);
-
-        if (startIndex > 5 && endIndex > startIndex)
+        if (!string.IsNullOrEmpty(infoUrl))
         {
-            return hyperlinkText.Substring(startIndex, endIndex - startIndex);
+            Application.OpenURL(infoUrl);
         }
-
-        return string.Empty;
+        else
+        {
+            Debug.LogError("URL is empty");
+        }
     }
 }
