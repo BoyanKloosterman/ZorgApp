@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine.UI;
 
 public class TrajectManager : MonoBehaviour
@@ -11,11 +10,10 @@ public class TrajectManager : MonoBehaviour
     public UserApiClient userApiClient;
     public Button noteButton;
 
-    public int HighestBehaaldId { get; private set; }
-
+    public List<int> zorgMomentIds = new List<int>();
+    public List<int> behaaldeZorgMomentIds = new List<int>();
     public int zorgMomentID;
     public string trajectNumber;
-    public List<int> BehaaldeZorgMomentIds;
     public event Action OnZorgMomentenUpdated;
 
     private void Awake()
@@ -36,13 +34,34 @@ public class TrajectManager : MonoBehaviour
     {
         if (scene.name == "Traject13")
         {
+            LoadZorgMomenten();
             LoadBehaaldeZorgMomenten();
         }
     }
 
     private void Start()
     {
+        LoadZorgMomenten();
         LoadBehaaldeZorgMomenten();
+
+        if (noteButton != null)
+            noteButton.onClick.AddListener(GoToNoteScene);
+    }
+
+    public async void LoadZorgMomenten()
+    {
+        IWebRequestResponse webRequestResponse = await userApiClient.LoadZorgMomenten();
+
+        switch (webRequestResponse)
+        {
+            case WebRequestData<string> dataResponse:
+                zorgMomentIds = JsonHelper.ParseJsonArray<int>(dataResponse.Data);
+                OnZorgMomentenUpdated?.Invoke();
+                break;
+            case WebRequestError errorResponse:
+                Debug.LogError($"API error: {errorResponse.ErrorMessage}");
+                break;
+        }
     }
 
     public async void LoadBehaaldeZorgMomenten()
@@ -52,27 +71,25 @@ public class TrajectManager : MonoBehaviour
         switch (webRequestResponse)
         {
             case WebRequestData<string> dataResponse:
-                try
-                {
-                    List<BehaaldeZorgMoment> zorgMomenten =
-                        JsonHelper.ParseJsonArray<BehaaldeZorgMoment>(dataResponse.Data);
-
-                    BehaaldeZorgMomentIds = zorgMomenten
-                        .Select(z => z.zorgMomentId)
-                        .ToList();
-                    HighestBehaaldId = BehaaldeZorgMomentIds.DefaultIfEmpty(0).Max();
-
-                    OnZorgMomentenUpdated?.Invoke();
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogError($"Parse error: {ex.Message}");
-                }
+                behaaldeZorgMomentIds = JsonHelper.ParseJsonArray<int>(dataResponse.Data);
+                OnZorgMomentenUpdated?.Invoke();
                 break;
             case WebRequestError errorResponse:
                 Debug.LogError($"API error: {errorResponse.ErrorMessage}");
                 break;
         }
+    }
+
+    public int GetNextEnabledIndex()
+    {
+        for (int i = 0; i < zorgMomentIds.Count; i++)
+        {
+            if (!behaaldeZorgMomentIds.Contains(zorgMomentIds[i]))
+            {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public void LoadZorgMomentScene(int id, string number)
@@ -86,10 +103,9 @@ public class TrajectManager : MonoBehaviour
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
-}
 
-[Serializable]
-public class BehaaldeZorgMoment
-{
-    public int zorgMomentId;
+    public void GoToNoteScene()
+    {
+        SceneManager.LoadScene("NoteScene");
+    }
 }

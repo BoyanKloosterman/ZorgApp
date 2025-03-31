@@ -35,6 +35,9 @@ builder.Services.AddScoped<IOuderVoogdRepository, OuderVoogdRepository>();
 builder.Services.AddScoped<INotitieRepository, NotitieRepository>();
 builder.Services.AddScoped<IUserZorgMomentRepository, UserZorgMomentRepository>();
 builder.Services.AddScoped<IAfspraakRepository, AfspraakRepository>();
+builder.Services.AddScoped<INotificatieRepository, NotificatieRepository>();
+builder.Services.AddScoped<INotificatieSender, NotificatieSender>();
+builder.Services.AddHostedService<NotificatieBackgroundService>();
 
 
 // Register the database connection
@@ -71,6 +74,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 // Move these lines before builder.Build()
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<IAuthenticationService, AspNetIdentityAuthenticationService>();
@@ -85,11 +89,39 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseWebSockets(new WebSocketOptions
+{
+    KeepAliveInterval = TimeSpan.FromMinutes(2)
+});
+
+// In Program.cs, voeg deze middleware toe voor app.UseWebSockets()
+app.Use(async (context, next) =>
+{
+    var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+
+    logger.LogInformation("Request Headers:");
+    foreach (var header in context.Request.Headers)
+    {
+        logger.LogInformation("    {Key}: {Value}", header.Key, header.Value);
+    }
+
+    // Controleer de websocket-specifieke headers
+    if (context.Request.Headers.ContainsKey("Upgrade") &&
+        context.Request.Headers["Upgrade"] == "websocket" &&
+        context.Request.Headers.ContainsKey("Connection") &&
+        context.Request.Headers["Connection"].ToString().Contains("Upgrade"))
+    {
+        logger.LogInformation("Dit lijkt een WebSocket request te zijn, IsWebSocketRequest: {IsWebSocketRequest}",
+            context.WebSockets.IsWebSocketRequest);
+    }
+
+    await next();
+});
+
 // HTTPS redirection and authorization middleware
 app.UseHttpsRedirection();
 app.UseAuthentication();  // Authentication middleware
 app.UseAuthorization();   // Authorization middleware
-
 // API Endpoints
 app.MapGet("/", () => "API is up");
 
@@ -106,5 +138,4 @@ app.MapPost("/account/logout", async (SignInManager<IdentityUser> signInManager)
 
 app.MapControllers()
     .RequireAuthorization();
-
 app.Run();

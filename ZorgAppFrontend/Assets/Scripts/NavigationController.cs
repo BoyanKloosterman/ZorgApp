@@ -34,7 +34,7 @@ public class NavigationController : MonoBehaviour
 
     public void Meldingen()
     {
-        //LoadScene("Meldingen");
+        LoadScene("NotificatieScene");
     }
 
     public void PatientInformation()
