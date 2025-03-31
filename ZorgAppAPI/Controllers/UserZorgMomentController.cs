@@ -61,11 +61,11 @@ namespace ZorgAppAPI.Controllers
             {
                 return BadRequest("User ID is null");
             }
-            else
-            {
-                var zorgMoments = await _userZorgMomentRepository.GetUserZorgMomentsByUserIdAsync(userId);
-                return Ok(zorgMoments);
-            }
+
+            var zorgMomentIds = await _userZorgMomentRepository.GetUserZorgMomentsByUserIdAsync(userId);
+            _logger.LogInformation($"ZorgMoment IDs: {string.Join(", ", zorgMomentIds)}");
+
+            return Ok(zorgMomentIds); // Geeft een array van ints terug bv. [2,3,4]
         }
     }
 }

@@ -12,18 +12,26 @@ namespace ZorgAppAPI.Controllers
     {
         private readonly IZorgmomentRepository _zorgmomentRepository;
         private readonly IAuthenticationService _authenticationService;
+        private readonly ILogger<UserZorgMomentController> _logger;
 
         public ZorgMomentController(
             IZorgmomentRepository zorgmomentRepository,
-            IAuthenticationService authenticationService)
+            IAuthenticationService authenticationService,
+            ILogger<UserZorgMomentController> logger)
         {
             _zorgmomentRepository = zorgmomentRepository;
             _authenticationService = authenticationService;
+            _logger = logger;
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetZorgmomentById(int id)
         {
+            var userId = _authenticationService.GetCurrentAuthenticatedUserId();
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("Niet ingelogd");
+            }
             var zorgmoment = await _zorgmomentRepository.GetZorgmomentByIdAsync(id);
             return zorgmoment != null ? Ok(zorgmoment) : NotFound();
         }
@@ -38,9 +46,9 @@ namespace ZorgAppAPI.Controllers
             }
 
             var zorgMomentIds = await _zorgmomentRepository.GetAllZorgmomenten(userId);
-            return Ok(zorgMomentIds); // Stuur de lijst met IDs terug
+            _logger.LogInformation($"ZorgMomentIds: {zorgMomentIds}");
+            return Ok(zorgMomentIds); 
         }
-
 
         //[HttpPost]
         //public async Task<IActionResult> AddZorgmoment([FromBody] ZorgMoment zorgmoment)

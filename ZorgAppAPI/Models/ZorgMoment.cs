@@ -16,7 +16,9 @@ namespace ZorgAppAPI.Models
         public string Tekst { get; set; }
 
         [StringLength(256)]
-        public string Url { get; set; }
+        public string VideoUrl { get; set; }
+        [StringLength(256)]
+        public string InfoUrl { get; set; }
 
         public byte[] Plaatje { get; set; }
 
