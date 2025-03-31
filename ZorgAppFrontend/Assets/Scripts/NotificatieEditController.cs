@@ -11,7 +11,8 @@ public class NotificatieEditController : MonoBehaviour
 {
     [Header("UI Elements")]
     public TMP_InputField berichtInput;
-    public DatePicker datumVerloopPicker;
+    // public DatePicker datumVerloopPicker;
+    public UI.Dates.DatePicker datumVerloopPicker;
     public TMP_Dropdown dropdownHour;
     public TMP_Dropdown dropdownMinute;
     public Button saveButton;

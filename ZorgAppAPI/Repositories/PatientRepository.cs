@@ -29,9 +29,9 @@ namespace ZorgAppAPI.Repositories
         {
             string query = @"
                 INSERT INTO dbo.Patient 
-                (Voornaam, Achternaam, Geboortedatum, OuderVoogdID, TrajectID, ArtsID, UserID) 
+                (Voornaam, Achternaam, Geboortedatum, OuderVoogdID, TrajectID, ArtsID, UserID, AvatarID) 
                 VALUES 
-                (@Voornaam, @Achternaam, @Geboortedatum, @OuderVoogdID, @TrajectID, @ArtsID, @UserID);
+                (@Voornaam, @Achternaam, @Geboortedatum, @OuderVoogdID, @TrajectID, @ArtsID, @UserID, @AvatarID);
                 SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
             // Voer insert uit en haal het nieuwe ID op

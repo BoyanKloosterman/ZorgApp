@@ -7,12 +7,13 @@ using System.Linq;
 using Assets.Scripts.Model;
 using Assets.Scripts.ApiClient.ModelApiClient;
 using Newtonsoft.Json;
+using UI.Dates;
 
 public class AddPatientController : MonoBehaviour
 {
     [Header("Kind Informatie")]
     [SerializeField] private InputField kindNaamInput;
-    [SerializeField] private InputField geboorteDatumInput;
+    public UI.Dates.DatePicker geboorteDatumInput;
 
     [Header("Arts Selectie")]
     public Dropdown artsDropdown;
@@ -21,61 +22,46 @@ public class AddPatientController : MonoBehaviour
     [SerializeField] private Dropdown behandelplanDropdown;
 
     [Header("Afspraak")]
-    [SerializeField] private InputField afspraakTimeInput; // Voeg dit toe aan je UI
-    [SerializeField] private Button openDateTimePickerButton; // Knop om de datumpicker te openen
-
+    [SerializeField] private InputField afspraakTimeInput;
+    [SerializeField] private Button openDateTimePickerButton;
     [SerializeField] private Button opslaanButton;
-
-    // DateTimePicker referentie
-    [SerializeField] private DateTimePicker dateTimePicker;
+    public InputField Email;
+    public InputField Password;
 
     // API Clients
     public PatientApiClient patientApiClient;
     public ArtsApiClient artsApiClient;
     public OuderVoogdApiClient ouderVoogdApiClient;
     public TrajectApiClient trajectApiClient;
-    public AfspraakApiClient afspraakApiClient; // Nieuwe AfspraakApiClient
+    public AfspraakApiClient afspraakApiClient;
 
     // Lokale lijsten
     private List<Traject> beschikbareTraject = new List<Traject>();
     private List<Arts> beschikbareArtsen = new List<Arts>();
     private List<OuderVoogd> beschikbareOuders = new List<OuderVoogd>();
 
-    // Geselecteerde gegevens
-    private DateTime geselecteerdeGeboorteDatum;
     private Arts geselecteerdeArts;
     private OuderVoogd geselecteerdeOuder;
-    private DateTime? geselecteerdeAfspraakDatum; // Nieuwe variabele voor afspraakdatum
-
-    // Kalender variabelen
+    private DateTime? geselecteerdeAfspraakDatum;
     private DateTime huidigeDatum = DateTime.Now;
     private OuderVoogd huidigeOuderVoogd;
 
     public GameObject ErrorPopup;
     public Text popupMessageText;
     public Button popupCloseButton;
-
+    public UserApiClient userApiClient;
 
     void Start()
     {
         // Initialiseer UI elementen
         InitialiseerUIElementen();
+
         if (ErrorPopup != null) ErrorPopup.SetActive(false);
         if (popupCloseButton != null) popupCloseButton.onClick.AddListener(() => ErrorPopup.SetActive(false));
-        if (geboorteDatumInput != null)
-        {
-            geboorteDatumInput.onEndEdit.AddListener(delegate { OnGeboorteDatumGewijzigd(); });
-        }
 
         if (opslaanButton != null)
         {
             opslaanButton.onClick.AddListener(OpslaanPatientGegevens);
-        }
-
-        // Koppel de DateTimePicker-knop
-        if (openDateTimePickerButton != null && dateTimePicker != null)
-        {
-            openDateTimePickerButton.onClick.AddListener(OpenDateTimePicker);
         }
 
         // Koppel afspraak input om wijzigingen op te vangen
@@ -86,14 +72,6 @@ public class AddPatientController : MonoBehaviour
 
         LaadBehandelplannen();
         LaadHuidigeOuderVoogd();
-    }
-    
-    void OpenDateTimePicker()
-    {
-        if (dateTimePicker != null)
-        {
-            dateTimePicker.OpenDateTimePicker();
-        }
     }
 
     void OnAfspraakTijdGewijzigd()
@@ -110,8 +88,8 @@ public class AddPatientController : MonoBehaviour
         bool datumGevonden = false;
         foreach (string format in dateFormats)
         {
-            if (DateTime.TryParseExact(inputText, format, 
-                System.Globalization.CultureInfo.InvariantCulture, 
+            if (DateTime.TryParseExact(inputText, format,
+                System.Globalization.CultureInfo.InvariantCulture,
                 System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
             {
                 geselecteerdeAfspraakDatum = parsedDate;
@@ -131,16 +109,16 @@ public class AddPatientController : MonoBehaviour
     async System.Threading.Tasks.Task LaadHuidigeOuderVoogd()
     {
         if (ouderVoogdApiClient == null) return;
-        
+
         IWebRequestResponse response = await ouderVoogdApiClient.GetCurrentOuderInfo();
-        
+        Debug.Log($"Huidige ouder/voogd geladen: {response}");
+
         switch (response)
         {
             case WebRequestData<OuderVoogd> dataResponse:
                 huidigeOuderVoogd = dataResponse.Data;
                 Debug.Log($"Huidige ouder/voogd geladen: {huidigeOuderVoogd.voornaam} {huidigeOuderVoogd.achternaam}");
                 break;
-                
             case WebRequestError errorResponse:
                 Debug.LogError($"Fout bij laden huidige ouder/voogd: {errorResponse.ErrorMessage}");
                 break;
@@ -149,7 +127,6 @@ public class AddPatientController : MonoBehaviour
 
     void InitialiseerUIElementen()
     {
-        // Configureer arts dropdown listener
         if (artsDropdown != null)
             artsDropdown.onValueChanged.AddListener(OnArtsGeselecteerd);
     }
@@ -210,48 +187,36 @@ public class AddPatientController : MonoBehaviour
     {
         if (!ValideerFormulier()) return;
 
-        // Valideer geboortedatum
-        if (!DateTime.TryParseExact(geboorteDatumInput.text, "dd-MM-yyyy", 
-            System.Globalization.CultureInfo.InvariantCulture, 
-            System.Globalization.DateTimeStyles.None, out geselecteerdeGeboorteDatum))
-        {
-            Debug.LogWarning("Ongeldige geboortedatum ingevoerd.");
-            return;
-        }
+        DateTime geboorteDatum = geboorteDatumInput.SelectedDate.Date;
 
-        Debug.Log($"Geldige geboortedatum: {geselecteerdeGeboorteDatum.ToShortDateString()}");
+        System.Random random = new System.Random();
+        int randomAvatarId = random.Next(1, 31); 
 
-        // Maak een nieuwe patiënt aan
-        Patient nieuwePatient = new Patient
+        Patient newUser = new Patient
         {
             voornaam = kindNaamInput.text,
             achternaam = huidigeOuderVoogd?.achternaam ?? string.Empty,
+            email = Email.text.Trim(),
+            password = Password.text,
             trajectid = GetGeselecteerdBehandelplanId(),
             artsid = geselecteerdeArts?.id ?? 0,
-            Geboortedatum = geselecteerdeGeboorteDatum,
+            Geboortedatum = geboorteDatum,
             oudervoogdid = huidigeOuderVoogd?.id ?? 0,
             userid = huidigeOuderVoogd?.userid ?? string.Empty,
+            avatarId = randomAvatarId
         };
+        Debug.Log($"Patiënt gegevens: {JsonConvert.SerializeObject(newUser)}"); 
+        IWebRequestResponse webRequestResponse = await patientApiClient.CreatePatient(newUser);
 
-        // Debug JSON output
-        string jsonData = JsonConvert.SerializeObject(nieuwePatient, Formatting.Indented);
-        Debug.Log("Verzonden JSON: " + jsonData);
-
-        // Stuur naar API
-        IWebRequestResponse response = await patientApiClient.CreatePatient(nieuwePatient);
-
-        switch (response)
+        switch (webRequestResponse)
         {
             case WebRequestData<Patient> dataResponse:
                 Debug.Log($"✅ Patiënt succesvol opgeslagen: {dataResponse.Data}");
-                
-                // Nadat patiënt is opgeslagen, maak een afspraak aan als er een datum is geselecteerd
                 if (geselecteerdeAfspraakDatum.HasValue && afspraakApiClient != null)
                 {
                     await MaakAfspraakAan(dataResponse.Data);
                 }
                 break;
-                
             case WebRequestError errorResponse:
                 Debug.LogError($"❌ Fout bij opslaan patiënt: {errorResponse.ErrorMessage}");
                 break;
@@ -266,92 +231,57 @@ public class AddPatientController : MonoBehaviour
             return;
         }
 
-        // Maak een nieuwe afspraak aan
-        Afspraak nieuweAfspraak = new Afspraak
+        string eersteGesprekNaam = "Kennismaking met " + kindNaamInput.text;
+        DateTime eersteAfspraakDatum = geselecteerdeAfspraakDatum.Value;
+
+        Afspraak eersteAfspraak = new Afspraak
         {
             UserId = patient.userid,
             ArtsId = geselecteerdeArts.id.ToString(),
-            Datumtijd = geselecteerdeAfspraakDatum.Value.ToString("yyyy-MM-ddTHH:mm:ss")
+            Datumtijd = eersteAfspraakDatum.ToString("yyyy-MM-ddTHH:mm:ss"),
+            naam = eersteGesprekNaam,
         };
 
-        // Debug JSON output
-        string jsonData = JsonConvert.SerializeObject(nieuweAfspraak, Formatting.Indented);
-        Debug.Log("Afspraak JSON: " + jsonData);
+        IWebRequestResponse eersteResponse = await afspraakApiClient.CreateAfspraak(eersteAfspraak);
 
-        // Stuur naar API
-        IWebRequestResponse response = await afspraakApiClient.CreateAfspraak(nieuweAfspraak);
-
-        switch (response)
+        if (eersteResponse is WebRequestData<Afspraak> eersteDataResponse)
         {
-            case WebRequestData<Afspraak> dataResponse:
-                Debug.Log($"✅ Afspraak succesvol opgeslagen: {dataResponse.Data.id}");
-                break;
-                
-            case WebRequestError errorResponse:
-                Debug.LogError($"❌ Fout bij opslaan afspraak: {errorResponse.ErrorMessage}");
-                break;
-        }
-    }
+            Debug.Log($"✅ Eerste afspraak succesvol opgeslagen: {eersteDataResponse.Data.id}");
 
-    public void OnGeboorteDatumGewijzigd()
-    {
-        string inputText = geboorteDatumInput.text;
-        Debug.Log($"Ingevoerde geboortedatum: {inputText}");
+            string vervolgGesprekNaam = "Vervolgafspraak met " + kindNaamInput.text;
+            DateTime vervolgAfspraakDatum = eersteAfspraakDatum.AddDays(14);
 
-        // Probeer de datum te parsen met meerdere formaten
-        string[] dateFormats = {
-            "dd-MM-yyyy",   // Standaard formaat
-            "d-MM-yyyy",    // Enkele cijfers zonder voorloop nul
-            "dd/MM/yyyy",   // Slash separator
-            "yyyy-MM-dd"    // ISO formaat
-        };
-
-        bool datumGevonden = false;
-        foreach (string format in dateFormats)
-        {
-            if (DateTime.TryParseExact(inputText, format, 
-                System.Globalization.CultureInfo.InvariantCulture, 
-                System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+            Afspraak vervolgAfspraak = new Afspraak
             {
-                geselecteerdeGeboorteDatum = parsedDate;
-                Debug.Log($"✅ Geldige geboortedatum geparseerd: {geselecteerdeGeboorteDatum:dd-MM-yyyy}");
-                datumGevonden = true;
-                break;
+                UserId = patient.userid,
+                ArtsId = geselecteerdeArts.id.ToString(),
+                Datumtijd = vervolgAfspraakDatum.ToString("yyyy-MM-ddTHH:mm:ss"),
+                naam = vervolgGesprekNaam,
+            };
+
+            IWebRequestResponse vervolgResponse = await afspraakApiClient.CreateAfspraak(vervolgAfspraak);
+
+            if (vervolgResponse is WebRequestData<Afspraak> vervolgDataResponse)
+            {
+                Debug.Log($"✅ Vervolgafspraak succesvol opgeslagen: {vervolgDataResponse.Data.id}");
+            }
+            else if (vervolgResponse is WebRequestError vervolgErrorResponse)
+            {
+                Debug.LogError($"❌ Fout bij opslaan vervolgafspraak: {vervolgErrorResponse.ErrorMessage}");
             }
         }
-
-        if (!datumGevonden)
+        else if (eersteResponse is WebRequestError eersteErrorResponse)
         {
-            Debug.LogError($"❌ Kan datum niet parsen: {inputText}");
-            geselecteerdeGeboorteDatum = default;
-        }
-    }
-
-    public void SetGeboorteDatum(string datum)
-    {
-        Debug.Log($"SetGeboorteDatum aangeroepen met: {datum}");
-        
-        if (geboorteDatumInput != null)
-        {
-            geboorteDatumInput.text = datum;
-            
-            // Forceer het aanroepen van de wijzigingsmethode
-            OnGeboorteDatumGewijzigd();
-        }
-        else
-        {
-            Debug.LogError("geboorteDatumInput is null!");
+            Debug.LogError($"❌ Fout bij opslaan eerste afspraak: {eersteErrorResponse.ErrorMessage}");
         }
     }
 
     public void SetAfspraakDatum(string datum)
     {
         Debug.Log($"SetAfspraakDatum aangeroepen met: {datum}");
-        
         if (afspraakTimeInput != null)
         {
             afspraakTimeInput.text = datum;
-            
             // Forceer het aanroepen van de wijzigingsmethode
             OnAfspraakTijdGewijzigd();
         }
@@ -363,7 +293,13 @@ public class AddPatientController : MonoBehaviour
 
     int GetGeselecteerdBehandelplanId()
     {
-        return behandelplanDropdown.value;
+        int index = behandelplanDropdown.value - 1; // -1 omdat index 0 de standaardoptie is
+        if (index >= 0 && index < beschikbareTraject.Count)
+        {
+            return beschikbareTraject[index].id; // Haal de ID op van de correcte selectie
+        }
+        Debug.LogError("Geen geldig behandelplan geselecteerd.");
+        return -1; // Of een andere standaardwaarde
     }
 
     bool ValideerFormulier()
@@ -374,7 +310,7 @@ public class AddPatientController : MonoBehaviour
             return false;
         }
 
-        if (geselecteerdeGeboorteDatum == default)
+        if (!geboorteDatumInput.SelectedDate.HasValue)
         {
             ShowErrorPopup("Selecteer een geldige geboortedatum.");
             return false;
@@ -398,10 +334,21 @@ public class AddPatientController : MonoBehaviour
             return false;
         }
 
+        if (string.IsNullOrWhiteSpace(Email.text) || !Email.text.Contains("@"))
+        {
+            ShowErrorPopup("Voer een geldig e-mailadres in.");
+            return false;
+        }
+        if (string.IsNullOrWhiteSpace(Password.text) || Password.text.Length < 8)
+        {
+            ShowErrorPopup("Wachtwoord moet minimaal 8 karakters lang zijn.");
+            return false;
+        }
+
         return true;
     }
 
-    async System.Threading.Tasks.Task LaadEnPopuleerBehandelplannen()
+     async System.Threading.Tasks.Task LaadEnPopuleerBehandelplannen()
     {
         if (trajectApiClient == null || behandelplanDropdown == null) return;
 
@@ -428,6 +375,8 @@ public class AddPatientController : MonoBehaviour
                 Debug.Log($"Fout bij laden behandelplannen: {errorResponse.ErrorMessage}");
                 break;
         }
+        // Implementatie voor het laden van behandelplannen
+        
     }
     void PopuleerBehandelplanDropdown()
     {
@@ -476,12 +425,17 @@ public class AddPatientController : MonoBehaviour
             }
         }
     }
-    private void ShowErrorPopup(string message)
+
+    void ShowErrorPopup(string message)
     {
-        if (ErrorPopup != null)
+        if (ErrorPopup != null && popupMessageText != null)
         {
-            if (popupMessageText != null) popupMessageText.text = message;
+            popupMessageText.text = message;
             ErrorPopup.SetActive(true);
+        }
+        else
+        {
+            Debug.LogError($"Fout: {message}");
         }
     }
 }

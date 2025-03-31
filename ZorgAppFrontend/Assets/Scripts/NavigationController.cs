@@ -8,13 +8,21 @@ public class NavigationController : MonoBehaviour
     void Start()
     {
         string role = PlayerPrefs.GetString("UserRole");
-        if (role != "Arts")
+        if (role == "Arts")
         {
-            patientInformationButton.SetActive(false);
-        }else{
+            patientInformationButton.SetActive(true);
             AddKindInformatieButton.SetActive(false);
         }
-        
+        else if (role == "Patient")
+        {
+            patientInformationButton.SetActive(false);
+            AddKindInformatieButton.SetActive(false);
+        }
+        else
+        {
+            patientInformationButton.SetActive(false);
+            AddKindInformatieButton.SetActive(true);
+        }
     }
 
     public void Home()

@@ -41,10 +41,13 @@ public class LoginController : MonoBehaviour
         {
             case WebRequestData<string> dataResponse:
                 Debug.Log("login success");
+
+                // SceneManager.LoadScene("Route13");
+
                 Debug.Log("Token opgeslagen in sessie: " + SecureUserSession.Instance.GetToken());
                 GetCurrentUserRole();
 
-                if (isNewUser)
+                if (isNewUser && PlayerPrefs.GetString("UserRole") == "OuderVoogd")
                 {
                     SceneManager.LoadScene("PatientInformatie");
                 }

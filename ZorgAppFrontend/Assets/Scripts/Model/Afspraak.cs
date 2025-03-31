@@ -12,5 +12,6 @@ namespace Assets.Scripts.Model
         public string UserId;
         public string ArtsId;
         public string Datumtijd;
+        public string naam;
     }
 }

@@ -29,6 +29,7 @@ namespace ZorgAppAPI.Models
         public string Geboortedatum { get; set; }
 
         public string UserId { get; set; }
+        public int AvatarID { set; get; }
         // Navigation properties
         //[ForeignKey("OuderVoogd_ID")]
         //public virtual OuderVoogd OuderVoogd { get; set; }

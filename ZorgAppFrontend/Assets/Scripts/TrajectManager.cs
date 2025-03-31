@@ -32,20 +32,11 @@ public class TrajectManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == "Traject13")
+        if (scene.name == "Traject13" || scene.name == "Traject8") 
         {
             LoadZorgMomenten();
             LoadBehaaldeZorgMomenten();
         }
-    }
-
-    private void Start()
-    {
-        LoadZorgMomenten();
-        LoadBehaaldeZorgMomenten();
-
-        if (noteButton != null)
-            noteButton.onClick.AddListener(GoToNoteScene);
     }
 
     public async void LoadZorgMomenten()

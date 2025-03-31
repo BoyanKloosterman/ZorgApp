@@ -6,5 +6,6 @@
         public string UserId { get; set; } = string.Empty;
         public int ArtsID { get; set; }
         public string Datumtijd { get; set; }
+        public string Naam { get; set; }
     }
 }

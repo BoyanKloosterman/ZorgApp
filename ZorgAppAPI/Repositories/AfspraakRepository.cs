@@ -28,7 +28,7 @@ namespace ZorgAppAPI.Repositories
 
         public async Task AddAsync(Afspraak afspraak)
         {
-            var query = "INSERT INTO dbo.Afspraak (UserId, ArtsID, Datumtijd) VALUES (@UserId, @ArtsID, @Datumtijd)";
+            var query = "INSERT INTO dbo.Afspraak (UserId, ArtsID, Datumtijd, Naam) VALUES (@UserId, @ArtsID, @Datumtijd, @Naam)";
             await _dbConnection.ExecuteAsync(query, afspraak);
         }
 
@@ -41,7 +41,7 @@ namespace ZorgAppAPI.Repositories
             if (!isArts && existingAfspraak.UserId != userId)
                 throw new UnauthorizedAccessException("Geen toestemming om deze afspraak te wijzigen.");
 
-            var query = "UPDATE dbo.Afspraak SET UserId = @UserId, ArtsID = @ArtsID, Datumtijd = @Datumtijd WHERE ID = @Id";
+            var query = "UPDATE dbo.Afspraak SET UserId = @UserId, ArtsID = @ArtsID, Datumtijd = @Datumtijd, Naam = @Naam WHERE ID = @Id";
             await _dbConnection.ExecuteAsync(query, afspraak);
         }
 

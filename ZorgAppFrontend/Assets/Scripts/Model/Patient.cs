@@ -15,6 +15,10 @@ namespace Assets.Scripts.Model
         public int? trajectid;
         public int? artsid;
         public string userid;
-        public DateTime Geboortedatum { get; set; }
+        public DateTime? Geboortedatum;
+        public int avatarId;
+        public string email;
+        public string password;
     }
+
 }

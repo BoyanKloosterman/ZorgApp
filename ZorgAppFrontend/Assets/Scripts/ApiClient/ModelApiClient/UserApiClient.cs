@@ -22,6 +22,7 @@ public class UserApiClient : MonoBehaviour
     public async Awaitable<IWebRequestResponse> LoadZorgMomentData(int zorgMomentId)
     {
         string route = "/api/ZorgMoment/" + zorgMomentId;
+        Debug.Log("ZorgMomentId: " + zorgMomentId); 
         return await webClient.SendGetRequest(route);
     }
 

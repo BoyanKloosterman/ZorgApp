@@ -101,22 +101,21 @@ namespace ZorgAppAPI.Controllers
                             }
                             break;
 
-                        //case "Patient":
-                        //    using (var command = new SqlCommand())
-                        //    {
-                        //        command.Connection = _db;
-                        //        command.Transaction = transaction;
-                        //        //command.CommandText = "INSERT INTO dbo.Patient (Voornaam, Achternaam, UserId, GeboorteDatum) VALUES (@Voornaam, @Achternaam, @UserId, @GeboorteDatum); SELECT SCOPE_IDENTITY();";
-                        //        command.CommandText = "INSERT INTO dbo.Patient (Voornaam, Achternaam, UserId) VALUES (@Voornaam, @Achternaam, @UserId); SELECT SCOPE_IDENTITY();";
+                        case "Patient":
+                            using (var command = new SqlCommand())
+                            {
+                                command.Connection = _db;
+                                command.Transaction = transaction;
+                                command.CommandText = "INSERT INTO dbo.Patient (Voornaam, Achternaam, UserId, GeboorteDatum, AvatarID) VALUES (@Voornaam, @Achternaam, @UserId, @GeboorteDatum @AvatarID); SELECT SCOPE_IDENTITY();";
 
-                        //        command.Parameters.AddWithValue("@Voornaam", model.Voornaam);
-                        //        command.Parameters.AddWithValue("@Achternaam", model.Achternaam);
-                        //        command.Parameters.AddWithValue("@UserId", userId);
+                                command.Parameters.AddWithValue("@Voornaam", model.Voornaam);
+                                command.Parameters.AddWithValue("@Achternaam", model.Achternaam);
+                                command.Parameters.AddWithValue("@UserId", userId);
 
-                        //        var result = await command.ExecuteScalarAsync();
-                        //        profileId = Convert.ToInt32(result);
-                        //    }
-                        //    break;
+                                var result = await command.ExecuteScalarAsync();
+                                profileId = Convert.ToInt32(result);
+                            }
+                            break;
 
 
                         default:
