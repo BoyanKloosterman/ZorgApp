@@ -14,6 +14,7 @@ namespace Assets.Scripts.Model
         public int? oudervoogdid;
         public int? trajectid;
         public int? artsid;
+        public int? avatarId;
         public string userid;
     }
 }
