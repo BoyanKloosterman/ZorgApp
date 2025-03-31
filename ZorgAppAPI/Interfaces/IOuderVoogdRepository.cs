@@ -6,6 +6,6 @@ namespace ZorgAppAPI.Interfaces
     {
         Task<IEnumerable<OuderVoogd>> GetOuderVoogden();
         Task<OuderVoogd> GetOuderVoogd(int id);
-        Task<OuderVoogd> GetCurrentOuderVoogd();
+        Task<OuderVoogd> GetCurrentOuderVoogd(string userId);
     }
 }
