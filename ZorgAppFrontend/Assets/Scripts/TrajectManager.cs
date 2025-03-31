@@ -39,6 +39,17 @@ public class TrajectManager : MonoBehaviour
         }
     }
 
+
+    //private void Start()
+    //{
+    //    LoadZorgMomenten();
+    //    if (zorgMomentIds.Count != 13)
+    //    {
+    //        SceneManager.LoadScene("Traject" + zorgMomentIds.Count);
+    //    }
+    //    LoadBehaaldeZorgMomenten();
+    //}
+
     public async void LoadZorgMomenten()
     {
         IWebRequestResponse webRequestResponse = await userApiClient.LoadZorgMomenten();

@@ -15,6 +15,7 @@ public class ZorgMomentSceneManager : MonoBehaviour
     private ZorgMoment currentZorgMoment;
     private bool isCompleting = false;
 
+
     private void Start()
     {
         PerformLoadzorgMomentData();
@@ -125,6 +126,7 @@ public class ZorgMomentSceneManager : MonoBehaviour
         if (!string.IsNullOrEmpty(videoUrl))
         {
             Application.OpenURL(videoUrl);
+
         }
         else
         {

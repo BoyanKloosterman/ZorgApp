@@ -8,5 +8,6 @@ namespace ZorgAppAPI.Interfaces
         Task<Patient> GetPatient(int id);
         Task<PatientDto> UpdatePatient(PatientDto patient);
         Task<Patient> CreatePatient(Patient patient);
+        Task<PatientAvatarDto> UpdatePatientAvatar(PatientAvatarDto patient);
     }
 }

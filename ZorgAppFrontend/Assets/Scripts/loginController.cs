@@ -55,6 +55,8 @@ public class LoginController : MonoBehaviour
                 {
                     SceneManager.LoadScene("Traject13");
                 }
+                //dit als laatste., hier sturen we naar de juiste scene.
+                GetZorgMomentenNumberToLoadScene();
                 break;
             case WebRequestError errorResponse:
                 Debug.Log("error");
@@ -104,6 +106,22 @@ public class LoginController : MonoBehaviour
     private void OnPopupCloseButtonClick()
     {
         ErrorPopup.SetActive(false);
+    }
+
+    public async void GetZorgMomentenNumberToLoadScene()
+    {
+        IWebRequestResponse webRequestResponse = await userApiClient.LoadZorgMomenten();
+
+        switch (webRequestResponse)
+        {
+            case WebRequestData<string> dataResponse:
+                var zorgMomentIds = JsonHelper.ParseJsonArray<int>(dataResponse.Data);
+                SceneManager.LoadScene("Traject" + zorgMomentIds.Count);
+                break;
+            case WebRequestError errorResponse:
+                Debug.LogError($"API error: {errorResponse.ErrorMessage}");
+                break;
+        }
     }
 
     [Serializable]

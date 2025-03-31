@@ -32,7 +32,7 @@ public class NavigationController : MonoBehaviour
 
     public void Account()
     {
-        //LoadScene("Account");
+        LoadScene("AvatarEditScene");
     }
 
     public void Notities()
