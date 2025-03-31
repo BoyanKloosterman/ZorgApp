@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ZorgAppAPI.Interfaces;
 using ZorgAppAPI.Models;
+using ZorgAppAPI.Services;
 
 namespace ZorgAppAPI.Controllers
 {
@@ -10,9 +11,12 @@ namespace ZorgAppAPI.Controllers
     public class PatientController : ControllerBase
     {
         private readonly IPatientRepository _patientRepository;
-        public PatientController(IPatientRepository patientRepository)
+        private readonly IAuthenticationService _authenticationService;
+
+        public PatientController(IPatientRepository patientRepository, IAuthenticationService authenticationService)
         {
             _patientRepository = patientRepository;
+            _authenticationService = authenticationService;
         }
 
         [HttpGet]
@@ -34,7 +38,7 @@ namespace ZorgAppAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePatient([FromBody]PatientDto patient)
+        public async Task<IActionResult> UpdatePatient([FromBody] PatientDto patient)
         {
             var existingPatient = await _patientRepository.GetPatient(patient.ID);
             if (existingPatient == null)
@@ -46,7 +50,23 @@ namespace ZorgAppAPI.Controllers
             existingPatient.ArtsID = patient.ArtsID;
             existingPatient.TrajectID = patient.TrajectID;
 
-            var updatedPatient = await _patientRepository.UpdatePatient(new PatientDto { ID = patient.ID, ArtsID = patient.ArtsID, TrajectID = patient.TrajectID});
+            var updatedPatient = await _patientRepository.UpdatePatient(new PatientDto { ID = patient.ID, ArtsID = patient.ArtsID, TrajectID = patient.TrajectID });
+            return Ok(updatedPatient);
+        }
+
+        [HttpPut("avatar")]
+        public async Task<IActionResult> UpdatePatientAvatar([FromBody] PatientAvatarDto patient)
+        {
+            var userId = _authenticationService.GetCurrentAuthenticatedUserId();
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User not authenticated.");
+            }
+
+            // Update only the ArtsID and TrajectID
+
+            var updatedPatient = await _patientRepository.UpdatePatientAvatar(new PatientAvatarDto { UserId = userId, AvatarID = patient.AvatarID  });
             return Ok(updatedPatient);
         }
     }

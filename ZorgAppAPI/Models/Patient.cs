@@ -26,6 +26,8 @@ namespace ZorgAppAPI.Models
 
         public int? ArtsID { get; set; }
 
+        public int? AvatarID { get; set; }
+
         public string UserId { get; set; }
         // Navigation properties
         [ForeignKey("OuderVoogd_ID")]

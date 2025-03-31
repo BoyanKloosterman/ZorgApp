@@ -3750,6 +3750,7 @@ MonoBehaviour:
   behandelplanDropdown: {fileID: 987924005}
   patientDetailsPanel: {fileID: 528334396}
   patientNameText: {fileID: 1906146679}
+  avatarImage: {fileID: 1358672318}
   patientApiClient: {fileID: 1593588582}
   artsApiClient: {fileID: 1593588585}
   ouderVoogdApiClient: {fileID: 1593588584}

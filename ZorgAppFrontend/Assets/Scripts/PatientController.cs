@@ -11,6 +11,7 @@ using UnityEngine.UI;
 
 public class PatientController : MonoBehaviour
 {
+    [Header("UI Elements")]
     [SerializeField] public Transform contentParent;
     [SerializeField] public GameObject PatientPrefab;
 
@@ -26,9 +27,12 @@ public class PatientController : MonoBehaviour
     [SerializeField] private GameObject patientDetailsPanel;
 
     [Header("Patient Details UI")]
-    [SerializeField] private TMP_Text patientNameText; 
+    [SerializeField] private TMP_Text patientNameText;
 
+    [Header("Avatar")]
+    [SerializeField] private Image avatarImage;
 
+    [Header("API Clients")]
     public Patient patient;
     public PatientApiClient patientApiClient;
     public ArtsApiClient artsApiClient;
@@ -225,6 +229,35 @@ public class PatientController : MonoBehaviour
 
         // 2. Klikfunctionaliteit op knoppen instellen
         ConfigureButton(newEnv.transform, "NameButton", () => SeePatient(patient.id));
+
+        // voeg juiste avatar toe
+        Transform avatarTransform = newEnv.transform.Find("Avatar");
+        if (avatarTransform != null)
+        {
+            Image avatarImage = avatarTransform.GetComponent<Image>();
+            if (avatarImage != null)
+            {
+                // Als er een avatarId is, gebruik deze om de avatar te vinden
+                if (patient.avatarId.HasValue)
+                {
+                    // Zoek de avatar in de resources map
+                    Sprite avatarSprite = Resources.Load<Sprite>($"Avatars/{patient.avatarId.Value}");
+                    if (avatarSprite != null)
+                    {
+                        avatarImage.sprite = avatarSprite;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Avatar {patient.avatarId.Value} not found");
+                    }
+                }
+                else
+                {
+                    // Gebruik een standaard avatar als er geen avatarId is
+                    avatarImage.sprite = Resources.Load<Sprite>("Avatars/TempHero_0");
+                }
+            }
+        }
     }
 
     public void SeePatient(int id)
@@ -251,6 +284,31 @@ public class PatientController : MonoBehaviour
             {
                 patientNameText.text = $"{selectedPatient.voornaam} {selectedPatient.achternaam}";
             }
+
+            // Set the avatar image
+            if (avatarImage != null)
+            {
+                // If there's an avatarId, use it to find the avatar
+                if (selectedPatient.avatarId.HasValue)
+                {
+                    // Find the avatar in the resources folder
+                    Sprite avatarSprite = Resources.Load<Sprite>($"Avatars/{selectedPatient.avatarId.Value}");
+                    if (avatarSprite != null)
+                    {
+                        avatarImage.sprite = avatarSprite;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Avatar {selectedPatient.avatarId.Value} not found");
+                    }
+                }
+                else
+                {
+                    // Use a default avatar if there's no avatarId
+                    avatarImage.sprite = Resources.Load<Sprite>("Avatars/TempHero_0");
+                }
+            }
+
 
             // Show the patient details panel
             if (patientDetailsPanel != null)

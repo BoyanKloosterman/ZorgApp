@@ -31,5 +31,12 @@ namespace ZorgAppAPI.Repositories
             await _dbConnection.ExecuteAsync(query, patient);
             return patient;
         }
+
+        public async Task<PatientAvatarDto> UpdatePatientAvatar(PatientAvatarDto patient)
+        {
+            string query = "UPDATE dbo.Patient SET AvatarID = @AvatarID WHERE UserId = @UserId";
+            await _dbConnection.ExecuteAsync(query, patient);
+            return patient;
+        }
     }
 }

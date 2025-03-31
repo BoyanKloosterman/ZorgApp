@@ -9,7 +9,7 @@ public class NavigationController : MonoBehaviour
         string role = PlayerPrefs.GetString("UserRole");
         if (role != "Arts")
         {
-            patientInformationButton.SetActive(false);
+            //patientInformationButton.SetActive(false);
         }
     }
 
@@ -20,7 +20,7 @@ public class NavigationController : MonoBehaviour
 
     public void Account()
     {
-        //LoadScene("Account");
+        LoadScene("AvatarEditScene");
     }
 
     public void Notities()

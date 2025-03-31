@@ -28,6 +28,14 @@ namespace Assets.Scripts.ApiClient.ModelApiClient
             return ParseResponse(webRequestResponse);
         }
 
+        public async Awaitable<IWebRequestResponse> UpdatePatientAvatar(PatientAvatarDto patient)
+        {
+            string route = $"/api/Patient/avatar";
+            string data = JsonConvert.SerializeObject(patient);
+            IWebRequestResponse webRequestResponse = await webClient.SendPutRequest(route, data);
+            return ParseResponse(webRequestResponse);
+        }
+
         private IWebRequestResponse ParseResponse(IWebRequestResponse webRequestResponse)
         {
             switch (webRequestResponse)
