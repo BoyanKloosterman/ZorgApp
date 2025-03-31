@@ -309,6 +309,7 @@ public class PatientController : MonoBehaviour
                 }
             }
 
+
             // Show the patient details panel
             if (patientDetailsPanel != null)
             {

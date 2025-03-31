@@ -532,7 +532,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 70, y: 0}
-  m_SizeDelta: {x: 1600, y: 1000}
+  m_SizeDelta: {x: 1600, y: 1100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1712776756
 MonoBehaviour:
@@ -672,6 +672,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2056936905}
   - component: {fileID: 2056936906}
+  - component: {fileID: 2056936908}
+  - component: {fileID: 2056936907}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -740,6 +742,33 @@ MonoBehaviour:
   - {fileID: 21300000, guid: f50c7bcf5e83948f6998522104aaff47, type: 3}
   - {fileID: 21300000, guid: 16999640cc74b4b899744f3ba70770c2, type: 3}
   - {fileID: 21300000, guid: ec1926eda34c34332b9042c0631c0143, type: 3}
+  patientApiClient: {fileID: 2056936908}
+--- !u!114 &2056936907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2056936904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ed722d7c057c4f48af80e38d24e0abc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseUrl: https://localhost:7078
+--- !u!114 &2056936908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2056936904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea10ebc273a823449b631ef9d03b55c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  webClient: {fileID: 2056936907}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

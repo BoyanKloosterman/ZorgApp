@@ -1,5 +1,9 @@
+using Assets.Scripts.ApiClient.ModelApiClient;
+using Assets.Scripts.Model;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class AvatarController : MonoBehaviour
@@ -8,6 +12,7 @@ public class AvatarController : MonoBehaviour
     public Transform buttonContainer; // Assign a parent UI panel/container
     public List<Sprite> avatarSprites; // Assign avatars in the Inspector
 
+    public PatientApiClient patientApiClient;
     private void Start()
     {
         GenerateAvatarButtons();
@@ -20,16 +25,22 @@ public class AvatarController : MonoBehaviour
             GameObject newButton = Instantiate(buttonPrefab, buttonContainer);
             newButton.GetComponent<Image>().sprite = avatarSprites[i];
 
-            int avatarIndex = i;
+            int avatarIndex = i + 1;
             newButton.GetComponent<Button>().onClick.AddListener(() => SelectAvatar(avatarIndex));
         }
     }
 
-    void SelectAvatar(int index)
+    async Task SelectAvatar(int index)
     {
-        Debug.Log("Selected avatar: " + index);
-        PlayerPrefs.SetInt("SelectedAvatar", index); // Store selection
+        IWebRequestResponse response = await patientApiClient.UpdatePatientAvatar(new PatientAvatarDto {userid = "", avatarId = index});
+
+        if (response is WebRequestData<Patient> data)
+        {
+            Debug.Log("Avatar updated: " + data.Data.avatarId);
+        }
+
+        //navigate to next scene
+        SceneManager.LoadScene("Traject13");
     }
-
-
 }
+
