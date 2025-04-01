@@ -26,7 +26,7 @@ namespace ZorgAppAPI.Models
         public int AvatarId { get; set; }
 
         // Optional fields
-        public int? OuderVoogdId { get; set; }
+        public string? OuderVoogdId { get; set; }
         public int? TrajectId { get; set; }
         public int? ArtsId { get; set; }
     }

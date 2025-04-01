@@ -109,8 +109,8 @@ namespace ZorgAppAPI.Controllers
                         command.Parameters.AddWithValue("@AvatarID", model.AvatarId);
 
                         // Handle nullable parameters
-                        if (model.OuderVoogdId.HasValue)
-                            command.Parameters.AddWithValue("@OuderVoogdId", model.OuderVoogdId.Value);
+                        if (!string.IsNullOrEmpty(model.OuderVoogdId))
+                            command.Parameters.AddWithValue("@OuderVoogdId", model.OuderVoogdId);
                         else
                             command.Parameters.AddWithValue("@OuderVoogdId", DBNull.Value);
 

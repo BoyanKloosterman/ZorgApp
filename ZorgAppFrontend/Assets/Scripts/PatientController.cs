@@ -103,19 +103,19 @@ public class PatientController : MonoBehaviour
     }
 
     // Update your SetOuderVoogdDropdown method to query the list
-    public void SetOuderVoogdText(int? voogdId)
+    public void SetOuderVoogdText(string oudervoogdid)
     {
         if (ouderVoogdText == null)
             return;
 
-        if (!voogdId.HasValue || voogdId.Value == 0)
+        if (string.IsNullOrEmpty(oudervoogdid))
         {
             ouderVoogdText.text = "Geen ouder/voogd gekoppeld";
             return;
         }
 
-        // Zoek de ouder/voogd op basis van ID
-        OuderVoogd selectedVoogd = allGuardians.FirstOrDefault(v => v.id == voogdId.Value);
+        // Zoek de ouder/voogd op basis van ID (waar v.userid is een string)
+        OuderVoogd selectedVoogd = allGuardians.FirstOrDefault(v => v.userid == oudervoogdid);
 
         if (selectedVoogd != null)
         {

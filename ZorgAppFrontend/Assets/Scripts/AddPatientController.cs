@@ -201,12 +201,13 @@ public class AddPatientController : MonoBehaviour
             trajectid = GetGeselecteerdBehandelplanId(),
             artsid = geselecteerdeArts?.id ?? 0,
             Geboortedatum = geboorteDatum,
-            oudervoogdid = huidigeOuderVoogd?.id ?? 0,
+            oudervoogdid = huidigeOuderVoogd?.userid ?? string.Empty,
             userid = huidigeOuderVoogd?.userid ?? string.Empty,
             avatarId = randomAvatarId
         };
         Debug.Log($"Patiënt gegevens: {JsonConvert.SerializeObject(newUser)}"); 
         IWebRequestResponse webRequestResponse = await patientApiClient.CreatePatient(newUser);
+        Debug.Log($"Patiënt gegevens opgeslagen: {webRequestResponse}");
 
         switch (webRequestResponse)
         {
