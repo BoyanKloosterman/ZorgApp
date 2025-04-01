@@ -17,7 +17,6 @@ namespace Assets.Scripts.Model
         public int? avatarId;
         public string userid;
         public DateTime? Geboortedatum;
-        public int avatarId;
         public string email;
         public string password;
     }
