@@ -30,7 +30,12 @@ public class ZorgMomentButton : MonoBehaviour
         zorgMomentID = TrajectManager.Instance.zorgMomentIds[index];
 
         bool isCompleted = TrajectManager.Instance.behaaldeZorgMomentIds.Contains(zorgMomentID);
-        buttonImage.color = isCompleted ? Color.green : Color.white;
+
+        Color semiTransparentGreen = new Color(0f, 1f, 0f, 0.5f);
+
+        Color opaqueWhite = new Color(0f, 0f, 0f, 1f);
+
+        buttonImage.color = isCompleted ? semiTransparentGreen : opaqueWhite;
 
         button.interactable = true;
     }
