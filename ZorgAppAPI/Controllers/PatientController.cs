@@ -21,22 +21,17 @@ namespace ZorgAppAPI.Controllers
         private readonly IAuthenticationService _authenticationService;
         private readonly IIdentityRepository _identityRepository;
 
-        public PatientController(
-            IAuthenticationService authenticationService,
-            IIdentityRepository identityRepository,
-            IPatientRepository patientRepository,
-            ILogger<PatientController> logger,
-            IDbConnection db)
-        private readonly IAuthenticationService _authenticationService;
-
-        public PatientController(IPatientRepository patientRepository, IAuthenticationService authenticationService)
+        public PatientController(IPatientRepository patientRepository,
+                                 IAuthenticationService authenticationService,
+                                 IIdentityRepository identityRepository,
+                                 ILogger<PatientController> logger,
+                                 SqlConnection db)
         {
+            _patientRepository = patientRepository;
             _authenticationService = authenticationService;
             _identityRepository = identityRepository;
-            _patientRepository = patientRepository;
             _logger = logger;
-            _db = (SqlConnection)db;
-            _authenticationService = authenticationService;
+            _db = db;
         }
 
         [HttpGet]
@@ -230,7 +225,7 @@ namespace ZorgAppAPI.Controllers
 
             // Update only the ArtsID and TrajectID
 
-            var updatedPatient = await _patientRepository.UpdatePatientAvatar(new PatientAvatarDto { UserId = userId, AvatarID = patient.AvatarID  });
+            var updatedPatient = await _patientRepository.UpdatePatientAvatar(new PatientAvatarDto { UserId = userId, AvatarID = patient.AvatarID });
             return Ok(updatedPatient);
         }
     }
