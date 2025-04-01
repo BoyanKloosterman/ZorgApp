@@ -25,13 +25,13 @@ namespace ZorgAppAPI.Controllers
                                  IAuthenticationService authenticationService,
                                  IIdentityRepository identityRepository,
                                  ILogger<PatientController> logger,
-                                 SqlConnection db)
+                                 IDbConnection db)
         {
             _patientRepository = patientRepository;
             _authenticationService = authenticationService;
             _identityRepository = identityRepository;
             _logger = logger;
-            _db = db;
+            _db = (SqlConnection)db;
         }
 
         [HttpGet]
