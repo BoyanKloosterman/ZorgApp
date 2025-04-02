@@ -19,8 +19,14 @@ public class TrajectAvatarManager : MonoBehaviour
 
         if (avatar != null)
         {
+            
             Debug.Log("Avatar beweegt naar " + TrajectManager.Instance.positions[index].transform.position);
-            await avatar.transform.DOMove(TrajectManager.Instance.positions[index].transform.position, duration).AsyncWaitForCompletion();
+            Tweener tweener = avatar.transform.DOMove(TrajectManager.Instance.positions[index].transform.position, duration);
+            while (tweener.IsActive() && !tweener.IsComplete())
+            {
+                await Task.Yield(); // Wachten tot de animatie klaar is
+            }
+            //avatar.transform.DOMove(TrajectManager.Instance.positions[index].transform.position, duration);
         }
 
         SetGameObjectInteractable(true);  // Zet het GameObject weer aan nadat de animatie klaar is
