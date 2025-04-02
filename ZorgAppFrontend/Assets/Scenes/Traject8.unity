@@ -550,6 +550,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: 5
   trajectNumber: 8
+  eventSystem: {fileID: 0}
 --- !u!114 &362921816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -792,6 +793,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: 0
   trajectNumber: 8
+  eventSystem: {fileID: 0}
 --- !u!1 &700049614
 GameObject:
   m_ObjectHideFlags: 0
@@ -846,6 +848,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: 2
   trajectNumber: 8
+  eventSystem: {fileID: 0}
 --- !u!114 &700049617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1072,6 +1075,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: 7
   trajectNumber: 8
+  eventSystem: {fileID: 0}
 --- !u!114 &751323923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1796,6 +1800,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: 4
   trajectNumber: 8
+  eventSystem: {fileID: 0}
 --- !u!114 &1093621009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2065,6 +2070,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: 1
   trajectNumber: 8
+  eventSystem: {fileID: 0}
 --- !u!114 &1134844536
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2441,6 +2447,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: 6
   trajectNumber: 8
+  eventSystem: {fileID: 0}
 --- !u!114 &1304222120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3443,6 +3450,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: 3
   trajectNumber: 8
+  eventSystem: {fileID: 0}
 --- !u!114 &1921212703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3687,6 +3695,7 @@ GameObject:
   - component: {fileID: 2098123112}
   - component: {fileID: 2098123115}
   - component: {fileID: 2098123116}
+
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -3749,11 +3758,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   userApiClient: {fileID: 2098123113}
+  patientApiClient: {fileID: 2098123115}
   noteButton: {fileID: 0}
   zorgMomentIds: 
   behaaldeZorgMomentIds: 
   zorgMomentID: 0
   trajectNumber: 
+
+  positions: []
+  avatar: {fileID: 145593458}
+
 --- !u!114 &2098123115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3767,6 +3781,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   webClient: {fileID: 2098123112}
+
 --- !u!114 &2098123116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3784,6 +3799,7 @@ MonoBehaviour:
   closeButton: {fileID: 1097646549}
   autoCloseTime: 15
   userApiClient: {fileID: 2098123113}
+
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
