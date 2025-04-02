@@ -64,7 +64,7 @@ public class TrajectManager : MonoBehaviour
     private async Task EnsureDataLoaded()
     {
         // Wait until zorgMomentIds and behaaldeZorgMomentIds are filled
-        while (zorgMomentIds.Count == 0 || behaaldeZorgMomentIds.Count == 0)
+        while (zorgMomentIds.Count == 0)
         {
             await Task.Delay(100); // Wait 100ms and check again
         }

@@ -49,7 +49,7 @@ public class ZorgMomentButton : MonoBehaviour
         float duration = 1f;
         int currentIndex = TrajectManager.Instance.GetCurrentAvatarIndex();
 
-        if (index > currentIndex)
+        if (index == currentIndex + 1)
         {
             await eventSystem.GetComponent<TrajectAvatarManager>().MoveAvatarTo(index, duration);
         }
