@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using System.Globalization;
 
 public class NotitieController : MonoBehaviour
 {
@@ -231,6 +232,8 @@ public class NotitieController : MonoBehaviour
         }
     }
 
+
+
     private void AddNoteToUI(Notitie note)
     {
         if (noteButtonPrefab == null || notePanel == null)
@@ -244,19 +247,25 @@ public class NotitieController : MonoBehaviour
         Text titleText = noteButtonObj.GetComponentInChildren<Text>();
 
         string formattedDate = note.DatumAanmaak;
+        CultureInfo dutchCulture = new CultureInfo("nl-NL");
+
         if (DateTime.TryParse(note.DatumAanmaak, out DateTime date))
         {
             if (date.Date == DateTime.Today)
             {
-                formattedDate = date.ToString("HH:mm");
+                formattedDate = $"Vandaag {date.ToString("HH:mm", dutchCulture)}";
+            }
+            else if (date.Date == DateTime.Today.AddDays(-1))
+            {
+                formattedDate = $"Gisteren {date.ToString("HH:mm", dutchCulture)}";
             }
             else if (date.Year == DateTime.Today.Year)
             {
-                formattedDate = date.ToString("yyyy-MM-dd HH:mm");
+                formattedDate = date.ToString("dd MMMM HH:mm", dutchCulture);
             }
             else
             {
-                formattedDate = date.ToString("yyyy");
+                formattedDate = date.ToString("yyyy", dutchCulture);
             }
         }
 
