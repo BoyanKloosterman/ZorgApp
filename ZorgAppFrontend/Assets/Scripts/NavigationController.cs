@@ -3,6 +3,8 @@ using UnityEngine;
 public class NavigationController : MonoBehaviour
 {
     [SerializeField] private GameObject patientInformationButton;
+    [SerializeField] private GameObject trajectButton;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -10,6 +12,11 @@ public class NavigationController : MonoBehaviour
         if (role != "Arts")
         {
             patientInformationButton.SetActive(false);
+        }
+
+        if (role != "Patient")
+        {
+            trajectButton.SetActive(false);
         }
     }
 
