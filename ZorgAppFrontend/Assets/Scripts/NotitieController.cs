@@ -253,7 +253,7 @@ public class NotitieController : MonoBehaviour
         {
             if (date.Date == DateTime.Today)
             {
-                formattedDate = $"Vandaag {date.ToString("HH:mm", dutchCulture)}";
+                formattedDate = $"{date.ToString("HH:mm", dutchCulture)}";
             }
             else if (date.Date == DateTime.Today.AddDays(-1))
             {
