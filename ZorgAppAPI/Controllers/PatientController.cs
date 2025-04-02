@@ -69,5 +69,23 @@ namespace ZorgAppAPI.Controllers
             var updatedPatient = await _patientRepository.UpdatePatientAvatar(new PatientAvatarDto { UserId = userId, AvatarID = patient.AvatarID  });
             return Ok(updatedPatient);
         }
+
+        //get avatar id for user
+        [HttpGet("avatar")]
+        public async Task<IActionResult> GetPatientAvatar()
+        {
+            var userId = _authenticationService.GetCurrentAuthenticatedUserId();
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User not authenticated.");
+            }
+
+            var patient = await _patientRepository.GetPatientAvatar(userId);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+            return Ok(patient);
+        }
     }
 }

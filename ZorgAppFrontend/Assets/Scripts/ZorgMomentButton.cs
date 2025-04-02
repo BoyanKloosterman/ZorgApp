@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,11 +11,14 @@ public class ZorgMomentButton : MonoBehaviour
     private Image buttonImage;
     private int zorgMomentID;
 
+    public GameObject eventSystem;
+
     private void Start()
     {
         button = GetComponent<Button>();
         buttonImage = GetComponent<Image>();
         button.onClick.AddListener(OnButtonClick);
+        eventSystem = GameObject.Find("EventSystem");
         TrajectManager.Instance.OnZorgMomentenUpdated += UpdateButtonState;
         UpdateButtonState();
     }
@@ -40,8 +44,16 @@ public class ZorgMomentButton : MonoBehaviour
         button.interactable = true;
     }
 
-    private void OnButtonClick()
+    private async void OnButtonClick()
     {
+        float duration = 1f;
+        int currentIndex = TrajectManager.Instance.GetCurrentAvatarIndex();
+
+        if (index > currentIndex)
+        {
+            await eventSystem.GetComponent<TrajectAvatarManager>().MoveAvatarTo(index, duration);
+        }
+
         TrajectManager.Instance.LoadZorgMomentScene(zorgMomentID, trajectNumber);
     }
 

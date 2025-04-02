@@ -36,6 +36,13 @@ namespace Assets.Scripts.ApiClient.ModelApiClient
             return ParseResponse(webRequestResponse);
         }
 
+        public async Awaitable<IWebRequestResponse> GetPatientAvatar()
+        {
+            string route = $"/api/Patient/avatar";
+            IWebRequestResponse webRequestResponse = await webClient.SendGetRequest(route);
+            return ParseResponse(webRequestResponse);
+        }
+
         private IWebRequestResponse ParseResponse(IWebRequestResponse webRequestResponse)
         {
             switch (webRequestResponse)
