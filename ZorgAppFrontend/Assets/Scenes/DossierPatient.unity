@@ -1189,9 +1189,9 @@ RectTransform:
   - {fileID: 944047824}
   - {fileID: 84960101}
   - {fileID: 96962844}
+  - {fileID: 987924004}
   - {fileID: 982533681}
   - {fileID: 59999513}
-  - {fileID: 987924004}
   - {fileID: 938905171}
   - {fileID: 1192562602}
   m_Father: {fileID: 1873621722}
@@ -2232,6 +2232,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 944047823}
   m_CullTransparentMesh: 1
+--- !u!1 &975245110
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 975245112}
+  - component: {fileID: 975245111}
+  m_Layer: 0
+  m_Name: SecureUserSession
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &975245111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 975245110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5232bd95faa63ab46a99f1f382ecf422, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &975245112
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 975245110}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &982533680
 GameObject:
   m_ObjectHideFlags: 0
@@ -3682,6 +3726,7 @@ GameObject:
   - component: {fileID: 1593588581}
   - component: {fileID: 1593588582}
   - component: {fileID: 1593588585}
+  - component: {fileID: 1593588587}
   - component: {fileID: 1593588584}
   - component: {fileID: 1593588583}
   - component: {fileID: 1593588586}
@@ -3720,7 +3765,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ed722d7c057c4f48af80e38d24e0abc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseUrl: https://localhost:7078
+  baseUrl: https://avansictb-23.azurewebsites.net
 --- !u!114 &1593588582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3758,6 +3803,7 @@ MonoBehaviour:
   patientApiClient: {fileID: 1593588582}
   artsApiClient: {fileID: 1593588585}
   ouderVoogdApiClient: {fileID: 1593588584}
+  trajectApiClient: {fileID: 1593588587}
 --- !u!114 &1593588584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3802,6 +3848,19 @@ MonoBehaviour:
   fallbackUrl: https://avansictb-23.azurewebsites.net/
   reconnectDelay: 5
   maxReconnectAttempts: 5
+--- !u!114 &1593588587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1593588579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3398820b969a34c4b9cdfbb9e9079f7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  webClient: {fileID: 1593588581}
 --- !u!1 &1627693313
 GameObject:
   m_ObjectHideFlags: 0
@@ -5523,3 +5582,4 @@ SceneRoots:
   - {fileID: 1593588580}
   - {fileID: 875854941}
   - {fileID: 2134120720}
+  - {fileID: 975245112}

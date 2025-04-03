@@ -11,7 +11,7 @@ public class TrajectAvatarManager : MonoBehaviour
     public void Start()
     {
         avatar = GameObject.FindWithTag("Avatar");
-        canvasGroup = GameObject.Find("Canvas").GetComponent<CanvasGroup>();
+        canvasGroup = GameObject.Find("CanvasTraject").GetComponent<CanvasGroup>();
     }
     public async Task MoveAvatarTo(int index, float duration)
     {
