@@ -1,11 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35828.75 d17.13
+VisualStudioVersion = 17.13.35828.75
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZorgAppAPI", "ZorgAppAPI.csproj", "{600FEB3F-439D-4E04-B1CE-F7A97095CBC5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZorgAppAPI.Tests", "..\ZorgAppAPI.Tests\ZorgAppAPI.Tests.csproj", "{6CF27238-6B9F-4932-9B8A-10A8E46FC48B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{600FEB3F-439D-4E04-B1CE-F7A97095CBC5} = {600FEB3F-439D-4E04-B1CE-F7A97095CBC5}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
