@@ -42,6 +42,7 @@ builder.Services.AddIdentityCore<IdentityUser>(options =>
 .AddDapperStores(options =>
 {
     options.ConnectionString = sqlConnectionString;
+    //options.ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 });
 
 builder.Services
@@ -69,6 +70,7 @@ builder.Services.AddHostedService<NotificatieBackgroundService>();
 
 // Register the database connection
 builder.Services.AddScoped<IDbConnection>(sp => new SqlConnection(builder.Configuration.GetConnectionString("sqlConnectionString")));
+//builder.Services.AddScoped<IDbConnection>(sp => new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
 builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
@@ -113,7 +115,7 @@ app.Use(async (context, next) =>
     logger.LogInformation("Request Headers:");
     foreach (var header in context.Request.Headers)
     {
-        logger.LogInformation("    {Key}: {Value}", header.Key, header.Value);
+        logger.LogInformation(" {Key}: {Value}", header.Key, header.Value);
     }
 
     // Controleer de websocket-specifieke headers
