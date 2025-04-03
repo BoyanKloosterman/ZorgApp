@@ -19,6 +19,13 @@ public class UserApiClient : MonoBehaviour
         return await webClient.SendGetRequest(route);
     }
 
+    public async Awaitable<IWebRequestResponse> Logout()
+    {
+        string route = "/account/logout";
+        string data = "";
+        return await webClient.SendPostRequest(route, data);
+    }
+
     public async Awaitable<IWebRequestResponse> LoadZorgMomentData(int zorgMomentId)
     {
         string route = "/api/ZorgMoment/" + zorgMomentId;
