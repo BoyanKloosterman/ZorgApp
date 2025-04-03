@@ -9,7 +9,7 @@ namespace Assets.Scripts.Model
     public class PatientDto
     {
         public int id;
-        public int artsid;
+        public string artsid;
         public int trajectid;
     }
 }

@@ -206,7 +206,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
-
 --- !u!1 &180661791
 GameObject:
   m_ObjectHideFlags: 0
@@ -239,7 +238,6 @@ Transform:
   - {fileID: 1172997150}
   m_Father: {fileID: 2098123110}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-
 --- !u!1 &318409677
 GameObject:
   m_ObjectHideFlags: 0
@@ -3806,7 +3804,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1419715554}
   m_CullTransparentMesh: 1
-
 --- !u!1 &1444151845
 GameObject:
   m_ObjectHideFlags: 0
@@ -3956,6 +3953,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1444151845}
   m_CullTransparentMesh: 1
+--- !u!1 &1529169230 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6154452584649174343, guid: b5dc5ed70aa7f344db5465e030dfaeee, type: 3}
+  m_PrefabInstance: {fileID: 1821237318}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1693688558
 GameObject:
   m_ObjectHideFlags: 0
@@ -4601,6 +4603,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2587751804541919609, guid: b5dc5ed70aa7f344db5465e030dfaeee, type: 3}
+      propertyPath: AddKindInformatieButton
+      value: 
+      objectReference: {fileID: 1529169230}
     - target: {fileID: 7622203637956249716, guid: b5dc5ed70aa7f344db5465e030dfaeee, type: 3}
       propertyPath: m_Name
       value: SideBar
@@ -5089,40 +5095,7 @@ MonoBehaviour:
   zorgMomentID: 0
   trajectNumber: 
   positions: []
-  avatarSprites:
-  - {fileID: 21300000, guid: 1ddfe5673ee5d4fcd90a7f06e4a81569, type: 3}
-  - {fileID: 21300000, guid: c64b98248e0df4b32bb6e4e1f7277758, type: 3}
-  - {fileID: 21300000, guid: 8bc8c544fb44e46ad868874e0bf9a20c, type: 3}
-  - {fileID: 21300000, guid: 71ef81b8e9fba40c49b40e1b9c502e43, type: 3}
-  - {fileID: 21300000, guid: 17a72937f222240b2941e5f15bea7581, type: 3}
-  - {fileID: 21300000, guid: 3e813a9020fa34fd7ad547d2c1278ec8, type: 3}
-  - {fileID: 21300000, guid: 493420c46b6c949ee8fd5d20b8f3ec67, type: 3}
-  - {fileID: 21300000, guid: 4a0b473570d1e49fabd302a94bc39771, type: 3}
-  - {fileID: 21300000, guid: 5d4b91350ec7542589e57fbc50c3ff89, type: 3}
-  - {fileID: 21300000, guid: a9f63645590f94b9ba636f232a8f858f, type: 3}
-  - {fileID: 21300000, guid: b95f64bf3de0843d896b24ba7704f0ee, type: 3}
-  - {fileID: 21300000, guid: 8c4db13cf4a394640af5e3524bb96509, type: 3}
-  - {fileID: 21300000, guid: 7dcfa62f202c54044bb935321e9ff295, type: 3}
-  - {fileID: 21300000, guid: 7d276563f4bde41c49f672085722eb76, type: 3}
-  - {fileID: 21300000, guid: 8dd23d8b95b9e40b9803bcbc7546b4fd, type: 3}
-  - {fileID: 21300000, guid: 8269123ae255a446089ea5dc197d4f0c, type: 3}
-  - {fileID: 21300000, guid: 04a0e047ea24c4acab83e1b386861423, type: 3}
-  - {fileID: 21300000, guid: 7c62962134aed4e4b85c8fd54b81f3a1, type: 3}
-  - {fileID: 21300000, guid: 9bd434a70a74e41fbaed9a5e9ff6d25b, type: 3}
-  - {fileID: 21300000, guid: 188ddb7e2385f4a7990bf8cc7d5676da, type: 3}
-  - {fileID: 21300000, guid: 04a0e047ea24c4acab83e1b386861423, type: 3}
-  - {fileID: 21300000, guid: 22396fe15688941c4a5a38b45aaab5d9, type: 3}
-  - {fileID: 21300000, guid: 1f8a482252fff47bf9554f37716ed0ae, type: 3}
-  - {fileID: 21300000, guid: 744edd5bbb005469e845586be88bb4fa, type: 3}
-  - {fileID: 21300000, guid: d10ff1aa7c6e14fccb547bab35231c31, type: 3}
-  - {fileID: 21300000, guid: 72fa3be150b314b7996f52b676fdbc2a, type: 3}
-  - {fileID: 21300000, guid: 5fd7610e83d924c7b9999b70c489b79b, type: 3}
-  - {fileID: 21300000, guid: f50c7bcf5e83948f6998522104aaff47, type: 3}
-  - {fileID: 21300000, guid: 16999640cc74b4b899744f3ba70770c2, type: 3}
-  - {fileID: 21300000, guid: ec1926eda34c34332b9042c0631c0143, type: 3}
-  avatarPrefab: {fileID: 0}
   avatar: {fileID: 787960462}
-
 --- !u!114 &2098123115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5274,7 +5247,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2121134389}
   m_CullTransparentMesh: 1
-
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

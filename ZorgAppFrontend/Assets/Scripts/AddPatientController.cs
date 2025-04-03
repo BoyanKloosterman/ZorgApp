@@ -199,7 +199,7 @@ public class AddPatientController : MonoBehaviour
             email = Email.text.Trim(),
             password = Password.text,
             trajectid = GetGeselecteerdBehandelplanId(),
-            artsid = geselecteerdeArts?.id ?? 0,
+            artsid = geselecteerdeArts?.userid ?? string.Empty,
             Geboortedatum = geboorteDatum,
             oudervoogdid = huidigeOuderVoogd?.userid ?? string.Empty,
             userid = huidigeOuderVoogd?.userid ?? string.Empty,

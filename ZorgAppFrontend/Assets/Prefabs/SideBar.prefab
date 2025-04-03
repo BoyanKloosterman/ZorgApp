@@ -620,9 +620,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   patientInformationButton: {fileID: 8719274974258817235}
-
   AddKindInformatieButton: {fileID: 6154452584649174343}
-  TrajectButton: {fileID: 818112357418871792}
+  trajectButton: {fileID: 0}
 --- !u!1 &8482912575461211435
 GameObject:
   m_ObjectHideFlags: 0

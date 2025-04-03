@@ -13,6 +13,7 @@ namespace ZorgAppAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [AllowAnonymous]
     public class PatientController : ControllerBase
     {
         private readonly IPatientRepository _patientRepository;
@@ -119,8 +120,8 @@ namespace ZorgAppAPI.Controllers
                         else
                             command.Parameters.AddWithValue("@TrajectId", DBNull.Value);
 
-                        if (model.ArtsId.HasValue)
-                            command.Parameters.AddWithValue("@ArtsId", model.ArtsId.Value);
+                        if (!string.IsNullOrEmpty(model.ArtsId))
+                            command.Parameters.AddWithValue("@ArtsId", model.ArtsId);
                         else
                             command.Parameters.AddWithValue("@ArtsId", DBNull.Value);
 

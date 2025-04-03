@@ -28,6 +28,6 @@ namespace ZorgAppAPI.Models
         // Optional fields
         public string? OuderVoogdId { get; set; }
         public int? TrajectId { get; set; }
-        public int? ArtsId { get; set; }
+        public string? ArtsId { get; set; }
     }
 }

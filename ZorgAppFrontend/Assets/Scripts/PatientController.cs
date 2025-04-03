@@ -68,9 +68,9 @@ public class PatientController : MonoBehaviour
     }
 
     // Set dropdown to specific value
-    public void SetArtsDropdown(int? artsId)
+    public void SetArtsDropdown(string? artsId)
     {
-        if (artsDropdown == null || !artsId.HasValue)
+        if (artsDropdown == null)
         {
             // Set default selection
             if (artsDropdown != null)
@@ -78,8 +78,7 @@ public class PatientController : MonoBehaviour
             return;
         }
 
-        // Find the doctor in the list
-        Arts selectedArts = allDoctors.FirstOrDefault(a => a.id == artsId.Value);
+        Arts selectedArts = allDoctors.FirstOrDefault(a => a.userid == artsId);
 
         if (selectedArts != null)
         {
@@ -160,7 +159,8 @@ public class PatientController : MonoBehaviour
         }
         // Get the selected doctor from the dropdown
         int selectedDoctorIndex = artsDropdown.value;
-        int selectedDoctorId = selectedDoctorIndex > 0 ? allDoctors[selectedDoctorIndex - 1].id : 0;
+        //int selectedDoctorId = selectedDoctorIndex > 0 ? allDoctors[selectedDoctorIndex - 1].id : 0;
+        string selectedDoctorId = selectedDoctorIndex > 0 ? allDoctors[selectedDoctorIndex - 1].id.ToString() : null;
         // Get the selected treatment plan from the dropdown
         int selectedPlanIndex = behandelplanDropdown.value;
         int selectedPlanId = selectedPlanIndex > 0 ? selectedPlanIndex : 0;
