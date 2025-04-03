@@ -21,7 +21,10 @@ builder.Services
     .AddAuthorization()
     .AddIdentityApiEndpoints<IdentityUser>()
     .AddDapperStores(options =>
-        options.ConnectionString = builder.Configuration.GetConnectionString("SqlConnectionString"));
+    {
+        options.ConnectionString = sqlConnectionString;
+    });
+        
 
 // Add HttpContextAccessor for accessing the current user
 builder.Services.AddHttpContextAccessor();
@@ -120,12 +123,14 @@ app.Use(async (context, next) =>
     await next();
 });
 
+// API Endpoints
+app.MapGet("/", () => $"The API is up . Connection string found: {(sqlConnectionStringFound ? "Ja" : "Nee")}");
+
+
 // HTTPS redirection and authorization middleware
 app.UseHttpsRedirection();
 app.UseAuthentication();  // Authentication middleware
 app.UseAuthorization();   // Authorization middleware
-// API Endpoints
-app.MapGet("/", () => $"The API is up . Connection string found: {(sqlConnectionStringFound ? "Ja" : "Nee")}");
 
 // Map Identity API endpoints with correct syntax for ASP.NET Core 8
 app.MapGroup("account")
