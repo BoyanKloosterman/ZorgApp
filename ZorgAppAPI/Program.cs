@@ -41,8 +41,8 @@ builder.Services.AddIdentityCore<IdentityUser>(options =>
 .AddRoles<IdentityRole>()
 .AddDapperStores(options =>
 {
-    //options.ConnectionString = sqlConnectionString;
-    options.ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    options.ConnectionString = sqlConnectionString;
+    //options.ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 });
 
 builder.Services
@@ -69,8 +69,8 @@ builder.Services.AddHostedService<NotificatieBackgroundService>();
 
 
 // Register the database connection
-//builder.Services.AddScoped<IDbConnection>(sp => new SqlConnection(builder.Configuration.GetConnectionString("sqlConnectionString")));
-builder.Services.AddScoped<IDbConnection>(sp => new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IDbConnection>(sp => new SqlConnection(builder.Configuration.GetConnectionString("sqlConnectionString")));
+//builder.Services.AddScoped<IDbConnection>(sp => new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
 builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
