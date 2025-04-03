@@ -24,7 +24,7 @@ namespace ZorgAppAPI.Models
 
         public int? TrajectID { get; set; }
 
-        public string ArtsID { get; set; }
+        public int? ArtsID { get; set; }
 
         public string Geboortedatum { get; set; }
         public int? AvatarID { get; set; }
