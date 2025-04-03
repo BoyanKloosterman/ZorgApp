@@ -40,7 +40,6 @@ public class LoginController : MonoBehaviour
         switch (webRequestResponse)
         {
             case WebRequestData<string> dataResponse:
-                Debug.Log("login success");
                 GetCurrentUserRole();
 
                 if (isNewUser && PlayerPrefs.GetString("UserRole") == "OuderVoogd")
@@ -49,9 +48,8 @@ public class LoginController : MonoBehaviour
                 }
                 else
                 {
-                    SceneManager.LoadScene("Traject13");
+                    SceneManager.LoadScene("DashboardScene");
                 }
-                SceneManager.LoadScene("DashboardScene");
                 break;
             case WebRequestError errorResponse:
                 Debug.Log("error");

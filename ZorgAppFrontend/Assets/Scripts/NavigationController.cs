@@ -5,8 +5,12 @@ public class NavigationController : MonoBehaviour
 {
     [SerializeField] private GameObject patientInformationButton;
     [SerializeField] private GameObject AddKindInformatieButton;
+    [SerializeField] private GameObject patientTrajectButton;
 
-    [SerializeField] private GameObject trajectButton;
+    //[SerializeField] private GameObject patientInformationButtonImage;
+    //[SerializeField] private GameObject AddKindInformatieButtonImage;
+    //[SerializeField] private GameObject patientTrajectButtonImage;
+
     public UserApiClient userApiClient;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -31,7 +35,7 @@ public class NavigationController : MonoBehaviour
 
         if (role != "Patient")
         {
-            trajectButton.SetActive(false);
+            patientTrajectButton.SetActive(false);
         }
     }
 
