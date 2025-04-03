@@ -37,10 +37,12 @@ public class PatientController : MonoBehaviour
     public PatientApiClient patientApiClient;
     public ArtsApiClient artsApiClient;
     public OuderVoogdApiClient ouderVoogdApiClient;
+    public TrajectApiClient trajectApiClient;
 
     private List<Patient> allPatients = new List<Patient>();
     private List<Arts> allDoctors = new List<Arts>();   // Arts objects from API
     private List<OuderVoogd> allGuardians = new List<OuderVoogd>(); // OuderVoogd objects from API
+    private List<Traject> trajects = new List<Traject>();
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -63,8 +65,9 @@ public class PatientController : MonoBehaviour
     private async Task LoadDropdownData()
     {
         await LoadDoctors();
-        await LoadGuardians();
         await LoadBehandelplannen();
+        await LoadGuardians();
+        
     }
 
     // Set dropdown to specific value
@@ -99,6 +102,50 @@ public class PatientController : MonoBehaviour
         {
             artsDropdown.value = 0; // Set to default if not found
         }
+    }
+
+    public void SetBehandelplanDropdown(int? behandelplanId)
+    {
+        if (behandelplanDropdown == null)
+        {
+            Debug.LogError("Behandelplan dropdown is null.");
+            return;
+        }
+
+        // Check if trajects is populated
+        if (trajects == null || trajects.Count == 0)
+        {
+            Debug.LogError("Trajects list is empty.");
+            return;
+        }
+
+        // Find the selected behandelplan by ID
+        Traject selectedBehandelplan = trajects.FirstOrDefault(t => t.id == behandelplanId);
+
+        if (selectedBehandelplan != null)
+        {
+            string behandelplanName = selectedBehandelplan.naam;
+
+            // Find the corresponding index in the dropdown options
+            int index = behandelplanDropdown.options.FindIndex(option => option.text == behandelplanName);
+
+            if (index >= 0)
+            {
+                Debug.Log($"Setting dropdown value to index: {index} for {behandelplanName}");
+                behandelplanDropdown.value = index; // Set the selected value
+                
+            }
+            else
+            {
+                behandelplanDropdown.value = 0; // Set to default if not found
+            }
+        }
+        else
+        {
+            behandelplanDropdown.value = 0; // Set to default if not found
+        }
+
+        behandelplanDropdown.RefreshShownValue();
     }
 
     // Update your SetOuderVoogdDropdown method to query the list
@@ -160,7 +207,7 @@ public class PatientController : MonoBehaviour
         // Get the selected doctor from the dropdown
         int selectedDoctorIndex = artsDropdown.value;
         //int selectedDoctorId = selectedDoctorIndex > 0 ? allDoctors[selectedDoctorIndex - 1].id : 0;
-        string selectedDoctorId = selectedDoctorIndex > 0 ? allDoctors[selectedDoctorIndex - 1].id.ToString() : null;
+        string selectedDoctorId = selectedDoctorIndex > 0 ? allDoctors[selectedDoctorIndex - 1].userid.ToString() : null;
         // Get the selected treatment plan from the dropdown
         int selectedPlanIndex = behandelplanDropdown.value;
         int selectedPlanId = selectedPlanIndex > 0 ? selectedPlanIndex : 0;
@@ -270,8 +317,9 @@ public class PatientController : MonoBehaviour
             this.patient = selectedPatient;
 
             // Set the dropdown values for this patient
+            SetBehandelplanDropdown(selectedPatient.trajectid);
             SetArtsDropdown(selectedPatient.artsid);
-
+            
             // Gebruik de nieuwe methode voor ouder/voogd
             SetOuderVoogdText(selectedPatient.oudervoogdid);
 
@@ -414,24 +462,48 @@ public class PatientController : MonoBehaviour
 
     private async Task LoadBehandelplannen()
     {
-        if (behandelplanDropdown != null)
+        if (behandelplanDropdown != null && trajectApiClient != null)
         {
             // Clear existing options
             behandelplanDropdown.ClearOptions();
 
-            // Since there's no specific API client for treatment plans in the provided files,
-            // we'll add placeholder data or you can implement the actual API call
+            try
+            {
+                // Get behandelplannen from API
+                IWebRequestResponse response = await trajectApiClient.GetBehandelplannen();
 
-            List<string> options = new List<string>();
-            options.Add("Selecteer behandelplan"); // Default option
-            options.Add("Behandelplan A");
-            options.Add("Behandelplan B");
-            options.Add("Behandelplan C");
+                // Process response
+                switch (response)
+                {
+                    case WebRequestData<List<Traject>> dataResponse:
+                        trajects = dataResponse.Data;
 
-            behandelplanDropdown.AddOptions(options);
-            Debug.Log("Added placeholder treatment plans");
+                        // Create dropdown options
+                        List<string> options = new List<string>();
+                        options.Add("Selecteer een behandelplan"); // Default option
 
-            // Note: Replace this with actual API call when available
+                        foreach (var traject in trajects)
+                        {
+                            options.Add(traject.naam); // Assuming "Naam" is a property on "Traject"
+                        }
+
+                        // Add options to dropdown
+                        behandelplanDropdown.AddOptions(options);
+                        Debug.Log($"Loaded {trajects.Count} behandelplannen");
+                        break;
+
+                    case WebRequestError errorResponse:
+                        Debug.LogError($"Error fetching behandelplannen: {errorResponse.ErrorMessage}");
+                        // Add default option
+                        behandelplanDropdown.AddOptions(new List<string> { "Geen behandelplannen beschikbaar" });
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Exception when loading behandelplannen: {ex.Message}");
+                behandelplanDropdown.AddOptions(new List<string> { "Fout bij laden van behandelplannen" });
+            }
         }
     }
 }
