@@ -80,6 +80,9 @@ builder.Services.AddTransient<IAuthenticationService, AspNetIdentityAuthenticati
 
 var app = builder.Build();
 
+var sqlConnectionString = builder.Configuration.GetValue<string>("SqlConnectionString");
+var sqlConnectionStringFound = !string.IsNullOrWhiteSpace(sqlConnectionString);
+
 // Swagger UI configuration (only in development)
 if (app.Environment.IsDevelopment())
 {
@@ -121,7 +124,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();  // Authentication middleware
 app.UseAuthorization();   // Authorization middleware
 // API Endpoints
-app.MapGet("/", () => "API is up");
+app.MapGet("/", () => $"The API is up . Connection string found: {(sqlConnectionStringFound ? "Ja" : "Nee")}");
 
 // Map Identity API endpoints with correct syntax for ASP.NET Core 8
 app.MapGroup("account")
