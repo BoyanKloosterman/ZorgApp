@@ -3941,7 +3941,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ed722d7c057c4f48af80e38d24e0abc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseUrl: https://avansictb-23.azurewebsites.net
+  baseUrl: https://avansictb-23.azurewebsites.net/
 --- !u!114 &2098123113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4021,7 +4021,7 @@ MonoBehaviour:
   notificationText: {fileID: 2131448423}
   notificationPanel: {fileID: 671967366}
   webClient: {fileID: 2098123112}
-  fallbackUrl: https://avansictb-23.azurewebsites.net
+  fallbackUrl: https://avansictb-23.azurewebsites.net/
   reconnectDelay: 5
   maxReconnectAttempts: 5
 --- !u!1 &2131448421
