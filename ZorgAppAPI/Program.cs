@@ -10,24 +10,45 @@ using ZorgAppAPI.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add controllers for the API
+builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+
+// Move these lines before builder.Build()
+builder.Services.AddHttpContextAccessor();
+
 // Add logging
 builder.Services.AddLogging();
+builder.Services.AddHttpContextAccessor();
 
-var sqlConnectionString = builder.Configuration.GetValue<string>("SqlConnectionString");
+var sqlConnectionString = builder.Configuration["sqlConnectionString"];
+
 var sqlConnectionStringFound = !string.IsNullOrWhiteSpace(sqlConnectionString);
 
 // Add Identity Framework with Dapper (correct configuration order)
+builder.Services.AddIdentityCore<IdentityUser>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequiredLength = 6;
+    options.User.RequireUniqueEmail = true;
+})
+.AddRoles<IdentityRole>()
+.AddDapperStores(options =>
+{
+    options.ConnectionString = sqlConnectionString;
+});
+
 builder.Services
     .AddAuthorization()
-    .AddIdentityApiEndpoints<IdentityUser>()
-    .AddDapperStores(options =>
-    {
-        options.ConnectionString = sqlConnectionString;
-    });
+    .AddIdentityApiEndpoints<IdentityUser>();
         
-
 // Add HttpContextAccessor for accessing the current user
-builder.Services.AddHttpContextAccessor();
 
 // Register the AuthenticationService
 builder.Services.AddScoped<IAuthenticationService, AspNetIdentityAuthenticationService>();
@@ -61,26 +82,9 @@ builder.Services
     });
 
 // Configureer Identity zonder EF
-builder.Services.AddIdentityCore<IdentityUser>(options =>
-{
-    options.Password.RequireDigit = true;
-    options.Password.RequireLowercase = true;
-    options.Password.RequireNonAlphanumeric = true;
-    options.Password.RequireUppercase = true;
-    options.Password.RequiredLength = 6;
-    options.User.RequireUniqueEmail = true;
-})
-.AddRoles<IdentityRole>();
-
-// Add controllers for the API
-builder.Services.AddControllers();
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 
-// Move these lines before builder.Build()
-builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddTransient<IAuthenticationService, AspNetIdentityAuthenticationService>();
 
 
