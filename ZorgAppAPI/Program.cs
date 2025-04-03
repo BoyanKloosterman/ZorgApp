@@ -83,9 +83,10 @@ var app = builder.Build();
 // Swagger UI configuration (only in development)
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    
 }
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseWebSockets(new WebSocketOptions
 {
