@@ -284,6 +284,7 @@ GameObject:
   - component: {fileID: 224811965}
   - component: {fileID: 224811964}
   - component: {fileID: 224811966}
+  - component: {fileID: 224811967}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -341,6 +342,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseUrl: https://localhost:7078/
+--- !u!114 &224811967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 224811963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 786c8be0544bb394d88c3e9c26c66aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  notificationText: {fileID: 303138378}
+  notificationPanel: {fileID: 2036730014}
+  webClient: {fileID: 224811966}
+  fallbackUrl: https://localhost:7078
+  reconnectDelay: 5
+  maxReconnectAttempts: 5
 --- !u!1 &263742835
 GameObject:
   m_ObjectHideFlags: 0

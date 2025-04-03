@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using System.Globalization;
 
 public class NotitieController : MonoBehaviour
 {
@@ -231,6 +232,8 @@ public class NotitieController : MonoBehaviour
         }
     }
 
+
+
     private void AddNoteToUI(Notitie note)
     {
         if (noteButtonPrefab == null || notePanel == null)
@@ -243,13 +246,36 @@ public class NotitieController : MonoBehaviour
         TextMeshProUGUI titleTMP = noteButtonObj.GetComponentInChildren<TextMeshProUGUI>();
         Text titleText = noteButtonObj.GetComponentInChildren<Text>();
 
+        string formattedDate = note.DatumAanmaak;
+        CultureInfo dutchCulture = new CultureInfo("nl-NL");
+
+        if (DateTime.TryParse(note.DatumAanmaak, out DateTime date))
+        {
+            if (date.Date == DateTime.Today)
+            {
+                formattedDate = $"{date.ToString("HH:mm", dutchCulture)}";
+            }
+            else if (date.Date == DateTime.Today.AddDays(-1))
+            {
+                formattedDate = $"Gisteren {date.ToString("HH:mm", dutchCulture)}";
+            }
+            else if (date.Year == DateTime.Today.Year)
+            {
+                formattedDate = date.ToString("dd MMMM HH:mm", dutchCulture);
+            }
+            else
+            {
+                formattedDate = date.ToString("yyyy", dutchCulture);
+            }
+        }
+
         if (titleTMP != null)
         {
-            titleTMP.text = note.Titel;
+            titleTMP.text = $"{note.Titel}\n{formattedDate}";
         }
         else if (titleText != null)
         {
-            titleText.text = note.Titel;
+            titleText.text = $"{note.Titel}\n{formattedDate}";
         }
         else
         {
@@ -264,7 +290,7 @@ public class NotitieController : MonoBehaviour
                         var property = component.GetType().GetProperty("text");
                         if (property != null)
                         {
-                            property.SetValue(component, note.Titel);
+                            property.SetValue(component, $"{note.Titel}\n{formattedDate}");
                             break;
                         }
                     }
@@ -283,6 +309,9 @@ public class NotitieController : MonoBehaviour
             button.onClick.AddListener(() => OpenEditNoteScene(capturedNote));
         }
     }
+
+
+
 
     private void OpenEditNoteScene(Notitie note)
     {
