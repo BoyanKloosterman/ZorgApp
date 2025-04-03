@@ -206,11 +206,15 @@ namespace ZorgAppAPI.Controllers
                 return NotFound($"Patient with ID {patient.ID} not found");
             }
 
-            // Update only the ArtsID and TrajectID
-            existingPatient.ArtsID = patient.ArtsID;
+            var userId = _authenticationService.GetCurrentAuthenticatedUserId();
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User not authenticated.");
+            }
+
             existingPatient.TrajectID = patient.TrajectID;
 
-            var updatedPatient = await _patientRepository.UpdatePatient(new PatientDto { ID = patient.ID, ArtsID = patient.ArtsID, TrajectID = patient.TrajectID });
+            var updatedPatient = await _patientRepository.UpdatePatient(new PatientDto { ID = patient.ID, ArtsID = userId, TrajectID = patient.TrajectID });
             return Ok(updatedPatient);
         }
 
