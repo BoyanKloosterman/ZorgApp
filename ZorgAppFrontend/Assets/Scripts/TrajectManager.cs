@@ -41,19 +41,20 @@ public class TrajectManager : MonoBehaviour
 
     private async void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == "Traject13" || scene.name == "Traject8") 
+        if (scene.name == "Traject13" || scene.name == "Traject8")
         {
             LoadCurrentAvatar();
             LoadZorgMomenten();
             LoadBehaaldeZorgMomenten();
-            
+
 
             if (avatar == null) // Controleer of avatar al bestaat
             {
                 avatar = GameObject.FindWithTag("Avatar");
 
             }
-            
+            avatar.SetActive(false);
+
             await EnsureDataLoaded();
 
             PlaceAvatarAtLastCompletedMoment();
@@ -186,12 +187,14 @@ public class TrajectManager : MonoBehaviour
         SceneManager.LoadScene("NoteScene");
     }
 
-    public void PlaceAvatarAtLastCompletedMoment()
+    public async Task PlaceAvatarAtLastCompletedMoment()
     {
+
         if (avatar == null)
         {
             avatar = GameObject.FindWithTag("Avatar");
         }
+        
 
         if (avatar == null || positions == null || positions.Length == 0)
         {
@@ -207,6 +210,7 @@ public class TrajectManager : MonoBehaviour
             if (index > lastCompletedIndex)
             {
                 lastCompletedIndex = index;
+                Debug.Log("Laatst behaalde zorgmoment index: " + lastCompletedIndex);
             }
         }
 
@@ -220,5 +224,6 @@ public class TrajectManager : MonoBehaviour
             // Als er geen behaalde momenten zijn, plaats avatar bij het eerste zorgmoment
             avatar.transform.position = positions[0].transform.position;
         }
+        avatar.SetActive(true);
     }
 }
