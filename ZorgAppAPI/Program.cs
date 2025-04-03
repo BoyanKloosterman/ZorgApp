@@ -13,12 +13,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add logging
 builder.Services.AddLogging();
 
+var sqlConnectionString = builder.Configuration.GetValue<string>("SqlConnectionString");
+var sqlConnectionStringFound = !string.IsNullOrWhiteSpace(sqlConnectionString);
+
 // Add Identity Framework with Dapper (correct configuration order)
 builder.Services
     .AddAuthorization()
     .AddIdentityApiEndpoints<IdentityUser>()
     .AddDapperStores(options =>
-        options.ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection"));
+        options.ConnectionString = builder.Configuration.GetConnectionString("SqlConnectionString"));
 
 // Add HttpContextAccessor for accessing the current user
 builder.Services.AddHttpContextAccessor();
@@ -39,7 +42,7 @@ builder.Services.AddScoped<INotificatieSender, NotificatieSender>();
 builder.Services.AddHostedService<NotificatieBackgroundService>();
 
 // Register the database connection
-builder.Services.AddScoped<IDbConnection>(sp => new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IDbConnection>(sp => new SqlConnection(builder.Configuration.GetConnectionString("SqlConnectionString")));
 
 builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
 builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
@@ -79,9 +82,6 @@ builder.Services.AddTransient<IAuthenticationService, AspNetIdentityAuthenticati
 
 
 var app = builder.Build();
-
-var sqlConnectionString = builder.Configuration.GetValue<string>("SqlConnectionString");
-var sqlConnectionStringFound = !string.IsNullOrWhiteSpace(sqlConnectionString);
 
 // Swagger UI configuration (only in development)
 if (app.Environment.IsDevelopment())
