@@ -68,7 +68,7 @@ builder.Services.AddHostedService<NotificatieBackgroundService>();
 
 
 // Register the database connection
-builder.Services.AddScoped<IDbConnection>(sp => new SqlConnection(builder.Configuration.GetConnectionString("SqlConnectionString")));
+builder.Services.AddScoped<IDbConnection>(sp => new SqlConnection(builder.Configuration.GetConnectionString("sqlConnectionString")));
 
 builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
 builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
