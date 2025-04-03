@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Model
 {
-    public class PatientDto
+    public class Afspraak
     {
         public int id;
-        public string artsid;
-        public int trajectid;
+        public string UserId;
+        public string ArtsId;
+        public string Datumtijd;
+        public string naam;
     }
 }

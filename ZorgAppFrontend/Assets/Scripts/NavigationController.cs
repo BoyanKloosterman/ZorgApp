@@ -3,15 +3,28 @@ using UnityEngine;
 public class NavigationController : MonoBehaviour
 {
     [SerializeField] private GameObject patientInformationButton;
+    [SerializeField] private GameObject AddKindInformatieButton;
+
     [SerializeField] private GameObject trajectButton;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         string role = PlayerPrefs.GetString("UserRole");
-        if (role != "Arts")
+        if (role == "Arts")
+        {
+            patientInformationButton.SetActive(true);
+            AddKindInformatieButton.SetActive(false);
+        }
+        else if (role == "Patient")
         {
             patientInformationButton.SetActive(false);
+            AddKindInformatieButton.SetActive(false);
+        }
+        else
+        {
+            patientInformationButton.SetActive(false);
+            AddKindInformatieButton.SetActive(true);
         }
 
         if (role != "Patient")
@@ -43,6 +56,10 @@ public class NavigationController : MonoBehaviour
     public void PatientInformation()
     {
         LoadScene("DossierPatient");
+    }
+
+    public void AddKindInformatie() {
+        LoadScene("PatientInformatie");    
     }
 
     public void LoadScene(string sceneName)

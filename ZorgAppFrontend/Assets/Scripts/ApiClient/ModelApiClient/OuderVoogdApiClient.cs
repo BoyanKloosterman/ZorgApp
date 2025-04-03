@@ -17,6 +17,13 @@ namespace Assets.Scripts.ApiClient.ModelApiClient
             IWebRequestResponse webRequestResponse = await webClient.SendGetRequest(route);
             return ParseListResponse(webRequestResponse);
         }
+
+        public async Awaitable<IWebRequestResponse> GetCurrentOuderInfo()
+        {
+            string route = "/api/OuderVoogd/current";
+            IWebRequestResponse webRequestResponse = await webClient.SendGetRequest(route);
+            return ParseResponse(webRequestResponse);
+        }
         private IWebRequestResponse ParseResponse(IWebRequestResponse webRequestResponse)
         {
             switch (webRequestResponse)

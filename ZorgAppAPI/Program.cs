@@ -61,9 +61,11 @@ builder.Services.AddScoped<IArtsRepository, ArtsRepository>();
 builder.Services.AddScoped<IOuderVoogdRepository, OuderVoogdRepository>();
 builder.Services.AddScoped<INotitieRepository, NotitieRepository>();
 builder.Services.AddScoped<IUserZorgMomentRepository, UserZorgMomentRepository>();
+builder.Services.AddScoped<IAfspraakRepository, AfspraakRepository>();
 builder.Services.AddScoped<INotificatieRepository, NotificatieRepository>();
 builder.Services.AddScoped<INotificatieSender, NotificatieSender>();
 builder.Services.AddHostedService<NotificatieBackgroundService>();
+
 
 // Register the database connection
 builder.Services.AddScoped<IDbConnection>(sp => new SqlConnection(builder.Configuration.GetConnectionString("SqlConnectionString")));

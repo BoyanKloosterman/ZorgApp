@@ -22,5 +22,11 @@ namespace ZorgAppAPI.Repositories
             var query = "SELECT * FROM dbo.OuderVoogd WHERE ID = @ID";
             return await _dbConnection.QueryFirstOrDefaultAsync<OuderVoogd>(query, new { ID = id });
         }
+
+        public async Task<OuderVoogd> GetCurrentOuderVoogd(string userId)
+        {
+            var query = "SELECT * FROM dbo.OuderVoogd WHERE UserId = @UserId";
+            return await _dbConnection.QueryFirstOrDefaultAsync<OuderVoogd>(query, new { UserId = userId });
+        }
     }
 }

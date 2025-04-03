@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Model
 {
-    public class PatientDto
+    public class Traject
     {
         public int id;
-        public string artsid;
-        public int trajectid;
+        public string naam;
+        public string beschrijving;
     }
 }

@@ -106,8 +106,7 @@ namespace ZorgAppAPI.Controllers
                             {
                                 command.Connection = _db;
                                 command.Transaction = transaction;
-                                //command.CommandText = "INSERT INTO dbo.Patient (Voornaam, Achternaam, UserId, GeboorteDatum) VALUES (@Voornaam, @Achternaam, @UserId, @GeboorteDatum); SELECT SCOPE_IDENTITY();";
-                                command.CommandText = "INSERT INTO dbo.Patient (Voornaam, Achternaam, UserId) VALUES (@Voornaam, @Achternaam, @UserId); SELECT SCOPE_IDENTITY();";
+                                command.CommandText = "INSERT INTO dbo.Patient (Voornaam, Achternaam, UserId, GeboorteDatum, AvatarID) VALUES (@Voornaam, @Achternaam, @UserId, @GeboorteDatum @AvatarID); SELECT SCOPE_IDENTITY();";
 
                                 command.Parameters.AddWithValue("@Voornaam", model.Voornaam);
                                 command.Parameters.AddWithValue("@Achternaam", model.Achternaam);

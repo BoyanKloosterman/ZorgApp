@@ -19,7 +19,7 @@ public class LoginController : MonoBehaviour
 
     void Start()
     {
-        loginButton.onClick.AddListener(PerformLogin);
+        loginButton.onClick.AddListener(() => PerformLogin(false));
         if (ErrorPopup != null)
         {
             ErrorPopup.SetActive(false);
@@ -30,7 +30,7 @@ public class LoginController : MonoBehaviour
         }
     }
 
-    public async void PerformLogin()
+    public async void PerformLogin(bool isNewUser = false)
     {
         user.email = emailInput.text;
         user.password = passwordInput.text;
@@ -41,9 +41,20 @@ public class LoginController : MonoBehaviour
         {
             case WebRequestData<string> dataResponse:
                 Debug.Log("login success");
+
+                // SceneManager.LoadScene("Route13");
+
                 Debug.Log("Token opgeslagen in sessie: " + SecureUserSession.Instance.GetToken());
                 GetCurrentUserRole();
 
+                if (isNewUser && PlayerPrefs.GetString("UserRole") == "OuderVoogd")
+                {
+                    SceneManager.LoadScene("PatientInformatie");
+                }
+                else
+                {
+                    SceneManager.LoadScene("Traject13");
+                }
                 //dit als laatste., hier sturen we naar de juiste scene.
                 GetZorgMomentenNumberToLoadScene();
                 break;

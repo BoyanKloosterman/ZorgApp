@@ -17,7 +17,17 @@ namespace Assets.Scripts.ApiClient.ModelApiClient
         {
             string route = "/api/Patient";
             IWebRequestResponse webRequestResponse = await webClient.SendGetRequest(route);
+            Debug.Log("GetPatients response: " + webRequestResponse);
             return ParseListResponse(webRequestResponse);
+        }
+
+        public async Awaitable<IWebRequestResponse> CreatePatient(Patient patient)
+        {
+            string route = "/api/Patient/register";
+            string data = JsonConvert.SerializeObject(patient);
+            IWebRequestResponse webRequestResponse = await webClient.SendPostRequest(route, data);
+
+            return ParseResponse(webRequestResponse);
         }
 
         public async Awaitable<IWebRequestResponse> UpdatePatient(PatientDto patient)

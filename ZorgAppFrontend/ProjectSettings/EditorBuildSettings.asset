@@ -45,6 +45,9 @@ EditorBuildSettings:
     path: Assets/Scenes/DossierPatient.unity
     guid: 51646579531a0524a84196d41b9c4819
   - enabled: 1
+    path: Assets/Scenes/PatientInformatie.unity
+    guid: a7fc9e258b2d66847a86554232ab99f9
+  - enabled: 1
     path: Assets/Scenes/AvatarEditScene.unity
     guid: e5db742a2a5044a449e4b3d6b85d1e2b
   m_configObjects:
