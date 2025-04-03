@@ -1,11 +1,17 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class NavigationController : MonoBehaviour
 {
     [SerializeField] private GameObject patientInformationButton;
     [SerializeField] private GameObject AddKindInformatieButton;
+    [SerializeField] private GameObject patientTrajectButton;
 
-    [SerializeField] private GameObject trajectButton;
+    //[SerializeField] private GameObject patientInformationButtonImage;
+    //[SerializeField] private GameObject AddKindInformatieButtonImage;
+    //[SerializeField] private GameObject patientTrajectButtonImage;
+
+    public UserApiClient userApiClient;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -29,13 +35,13 @@ public class NavigationController : MonoBehaviour
 
         if (role != "Patient")
         {
-            trajectButton.SetActive(false);
+            patientTrajectButton.SetActive(false);
         }
     }
 
     public void Home()
     {
-        LoadScene("Traject13");
+        LoadScene("DashboardScene");
     }
 
     public void Account()
@@ -65,5 +71,36 @@ public class NavigationController : MonoBehaviour
     public void LoadScene(string sceneName)
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
+    }
+
+    public async void GetZorgMomentenNumberToLoadScene()
+    {
+        IWebRequestResponse webRequestResponse = await userApiClient.LoadZorgMomenten();
+
+        switch (webRequestResponse)
+        {
+            case WebRequestData<string> dataResponse:
+                var zorgMomentIds = JsonHelper.ParseJsonArray<int>(dataResponse.Data);
+                SceneManager.LoadScene("Traject" + zorgMomentIds.Count);
+                break;
+            case WebRequestError errorResponse:
+                Debug.LogError($"API error: {errorResponse.ErrorMessage}");
+                break;
+        }
+    }
+
+    public async void Logout()
+    {
+        IWebRequestResponse webRequestResponse = await userApiClient.Logout();
+
+        switch (webRequestResponse)
+        {
+            case WebRequestData<string> dataResponse:
+                SceneManager.LoadScene("HomeScene");
+                break;
+            case WebRequestError errorResponse:
+                Debug.LogError($"API error: {errorResponse.ErrorMessage}");
+                break;
+        }
     }
 }
