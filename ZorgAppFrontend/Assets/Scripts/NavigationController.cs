@@ -88,4 +88,19 @@ public class NavigationController : MonoBehaviour
                 break;
         }
     }
+
+    public async void Logout()
+    {
+        IWebRequestResponse webRequestResponse = await userApiClient.Logout();
+
+        switch (webRequestResponse)
+        {
+            case WebRequestData<string> dataResponse:
+                SceneManager.LoadScene("HomeScene");
+                break;
+            case WebRequestError errorResponse:
+                Debug.LogError($"API error: {errorResponse.ErrorMessage}");
+                break;
+        }
+    }
 }

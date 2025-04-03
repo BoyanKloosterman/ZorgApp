@@ -40,7 +40,7 @@ public class AvatarController : MonoBehaviour
         }
 
         //navigate to next scene
-        SceneManager.LoadScene("Traject13");
+        SceneManager.LoadScene("DashboardScene");
     }
 }
 
