@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class NavigationController : MonoBehaviour
 {
@@ -6,6 +7,7 @@ public class NavigationController : MonoBehaviour
     [SerializeField] private GameObject AddKindInformatieButton;
 
     [SerializeField] private GameObject trajectButton;
+    public UserApiClient userApiClient;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -35,7 +37,7 @@ public class NavigationController : MonoBehaviour
 
     public void Home()
     {
-        LoadScene("Traject13");
+        LoadScene("DashboardScene");
     }
 
     public void Account()
@@ -65,5 +67,21 @@ public class NavigationController : MonoBehaviour
     public void LoadScene(string sceneName)
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
+    }
+
+    public async void GetZorgMomentenNumberToLoadScene()
+    {
+        IWebRequestResponse webRequestResponse = await userApiClient.LoadZorgMomenten();
+
+        switch (webRequestResponse)
+        {
+            case WebRequestData<string> dataResponse:
+                var zorgMomentIds = JsonHelper.ParseJsonArray<int>(dataResponse.Data);
+                SceneManager.LoadScene("Traject" + zorgMomentIds.Count);
+                break;
+            case WebRequestError errorResponse:
+                Debug.LogError($"API error: {errorResponse.ErrorMessage}");
+                break;
+        }
     }
 }
