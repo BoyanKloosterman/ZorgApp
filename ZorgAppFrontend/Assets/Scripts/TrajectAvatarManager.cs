@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
 public class TrajectAvatarManager : MonoBehaviour
@@ -10,7 +11,10 @@ public class TrajectAvatarManager : MonoBehaviour
     
     public void Start()
     {
-        avatar = GameObject.FindWithTag("Avatar");
+        if (avatar == null)
+        {
+            avatar = GameObject.FindWithTag("Avatar");
+        }
         canvasGroup = GameObject.Find("CanvasTraject").GetComponent<CanvasGroup>();
     }
     public async Task MoveAvatarTo(int index, float duration)

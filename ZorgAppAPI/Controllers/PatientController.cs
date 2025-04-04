@@ -38,6 +38,11 @@ namespace ZorgAppAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllPatients()
         {
+            var userId = _authenticationService.GetCurrentAuthenticatedUserId();
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User not authenticated.");
+            }
             var patients = await _patientRepository.GetPatients();
             return Ok(patients);
         }
@@ -189,6 +194,11 @@ namespace ZorgAppAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPatient(int id)
         {
+            var userId = _authenticationService.GetCurrentAuthenticatedUserId();
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User not authenticated.");
+            }
             var patient = await _patientRepository.GetPatient(id);
             if (patient == null)
             {

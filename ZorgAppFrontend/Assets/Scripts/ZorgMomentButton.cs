@@ -12,6 +12,7 @@ public class ZorgMomentButton : MonoBehaviour
     private int zorgMomentID;
 
     public GameObject eventSystem;
+    public GameObject avatar;
 
     private void Start()
     {
