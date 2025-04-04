@@ -48,7 +48,7 @@ builder.Services.AddIdentityCore<IdentityUser>(options =>
 builder.Services
     .AddAuthorization()
     .AddIdentityApiEndpoints<IdentityUser>();
-
+        
 // Add HttpContextAccessor for accessing the current user
 
 // Register the AuthenticationService
@@ -97,7 +97,7 @@ var app = builder.Build();
 // Swagger UI configuration (only in development)
 if (app.Environment.IsDevelopment())
 {
-
+    
 }
 app.UseSwagger();
 app.UseSwaggerUI();

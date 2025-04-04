@@ -5,6 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using ZorgAppAPI.Interfaces;
+using ZorgAppAPI.Controllers;
 using ZorgAppAPI.Models;
 
 namespace ZorgAppAPI.Services
