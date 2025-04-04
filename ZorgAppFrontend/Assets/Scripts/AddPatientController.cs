@@ -7,6 +7,7 @@ using System.Linq;
 using Assets.Scripts.Model;
 using Assets.Scripts.ApiClient.ModelApiClient;
 using Newtonsoft.Json;
+using UnityEngine.SceneManagement;
 using UI.Dates;
 
 public class AddPatientController : MonoBehaviour
@@ -264,6 +265,7 @@ public class AddPatientController : MonoBehaviour
 
             if (vervolgResponse is WebRequestData<Afspraak> vervolgDataResponse)
             {
+                SceneManager.LoadScene("DashboardScene");
                 Debug.Log($"✅ Vervolgafspraak succesvol opgeslagen: {vervolgDataResponse.Data.id}");
             }
             else if (vervolgResponse is WebRequestError vervolgErrorResponse)

@@ -2662,6 +2662,7 @@ GameObject:
   - component: {fileID: 1345682746}
   - component: {fileID: 1345682745}
   - component: {fileID: 1345682744}
+  - component: {fileID: 1345682748}
   m_Layer: 5
   m_Name: CanvasTraject
   m_TagString: Untagged
@@ -2762,6 +2763,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!225 &1345682748
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1345682743}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1374084139
 GameObject:
   m_ObjectHideFlags: 0
