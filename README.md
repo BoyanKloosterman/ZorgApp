@@ -71,10 +71,10 @@ Onderstaand een overzicht van het aantal commits per contributor in deze reposit
 
 | Contributor       | Aantal Commits |
 |-------------------|----------------|
-| Boyan Kloosterman | 112            |
-| Pluk Zwaal        | 27             |
-| Jeroen Zwaal      | 17             |
-| Junbo Chen        | 4              |
+| Boyan Kloosterman | 95             |
+| Pluk Zwaal        | 36             |
+| Jeroen Zwaal      | 29             |
+| Junbo Chen        | 12              |
 
 > Bovenstaande telling is gebaseerd op de commit-historie van de main branch. Het geeft een indicatie van ieders bijdrage. Let op dat kwaliteit en rolverdeling niet enkel uit commit-aantallen blijken – bijvoorbeeld een kleinere hoeveelheid commits kan nog steeds cruciale functionaliteit bevatten.
 
