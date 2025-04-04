@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using ZorgAppAPI.Interfaces;
+using ZorgAppAPI.Services;
 
 namespace ZorgAppAPI.Controllers
 {
@@ -9,14 +10,21 @@ namespace ZorgAppAPI.Controllers
     public class OuderVoogdController : ControllerBase
     {
         private readonly IOuderVoogdRepository _ouderVoogdRepository;
-        public OuderVoogdController(IOuderVoogdRepository ouderVoogdRepository)
+        private readonly IAuthenticationService _authenticationService;
+        public OuderVoogdController(IOuderVoogdRepository ouderVoogdRepository, IAuthenticationService authenticationService)
         {
             _ouderVoogdRepository = ouderVoogdRepository;
+            _authenticationService = authenticationService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetOuderVoogden()
         {
+            var userId = _authenticationService.GetCurrentAuthenticatedUserId();
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User not authenticated.");
+            }
             var ouderVoogden = await _ouderVoogdRepository.GetOuderVoogden();
             return Ok(ouderVoogden);
         }
@@ -24,6 +32,11 @@ namespace ZorgAppAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOuderVoogd(int id)
         {
+            var userId = _authenticationService.GetCurrentAuthenticatedUserId();
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User not authenticated.");
+            }
             var ouderVoogd = await _ouderVoogdRepository.GetOuderVoogd(id);
             if (ouderVoogd == null)
             {
